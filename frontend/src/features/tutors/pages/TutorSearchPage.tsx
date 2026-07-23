@@ -1,7 +1,7 @@
 import { useQuery } from "@tanstack/react-query";
 import { motion } from "framer-motion";
 import { AlertCircle, Search, SearchX, SlidersHorizontal, Sparkles, X } from "lucide-react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useSearchParams } from "react-router-dom";
 
 import { Button } from "@/components/ui/Button";
@@ -37,6 +37,7 @@ export function TutorSearchPage() {
   const still = prefersReducedMotion();
 
   const query = searchParams.get("q") ?? "";
+  const [queryInput, setQueryInput] = useState(query);
   const subjectId = searchParams.get("subject_id") ?? "";
   const mode = searchParams.get("teaching_mode") ?? "";
   const minPrice = searchParams.get("min_price") ?? "";
@@ -67,6 +68,18 @@ export function TutorSearchPage() {
     next.delete("page"); // any filter change resets to page 1
     setSearchParams(next);
   };
+
+  // Debounce free-text search so typing doesn't fire a request per keystroke.
+  useEffect(() => {
+    setQueryInput(query);
+  }, [query]);
+
+  useEffect(() => {
+    if (queryInput === query) return;
+    const timeout = setTimeout(() => updateFilter("q", queryInput), 400);
+    return () => clearTimeout(timeout);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [queryInput]);
 
   const setPage = (nextPage: number) => {
     const next = new URLSearchParams(searchParams);
@@ -121,8 +134,8 @@ export function TutorSearchPage() {
             <div className="mt-6 flex items-center gap-2 rounded-2xl bg-canvas p-2 pl-4 shadow-dialog">
               <Search className="h-5 w-5 shrink-0 text-slate-400" />
               <input
-                value={query}
-                onChange={(event) => updateFilter("q", event.target.value)}
+                value={queryInput}
+                onChange={(event) => setQueryInput(event.target.value)}
                 placeholder="Search by name, subject, or headline…"
                 aria-label="Search tutors"
                 className="w-full bg-transparent text-navy placeholder:text-slate-400 focus:outline-none"
@@ -231,7 +244,7 @@ export function TutorSearchPage() {
           </aside>
 
           {/* -------------------------------------------- Results */}
-          <div>
+          <div className="min-w-0">
             <div className="mb-5 flex flex-wrap items-center justify-between gap-3">
               <p className="text-sm text-slate-500" aria-live="polite">
                 {data

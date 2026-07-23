@@ -41,7 +41,10 @@ export function NotificationBell() {
 
   return (
     <Menu as="div" className="relative">
-      <Menu.Button className="relative rounded-full p-2 text-slate-500 transition-colors hover:bg-surface-3 hover:text-slate-700 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/30">
+      <Menu.Button
+        aria-label={unreadCount > 0 ? `Notifications, ${unreadCount} unread` : "Notifications"}
+        className="relative rounded-full p-2 text-slate-500 transition-colors hover:bg-surface-3 hover:text-slate-700 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/30"
+      >
         <Bell className="h-5 w-5" />
         {unreadCount > 0 && (
           <span className="absolute right-1 top-1 flex h-4 w-4 items-center justify-center rounded-full bg-danger text-[0.6rem] font-bold text-white">
