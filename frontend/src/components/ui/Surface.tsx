@@ -1,3 +1,5 @@
+import { forwardRef, type HTMLAttributes } from "react";
+
 import { cn } from "@/lib/utils";
 
 /**
@@ -63,6 +65,62 @@ export function GradientOrb({
     />
   );
 }
+
+/**
+ * AuroraWash — V4 addendum: BrandMesh/GradientOrb's "louder sibling" for
+ * arrival moments that want more drift than a static wash, short of the
+ * cinematic-dark aesthetic V3 already retired. 2–3 slow-drifting orbs, no
+ * shader, no WebGL — just the existing `animate-float-slow` keyframe with
+ * staggered negative delays so the orbs don't move in lockstep.
+ *
+ * Allowed only on: the landing hero background, the auth BrandMesh panel.
+ * Never on portal dashboards, page bodies, or cards (DESIGN_V3.md V4).
+ */
+export function AuroraWash({ className }: { className?: string }) {
+  return (
+    <div aria-hidden="true" className={cn("pointer-events-none absolute inset-0 overflow-hidden", className)}>
+      <div
+        className="absolute -left-24 top-24 h-72 w-72 animate-float-slow rounded-full bg-primary/15 blur-3xl motion-reduce:animate-none"
+        style={{ animationDelay: "-1.5s" }}
+      />
+      <div
+        className="absolute -right-16 top-8 h-64 w-64 animate-float-slow rounded-full bg-secondary/15 blur-3xl motion-reduce:animate-none"
+        style={{ animationDelay: "-4s" }}
+      />
+      <div
+        className="absolute bottom-0 left-1/3 h-56 w-56 animate-float-slow rounded-full bg-accent/10 blur-3xl motion-reduce:animate-none"
+        style={{ animationDelay: "-6.5s" }}
+      />
+    </div>
+  );
+}
+
+/**
+ * GlassPanel — V4 addendum: a restrained frosted-glass surface for content
+ * that floats over real imagery or a saturated brand background. One blur
+ * layer, one border, one shadow — no inner glow, no gradient border, no
+ * second translucent layer (that's the "heavy glass" V3 rejected).
+ *
+ * Two tones, not a light/dark theme switch — pick by what's underneath:
+ * `light` (default) for content over real imagery or plain-enough ground;
+ * `dark` for content sitting directly on a saturated wash like `BrandMesh`,
+ * where a white glass panel would fight the wash instead of sitting on it.
+ *
+ * Allowed only on: the sticky nav once scrolled past a hero, floating cards
+ * over the landing hero, auth brand-panel content over BrandMesh. Never on
+ * dashboard cards, tables, forms, modals, or any surface over plain
+ * canvas/surface — there, "glass" just reads as a low-contrast box; use
+ * `Card` instead (DESIGN_V3.md V4).
+ */
+export const GLASS_PANEL_CLASSES = "border border-white/40 bg-white/70 shadow-dropdown backdrop-blur-xl";
+const GLASS_PANEL_DARK_CLASSES = "border border-white/10 bg-navy/60 shadow-dropdown backdrop-blur-xl";
+
+export const GlassPanel = forwardRef<HTMLDivElement, HTMLAttributes<HTMLDivElement> & { tone?: "light" | "dark" }>(
+  ({ className, tone = "light", ...props }, ref) => (
+    <div ref={ref} className={cn(tone === "dark" ? GLASS_PANEL_DARK_CLASSES : GLASS_PANEL_CLASSES, className)} {...props} />
+  )
+);
+GlassPanel.displayName = "GlassPanel";
 
 /**
  * MeshBackground — a full light mesh-gradient wash for app page shells.

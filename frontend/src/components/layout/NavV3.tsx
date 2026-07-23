@@ -1,11 +1,12 @@
 import { Menu as HeadlessMenu, Transition } from "@headlessui/react";
 import { ChevronDown, LogOut, Menu as MenuIcon, X } from "lucide-react";
-import { Fragment, useState } from "react";
+import { Fragment, useEffect, useState } from "react";
 import { Link, NavLink } from "react-router-dom";
 
 import { NotificationBell } from "@/components/layout/NotificationBell";
 import { type DashboardNavItem } from "@/components/layout/DashboardLayout";
 import { Avatar } from "@/components/ui/Avatar";
+import { GLASS_PANEL_CLASSES } from "@/components/ui/Surface";
 import { Logo } from "@/components/shared/Logo";
 import { useAuth } from "@/features/auth/use-auth";
 import { adminNavItems } from "@/features/admin/nav";
@@ -68,13 +69,28 @@ function TopNavLink({ item, end }: { item: { label: string; to: string }; end?: 
 export function NavV3() {
   const { user, logout } = useAuth();
   const [mobileOpen, setMobileOpen] = useState(false);
+  const [scrolled, setScrolled] = useState(false);
 
   const roleItems = user ? ROLE_NAVS[user.role] ?? [] : [];
   const primary = roleItems.slice(0, PRIMARY_LINKS);
   const overflow = roleItems.slice(PRIMARY_LINKS);
 
+  // V4 addendum (DESIGN_V3.md): the sticky nav picks up the GlassPanel
+  // treatment once scrolled past the hero — a flat translucent bar before that.
+  useEffect(() => {
+    const onScroll = () => setScrolled(window.scrollY > 24);
+    onScroll();
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => window.removeEventListener("scroll", onScroll);
+  }, []);
+
   return (
-    <header className="sticky top-0 z-40 border-b border-line bg-canvas/80 backdrop-blur-xl">
+    <header
+      className={cn(
+        "sticky top-0 z-40 transition-colors duration-300",
+        scrolled ? cn(GLASS_PANEL_CLASSES, "border-x-0 border-t-0") : "border-b border-line bg-canvas/80 backdrop-blur-xl"
+      )}
+    >
       <div className="container-page flex h-16 items-center justify-between gap-4">
         <Link to="/" aria-label="TutorDoor home" className="shrink-0">
           <Logo />

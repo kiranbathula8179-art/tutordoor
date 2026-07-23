@@ -5,7 +5,7 @@ import { Link, useNavigate } from "react-router-dom";
 
 import { StarRating } from "@/components/shared/StarRating";
 import { Avatar } from "@/components/ui/Avatar";
-import { DotGrid, GradientOrb } from "@/components/ui/Surface";
+import { AuroraWash, DotGrid } from "@/components/ui/Surface";
 import { useLandingTutorPool } from "@/features/landing/v3/useTutorPool";
 import { DURATION, EASE_OUT, motionSafe, riseInit } from "@/lib/motion/tokens";
 import { cn, formatCurrency } from "@/lib/utils";
@@ -104,13 +104,12 @@ export function HeroV3() {
 
   return (
     <section className="relative overflow-hidden">
-      {/* Layered depth: wash → shared dot grid → two soft brand orbs (Surface.tsx primitives) */}
+      {/* Layered depth: radial wash → AuroraWash's slow-drifting orbs (V4 addendum, Surface.tsx) */}
       <div aria-hidden="true" className="pointer-events-none absolute inset-0 overflow-hidden">
         <div className="absolute inset-x-0 top-0 h-[480px] bg-[radial-gradient(60%_100%_at_50%_0%,#EFF6FF_0%,transparent_70%)]" />
-        <DotGrid size={22} className="h-[480px] opacity-60" />
-        <GradientOrb color="primary" size={288} className="-left-24 top-24" />
-        <GradientOrb color="secondary" size={256} className="-right-16 top-56" />
       </div>
+      <AuroraWash className="h-[480px]" />
+      <DotGrid size={22} className="h-[480px] opacity-60" />
       <div className="container-page relative grid items-center gap-12 py-16 lg:grid-cols-[1.1fr_0.9fr] lg:py-24">
         <div>
           <motion.h1

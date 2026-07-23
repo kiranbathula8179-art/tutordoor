@@ -2,7 +2,7 @@ import { motion } from "framer-motion";
 import { BookOpen, CalendarCheck, GraduationCap, Lightbulb, Lock, ShieldCheck, Sparkles, Star } from "lucide-react";
 import { Link, Outlet, useLocation, useSearchParams } from "react-router-dom";
 
-import { BrandMesh } from "@/components/ui/Surface";
+import { AuroraWash, BrandMesh, GlassPanel } from "@/components/ui/Surface";
 import { Logo } from "@/components/shared/Logo";
 import { DURATION, EASE_OUT, riseInit } from "@/lib/motion/tokens";
 import { prefersReducedMotion } from "@/lib/motion/quality";
@@ -112,6 +112,7 @@ export function AuthLayout() {
       {/* ------------------------------------------------ Brand panel */}
       <div className="relative hidden overflow-hidden lg:flex lg:flex-col lg:justify-between lg:p-12">
         <BrandMesh />
+        <AuroraWash />
 
         {/* Floating education glyphs */}
         {!still &&
@@ -148,31 +149,34 @@ export function AuthLayout() {
           <p className="mt-4 text-lg leading-relaxed text-blue-100">{narrative.sub}</p>
         </motion.div>
 
-        {/* Animated trust stats + points */}
+        {/* Animated trust stats + points — GlassPanel (dark tone), V4 addendum:
+            floating brand-panel content over BrandMesh */}
         <motion.div
           initial={riseInit(20)}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: DURATION.slow, delay: still ? 0 : 0.2, ease: EASE_OUT }}
           className="relative"
         >
-          <div className="grid grid-cols-3 gap-4 border-y border-white/15 py-5">
-            {TRUST_STATS.map((stat) => (
-              <div key={stat.label}>
-                <p className="font-display text-2xl font-extrabold tracking-tight text-white">{stat.value}</p>
-                <p className="mt-0.5 text-xs leading-tight text-blue-100">{stat.label}</p>
-              </div>
-            ))}
-          </div>
-          <ul className="mt-5 space-y-2.5">
-            {TRUST_POINTS.map(({ icon: Icon, text }) => (
-              <li key={text} className="flex items-center gap-3 text-sm font-medium text-blue-50">
-                <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-lg bg-white/15">
-                  <Icon className="h-3.5 w-3.5 text-white" />
-                </span>
-                {text}
-              </li>
-            ))}
-          </ul>
+          <GlassPanel tone="dark" className="rounded-2xl p-5">
+            <div className="grid grid-cols-3 gap-4 border-b border-white/15 pb-5">
+              {TRUST_STATS.map((stat) => (
+                <div key={stat.label}>
+                  <p className="font-display text-2xl font-extrabold tracking-tight text-white">{stat.value}</p>
+                  <p className="mt-0.5 text-xs leading-tight text-blue-100">{stat.label}</p>
+                </div>
+              ))}
+            </div>
+            <ul className="mt-5 space-y-2.5">
+              {TRUST_POINTS.map(({ icon: Icon, text }) => (
+                <li key={text} className="flex items-center gap-3 text-sm font-medium text-blue-50">
+                  <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-lg bg-white/15">
+                    <Icon className="h-3.5 w-3.5 text-white" />
+                  </span>
+                  {text}
+                </li>
+              ))}
+            </ul>
+          </GlassPanel>
         </motion.div>
       </div>
     </div>
