@@ -11,6 +11,7 @@ import { useLandingTutorPool } from "@/features/landing/v3/useTutorPool";
 import { getSubjects } from "@/features/tutors/api";
 import { TutorResultCard } from "@/features/tutors/components/TutorResultCard";
 import { DURATION, EASE_OUT, fadeRise, motionSafe, staggerContainer, staggerItem } from "@/lib/motion/tokens";
+import { prefersReducedMotion } from "@/lib/motion/quality";
 
 /**
  * Landing V3 sections — real data, truthful copy, subtle motion, on the
@@ -27,6 +28,7 @@ import { DURATION, EASE_OUT, fadeRise, motionSafe, staggerContainer, staggerItem
 // ---------------------------------------------------------------------------
 
 export function CategoriesV3() {
+  const still = prefersReducedMotion();
   const { data: subjects = [] } = useQuery({ queryKey: ["subjects"], queryFn: () => getSubjects() });
   const shown = subjects.slice(0, 8);
 
@@ -36,7 +38,7 @@ export function CategoriesV3() {
     <section className="container-page py-20">
       <SectionHeading eyebrow="Categories" title="Popular subjects to explore" />
       <motion.div
-        initial="hidden"
+        initial={still ? false : "hidden"}
         whileInView="show"
         viewport={{ once: true, margin: "-60px" }}
         variants={staggerContainer}
@@ -74,6 +76,7 @@ export function CategoriesV3() {
 // ---------------------------------------------------------------------------
 
 export function FeaturedTutorsV3() {
+  const still = prefersReducedMotion();
   const { data, isLoading } = useLandingTutorPool();
 
   // Slice past the 3 tutors Hero already shows, so the sections never repeat people.
@@ -86,7 +89,7 @@ export function FeaturedTutorsV3() {
     <section className="container-page py-20">
       <SectionHeading eyebrow="Tutors" title="Learn from verified tutors" />
       <motion.div
-        initial="hidden"
+        initial={still ? false : "hidden"}
         whileInView="show"
         viewport={{ once: true, margin: "-60px" }}
         variants={staggerContainer}
@@ -132,12 +135,13 @@ const STEPS = [
 ];
 
 export function HowItWorksV3() {
+  const still = prefersReducedMotion();
   return (
     <section className="bg-surface py-20">
       <div className="container-page">
         <SectionHeading eyebrow="How it works" title="From search to session in three steps" />
         <motion.div
-          initial="hidden"
+          initial={still ? false : "hidden"}
           whileInView="show"
           viewport={{ once: true, margin: "-60px" }}
           variants={staggerContainer}
@@ -174,11 +178,12 @@ const FEATURES = [
 ];
 
 export function WhyV3() {
+  const still = prefersReducedMotion();
   return (
     <section className="container-page py-20">
       <SectionHeading eyebrow="Why TutorDoor" title="Built for trust, not just traffic" />
       <motion.div
-        initial="hidden"
+        initial={still ? false : "hidden"}
         whileInView="show"
         viewport={{ once: true, margin: "-60px" }}
         variants={staggerContainer}
@@ -212,12 +217,13 @@ const FAQS = [
 ] as const;
 
 export function FaqV3() {
+  const still = prefersReducedMotion();
   return (
     <section className="bg-surface py-20">
       <div className="container-page max-w-3xl">
         <SectionHeading eyebrow="FAQ" title="Questions, answered" />
         <motion.div
-          initial="hidden"
+          initial={still ? false : "hidden"}
           whileInView="show"
           viewport={{ once: true, margin: "-60px" }}
           variants={staggerContainer}
@@ -247,10 +253,11 @@ export function FaqV3() {
 // ---------------------------------------------------------------------------
 
 export function CtaV3() {
+  const still = prefersReducedMotion();
   return (
     <section className="container-page py-20">
       <motion.div
-        initial="hidden"
+        initial={still ? false : "hidden"}
         whileInView="show"
         viewport={{ once: true, margin: "-60px" }}
         variants={fadeRise}
