@@ -1,0 +1,14 @@
+[flake8]
+max-line-length = 120
+extend-ignore = E203, W503
+exclude =
+    .git,
+    __pycache__,
+    */migrations/*,
+    .venv,
+    venv,
+    staticfiles,
+    media
+per-file-ignores =
+    # Settings files legitimately use star-ish long lines and env chains.
+    config/settings/*.py: E501

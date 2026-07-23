@@ -1,0 +1,39 @@
+# --- Python / Django ---
+__pycache__/
+*.py[cod]
+*.egg-info/
+.venv/
+venv/
+env/
+*.sqlite3
+staticfiles/
+media/
+.pytest_cache/
+.coverage
+htmlcov/
+celerybeat-schedule
+celerybeat.pid
+
+# --- Environment ---
+.env
+.env.*
+!.env.example
+
+# --- Node / React ---
+node_modules/
+dist/
+build/
+.vite/
+*.local
+
+# --- Editor / OS ---
+.vscode/
+.idea/
+.DS_Store
+*.swp
+
+# --- Docker ---
+*.log
+
+# --- Test artifacts ---
+coverage/

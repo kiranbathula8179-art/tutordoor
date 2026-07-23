@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html>
+<head><meta charset="utf-8"><title>Verify your TutorDoor account</title></head>
+<body style="font-family: 'Segoe UI', Arial, sans-serif; background:#f4f6fb; padding:32px;">
+  <table style="max-width:520px;margin:0 auto;background:#ffffff;border-radius:12px;overflow:hidden;box-shadow:0 4px 24px rgba(20,20,50,0.08);">
+    <tr>
+      <td style="background:linear-gradient(135deg,#4F46E5,#7C3AED);padding:32px;text-align:center;">
+        <h1 style="color:#ffffff;margin:0;font-size:24px;">TutorDoor</h1>
+      </td>
+    </tr>
+    <tr>
+      <td style="padding:32px;">
+        <h2 style="color:#111827;">Confirm your email address</h2>
+        <p style="color:#4b5563;line-height:1.6;">
+          Thanks for signing up with TutorDoor. Please confirm your email address to
+          activate your account and start learning or teaching.
+        </p>
+        <p style="text-align:center;margin:32px 0;">
+          <a href="{{ verification_link }}"
+             style="background:#4F46E5;color:#ffffff;padding:14px 28px;border-radius:8px;
+                    text-decoration:none;font-weight:600;display:inline-block;">
+            Verify Email Address
+          </a>
+        </p>
+        <p style="color:#9ca3af;font-size:13px;">
+          If the button above doesn't work, copy and paste this link into your browser:<br>
+          <span style="word-break:break-all;">{{ verification_link }}</span>
+        </p>
+      </td>
+    </tr>
+  </table>
+</body>
+</html>

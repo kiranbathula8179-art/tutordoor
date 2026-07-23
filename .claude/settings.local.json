@@ -1,0 +1,15 @@
+{
+  "permissions": {
+    "allow": [
+      "Skill(artifact-design)",
+      "WebFetch(domain:raw.githubusercontent.com)",
+      "WebFetch(domain:docs.claude.com)",
+      "WebFetch(domain:21st.dev)",
+      "PowerShell(claude mcp *)",
+      "Skill(run)",
+      "Skill(claude-in-chrome)",
+      "PowerShell(docker restart tutordoor_frontend *)",
+      "PowerShell(docker exec tutordoor_backend *)"
+    ]
+  }
+}
