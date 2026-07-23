@@ -14,8 +14,8 @@ export function SectionHeading({ eyebrow, title }: { eyebrow: string; title: Rea
       viewport={{ once: true, margin: "-60px" }}
       variants={fadeRise}
     >
-      <p className="text-xs font-semibold uppercase tracking-[0.18em] text-primary">{eyebrow}</p>
-      <h2 className="mt-2 max-w-2xl font-display text-3xl font-bold tracking-tight text-navy sm:text-4xl">
+      <p className="text-xs font-bold uppercase tracking-[0.22em] text-primary">{eyebrow}</p>
+      <h2 className="mt-2.5 max-w-2xl font-display text-3xl font-bold tracking-[-0.02em] text-navy sm:text-4xl lg:text-[2.75rem]">
         {title}
       </h2>
     </motion.div>

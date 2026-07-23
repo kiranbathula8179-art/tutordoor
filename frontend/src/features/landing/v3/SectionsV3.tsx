@@ -12,6 +12,14 @@ import { getSubjects } from "@/features/tutors/api";
 import { TutorResultCard } from "@/features/tutors/components/TutorResultCard";
 import { DURATION, EASE_OUT, fadeRise, motionSafe, staggerContainer, staggerItem } from "@/lib/motion/tokens";
 import { prefersReducedMotion } from "@/lib/motion/quality";
+import { cn } from "@/lib/utils";
+
+/** Rotating icon-badge tones for Categories — real brand colors only, cycled for variety. */
+const CATEGORY_TONES = [
+  "bg-primary-subtle text-primary",
+  "bg-secondary/10 text-secondary",
+  "bg-accent/10 text-accent",
+];
 
 /**
  * Landing V3 sections — real data, truthful copy, subtle motion, on the
@@ -44,19 +52,30 @@ export function CategoriesV3() {
         variants={staggerContainer}
         className="mt-8 grid grid-cols-2 gap-4 md:grid-cols-4"
       >
-        {shown.map((subject) => {
+        {shown.map((subject, index) => {
           const Icon = iconForSubject(subject.name);
+          const tone = CATEGORY_TONES[index % CATEGORY_TONES.length];
+          const featured = index === 0;
           return (
-            <motion.div key={subject.id} variants={staggerItem}>
+            <motion.div key={subject.id} variants={staggerItem} className={cn(featured && "col-span-2 md:col-span-2")}>
               <Link
                 to={`/search?subject_id=${subject.id}`}
-                className="group flex h-full flex-col justify-between rounded-2xl border border-line bg-canvas p-5 shadow-soft transition-all hover:-translate-y-0.5 hover:border-primary/40 hover:shadow-hover focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/30"
+                className={cn(
+                  "group flex h-full flex-col justify-between rounded-2xl border border-line bg-canvas shadow-soft transition-all hover:-translate-y-0.5 hover:border-primary/40 hover:shadow-hover focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/30",
+                  featured ? "p-6" : "p-5"
+                )}
               >
-                <span className="flex h-9 w-9 items-center justify-center rounded-xl bg-primary-subtle text-primary">
-                  <Icon className="h-4 w-4" />
+                <span
+                  className={cn(
+                    "flex items-center justify-center rounded-xl",
+                    tone,
+                    featured ? "h-11 w-11" : "h-9 w-9"
+                  )}
+                >
+                  <Icon className={featured ? "h-5 w-5" : "h-4 w-4"} />
                 </span>
-                <div className="mt-6">
-                  <p className="font-semibold text-navy">{subject.name}</p>
+                <div className={featured ? "mt-8" : "mt-6"}>
+                  <p className={cn("font-semibold text-navy", featured && "font-display text-lg")}>{subject.name}</p>
                   <p className="mt-0.5 flex items-center gap-1 text-xs font-medium text-primary opacity-0 transition-opacity group-hover:opacity-100">
                     Find tutors <ArrowRight className="h-3 w-3" />
                   </p>
@@ -106,7 +125,7 @@ export function FeaturedTutorsV3() {
       <div className="mt-8 flex justify-center">
         <Link
           to="/search"
-          className="inline-flex items-center gap-1.5 rounded-xl border border-line bg-canvas px-5 py-2.5 text-sm font-semibold text-navy shadow-soft transition-all hover:-translate-y-0.5 hover:border-primary/40 hover:shadow-hover focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/30"
+          className="inline-flex items-center gap-1.5 rounded-xl border border-line bg-canvas px-5 py-2.5 text-sm font-semibold text-navy shadow-soft transition-all hover:-translate-y-0.5 hover:border-primary/40 hover:shadow-hover focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/30 active:scale-[0.97]"
         >
           Browse all tutors <ArrowRight className="h-4 w-4" />
         </Link>
@@ -145,19 +164,22 @@ export function HowItWorksV3() {
           whileInView="show"
           viewport={{ once: true, margin: "-60px" }}
           variants={staggerContainer}
-          className="mt-10 grid gap-5 md:grid-cols-3"
+          className="relative mt-12 grid gap-5 md:grid-cols-3"
         >
+          {/* Connecting line — the numbered badges read as a timeline, not three loose cards. */}
+          <div
+            aria-hidden="true"
+            className="pointer-events-none absolute left-[16.5%] right-[16.5%] top-[22px] hidden h-px bg-line md:block"
+          />
           {STEPS.map((step, index) => (
-            <motion.div
-              key={step.title}
-              variants={staggerItem}
-              className="rounded-2xl border border-line bg-canvas p-6 shadow-soft"
-            >
-              <span className="flex h-9 w-9 items-center justify-center rounded-xl bg-primary text-sm font-bold text-white">
+            <motion.div key={step.title} variants={staggerItem} className="relative">
+              <span className="relative z-10 flex h-11 w-11 items-center justify-center rounded-full bg-primary text-sm font-bold text-white shadow-soft ring-4 ring-surface">
                 {index + 1}
               </span>
-              <h3 className="mt-5 font-display text-lg font-bold text-navy">{step.title}</h3>
-              <p className="mt-2 text-sm leading-relaxed text-slate-600">{step.body}</p>
+              <div className="mt-5 rounded-2xl border border-line bg-canvas p-6 shadow-soft transition-all hover:-translate-y-0.5 hover:shadow-hover">
+                <h3 className="font-display text-lg font-bold text-navy">{step.title}</h3>
+                <p className="mt-2 text-sm leading-relaxed text-slate-600">{step.body}</p>
+              </div>
             </motion.div>
           ))}
         </motion.div>
@@ -180,25 +202,58 @@ const FEATURES = [
 export function WhyV3() {
   const still = prefersReducedMotion();
   return (
-    <section className="container-page py-20">
-      <SectionHeading eyebrow="Why TutorDoor" title="Built for trust, not just traffic" />
-      <motion.div
-        initial={still ? false : "hidden"}
-        whileInView="show"
-        viewport={{ once: true, margin: "-60px" }}
-        variants={staggerContainer}
-        className="mt-10 grid gap-5 sm:grid-cols-2 lg:grid-cols-4"
-      >
-        {FEATURES.map(({ icon: Icon, title, body }) => (
-          <motion.div key={title} variants={staggerItem}>
-            <span className="flex h-10 w-10 items-center justify-center rounded-xl bg-primary-subtle text-primary">
-              <Icon className="h-5 w-5" />
-            </span>
-            <h3 className="mt-4 font-semibold text-navy">{title}</h3>
-            <p className="mt-1.5 text-sm leading-relaxed text-slate-600">{body}</p>
+    <section className="py-20">
+      <div className="container-page">
+        <div className="grid gap-10 lg:grid-cols-[0.85fr_1.15fr] lg:items-center">
+          {/* Asymmetric split, not another grid-of-cards — the section makes a claim, then proves it. */}
+          <div>
+            <SectionHeading eyebrow="Why TutorDoor" title="Built for trust, not just traffic" />
+            <motion.div
+              initial={still ? false : "hidden"}
+              whileInView="show"
+              viewport={{ once: true, margin: "-60px" }}
+              variants={fadeRise}
+              transition={motionSafe({ duration: DURATION.slow, delay: 0.1, ease: EASE_OUT })}
+            >
+              <p className="mt-4 max-w-sm text-sm leading-relaxed text-slate-600">
+                Every line below is something the platform actually enforces — not a promise.
+              </p>
+              <div className="mt-8 flex gap-8 border-t border-line pt-6">
+                <div>
+                  <p className="font-display text-3xl font-extrabold tracking-tight text-navy">100%</p>
+                  <p className="mt-1 text-xs text-slate-500">Tutors verified by review</p>
+                </div>
+                <div>
+                  <p className="font-display text-3xl font-extrabold tracking-tight text-navy">0</p>
+                  <p className="mt-1 text-xs text-slate-500">Hidden fees, ever</p>
+                </div>
+              </div>
+            </motion.div>
+          </div>
+
+          <motion.div
+            initial={still ? false : "hidden"}
+            whileInView="show"
+            viewport={{ once: true, margin: "-60px" }}
+            variants={staggerContainer}
+            className="grid gap-4 sm:grid-cols-2"
+          >
+            {FEATURES.map(({ icon: Icon, title, body }) => (
+              <motion.div
+                key={title}
+                variants={staggerItem}
+                className="rounded-2xl border border-line bg-canvas p-5 shadow-soft transition-all hover:-translate-y-0.5 hover:shadow-hover"
+              >
+                <span className="flex h-10 w-10 items-center justify-center rounded-xl bg-primary-subtle text-primary">
+                  <Icon className="h-5 w-5" />
+                </span>
+                <h3 className="mt-4 font-semibold text-navy">{title}</h3>
+                <p className="mt-1.5 text-sm leading-relaxed text-slate-600">{body}</p>
+              </motion.div>
+            ))}
           </motion.div>
-        ))}
-      </motion.div>
+        </div>
+      </div>
     </section>
   );
 }
@@ -262,24 +317,29 @@ export function CtaV3() {
         viewport={{ once: true, margin: "-60px" }}
         variants={fadeRise}
         transition={motionSafe({ duration: DURATION.slow, ease: EASE_OUT })}
-        className="rounded-3xl bg-primary px-8 py-14 text-center shadow-hover sm:px-14"
+        className="relative overflow-hidden rounded-3xl bg-primary px-8 py-14 shadow-hover sm:px-14"
       >
-        <h2 className="mx-auto max-w-2xl font-display text-3xl font-bold tracking-tight text-white sm:text-4xl">
-          Start learning with a tutor who's actually available.
-        </h2>
-        <div className="mt-8 flex flex-wrap items-center justify-center gap-3">
-          <Link
-            to="/register"
-            className="rounded-xl bg-canvas px-6 py-3 font-semibold text-primary shadow-soft transition-all hover:-translate-y-0.5 hover:shadow-hover focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/60"
-          >
-            Create a free account
-          </Link>
-          <Link
-            to="/search"
-            className="rounded-xl px-6 py-3 font-semibold text-white/90 transition-colors hover:bg-white/10 hover:text-white"
-          >
-            Browse tutors →
-          </Link>
+        {/* Soft internal light — the same bg-white/10 + bg-secondary blur-3xl blooms BrandMesh already uses. */}
+        <div aria-hidden="true" className="pointer-events-none absolute -right-20 -top-20 h-72 w-72 rounded-full bg-white/10 blur-3xl" />
+        <div aria-hidden="true" className="pointer-events-none absolute -bottom-24 -left-10 h-64 w-64 rounded-full bg-secondary/20 blur-3xl" />
+        <div className="relative flex flex-col items-start gap-8 lg:flex-row lg:items-center lg:justify-between">
+          <h2 className="max-w-xl font-display text-3xl font-bold tracking-tight text-white sm:text-4xl">
+            Start learning with a tutor who's actually available.
+          </h2>
+          <div className="flex shrink-0 flex-wrap items-center gap-3">
+            <Link
+              to="/register"
+              className="rounded-xl bg-canvas px-6 py-3 font-semibold text-primary shadow-soft transition-all hover:-translate-y-0.5 hover:shadow-hover focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/60 active:scale-[0.97]"
+            >
+              Create a free account
+            </Link>
+            <Link
+              to="/search"
+              className="rounded-xl px-6 py-3 font-semibold text-white/90 transition-all hover:bg-white/10 hover:text-white active:scale-[0.97]"
+            >
+              Browse tutors →
+            </Link>
+          </div>
         </div>
       </motion.div>
     </section>
@@ -294,21 +354,25 @@ const FOOTER_GROUPS = [
 
 export function FooterV3() {
   return (
-    <footer className="border-t border-line bg-canvas">
-      <div className="container-page grid gap-10 py-12 md:grid-cols-[1.4fr_repeat(3,1fr)]">
+    <footer className="relative border-t border-line bg-canvas">
+      <div
+        aria-hidden="true"
+        className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-primary/30 to-transparent"
+      />
+      <div className="container-page grid gap-12 py-14 md:grid-cols-[1.4fr_repeat(3,1fr)]">
         <div>
           <Logo />
-          <p className="mt-3 max-w-xs text-sm leading-relaxed text-slate-500">
+          <p className="mt-4 max-w-xs text-sm leading-relaxed text-slate-500">
             Verified tutors, real availability, and payments you can audit — for every learner.
           </p>
         </div>
         {FOOTER_GROUPS.map((group) => (
           <nav key={group.heading} aria-label={group.heading}>
-            <p className="text-sm font-semibold text-navy">{group.heading}</p>
-            <ul className="mt-3 space-y-2">
+            <p className="text-xs font-bold uppercase tracking-[0.12em] text-slate-400">{group.heading}</p>
+            <ul className="mt-4 space-y-2.5">
               {group.links.map(([label, to]) => (
                 <li key={to}>
-                  <Link to={to} className="text-sm text-slate-500 transition-colors hover:text-navy">
+                  <Link to={to} className="text-sm text-slate-600 transition-colors hover:text-primary">
                     {label}
                   </Link>
                 </li>
@@ -317,8 +381,13 @@ export function FooterV3() {
           </nav>
         ))}
       </div>
-      <div className="border-t border-line py-5 text-center text-xs text-slate-400">
-        © {new Date().getFullYear()} TutorDoor. All rights reserved.
+      <div className="border-t border-line py-5">
+        <div className="container-page flex flex-col items-center justify-between gap-2 text-xs text-slate-400 sm:flex-row">
+          <p>© {new Date().getFullYear()} TutorDoor. All rights reserved.</p>
+          <p className="flex items-center gap-1.5">
+            <ShieldCheck className="h-3.5 w-3.5" /> Verified tutors · Secure payments
+          </p>
+        </div>
       </div>
     </footer>
   );

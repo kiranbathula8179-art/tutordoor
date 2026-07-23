@@ -56,12 +56,14 @@ export function AdvancedSearchV3() {
         viewport={{ once: true, margin: "-40px" }}
         transition={motionSafe({ duration: DURATION.slow, ease: EASE_OUT })}
       >
-        <Card className="rounded-3xl shadow-dialog">
+        <Card className="relative overflow-hidden rounded-3xl shadow-dialog">
+          {/* A single confident accent edge — the search card reads as the product's centerpiece, not another panel. */}
+          <div aria-hidden="true" className="absolute inset-x-0 top-0 h-1.5 bg-gradient-to-r from-primary via-primary-light to-secondary" />
           <CardBody className="p-6 sm:p-8">
-            <div className="flex items-center gap-2 text-sm font-semibold text-primary">
+            <div className="flex items-center gap-2 text-sm font-bold uppercase tracking-[0.1em] text-primary">
               <SlidersHorizontal className="h-4 w-4" /> Advanced search
             </div>
-            <h2 className="mt-1.5 font-display text-xl font-bold text-navy sm:text-2xl">{headline}</h2>
+            <h2 className="mt-2 font-display text-2xl font-bold tracking-tight text-navy sm:text-[1.75rem]">{headline}</h2>
 
             <form onSubmit={onSubmit} className="mt-6 space-y-4">
               <Input
