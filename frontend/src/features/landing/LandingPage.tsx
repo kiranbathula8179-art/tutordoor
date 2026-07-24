@@ -2,11 +2,13 @@ import { AdvancedSearchV3 } from "@/features/landing/v3/AdvancedSearchV3";
 import { AnnouncementBar, HeroV3, NavV3 } from "@/features/landing/v3/HeroV3";
 import { CategoriesV3, CtaV3, FaqV3, FeaturedTutorsV3, FooterV3, HowItWorksV3, WhyV3 } from "@/features/landing/v3/SectionsV3";
 import { TestimonialsV3 } from "@/features/landing/v3/TestimonialsV3";
+import { PublicAtmosphere } from "@/components/ui/Surface";
 
 /**
- * Landing — V3 "Bright" (DESIGN_V3.md), now on the same premium foundation
- * (canonical motion tokens, Surface depth layers) as every other elevated
- * page in the app.
+ * Landing — V7 "One World" (DESIGN_V3.md). Sits on the shared
+ * `PublicAtmosphere` background system (mounted here and in
+ * `PublicLayout.tsx`) instead of its own page-local wash, so Landing and
+ * every other public page read as one continuous world.
  *
  * Composition: announcement → sticky nav → hero (real tutors as the visual,
  * quick search) → advanced search (full real filter surface, deep-links into
@@ -14,11 +16,13 @@ import { TestimonialsV3 } from "@/features/landing/v3/TestimonialsV3";
  * testimonials (real reviews, sourced from the public reviews endpoint — hides
  * gracefully if none exist yet) → FAQ → CTA → footer.
  *
- * The v2 Observatory landing files remain on disk until the cleanup pass.
+ * Individual sections below still carry their own opaque fills pending V7
+ * Milestone 2, which reconciles them onto translucent surfaces.
  */
 export function LandingPage() {
   return (
-    <div className="min-h-screen bg-ice text-navy antialiased">
+    <div className="relative min-h-screen text-navy antialiased">
+      <PublicAtmosphere />
       <AnnouncementBar />
       <NavV3 />
       <main>

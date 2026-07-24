@@ -70,6 +70,10 @@ export default {
         /* ---- V6 "The Journey" hero (see DESIGN_V3.md V6 addendum) — landing hero only ---- */
         forest: { subtle: "#EAF0EA", DEFAULT: "#2F5233", dark: "#1F3A23" },
         sage: "#8BA888",
+        /* ---- V7 "One World" (see DESIGN_V3.md V7 addendum) — whole public surface ---- */
+        linen: "#F6F1E7",
+        sand: "#EDE4D3",
+        clay: "#B5714B",
       },
       fontFamily: {
         /* V3 (DESIGN_V3.md): Jakarta for display, Inter for everything else.

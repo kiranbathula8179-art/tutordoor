@@ -1,5 +1,7 @@
+import { motion, useScroll, useTransform } from "framer-motion";
 import { forwardRef, type HTMLAttributes } from "react";
 
+import { prefersReducedMotion } from "@/lib/motion/quality";
 import { cn } from "@/lib/utils";
 
 /**
@@ -129,7 +131,7 @@ GlassPanel.displayName = "GlassPanel";
  * section rather than a flat fill. Each landing section gets its own tone
  * combination instead of alternating solid backgrounds.
  */
-type AmbientTone = "blue" | "cyan" | "sky" | "lavender" | "indigo";
+type AmbientTone = "blue" | "cyan" | "sky" | "lavender" | "indigo" | "sand" | "clay" | "forest" | "gold";
 
 const AMBIENT_TONE_CLASSES: Record<AmbientTone, string> = {
   blue: "bg-primary/[0.08]",
@@ -137,6 +139,11 @@ const AMBIENT_TONE_CLASSES: Record<AmbientTone, string> = {
   sky: "bg-sky-400/[0.09]",
   lavender: "bg-violet-300/[0.08]",
   indigo: "bg-indigo-400/[0.07]",
+  /* ---- V7 "One World" warm tones (DESIGN_V3.md V7 addendum) ---- */
+  sand: "bg-sand/[0.35]",
+  clay: "bg-clay/[0.08]",
+  forest: "bg-forest/[0.08]",
+  gold: "bg-gold-star/[0.09]",
 };
 
 export function AmbientWash({
@@ -203,5 +210,92 @@ export function BrandMesh({ className }: { className?: string }) {
       <div className="absolute -bottom-24 -left-10 h-72 w-72 rounded-full bg-secondary/30 blur-3xl" />
       <NoiseTexture opacity={0.05} />
     </div>
+  );
+}
+
+/**
+ * PublicAtmosphere — V7 "One World" (DESIGN_V3.md V7 addendum). The
+ * background system for the entire public surface (Landing, global public
+ * nav/footer, Search, Tutor Profile, Courses, About/Trust/Support/Legal,
+ * public auth). One fixed, page-spanning layer of warm multi-layer radial
+ * gradient blooms over a `linen` base plus a soft grain texture — mounted
+ * once per page (`LandingPage.tsx`, `PublicLayout.tsx`) so the whole page
+ * sits on a continuous atmosphere instead of resetting to flat white
+ * between sections.
+ *
+ * Blooms drift slowly on scroll (never static) via Framer Motion's
+ * `useScroll`/`useTransform`, gated by `prefersReducedMotion()` — a fully
+ * static composition when reduced motion is on, matching every other
+ * scroll/loop animation in this codebase.
+ *
+ * Out of scope: authenticated portals (Student/Tutor/Parent/Institute/
+ * Admin) keep their existing `MeshBackground`/`canvas` treatment — this
+ * primitive is public-surface only (V8 will decide the portal treatment
+ * later, not this).
+ */
+export function PublicAtmosphere({ className }: { className?: string }) {
+  const still = prefersReducedMotion();
+  const { scrollYProgress } = useScroll();
+  const driftDown = useTransform(scrollYProgress, [0, 1], [0, 140]);
+  const driftUp = useTransform(scrollYProgress, [0, 1], [0, -110]);
+  const driftSide = useTransform(scrollYProgress, [0, 1], [0, 90]);
+
+  return (
+    <div aria-hidden="true" className={cn("pointer-events-none fixed inset-0 -z-10 overflow-hidden bg-linen", className)}>
+      <motion.div
+        className="absolute -left-40 -top-20 h-[38rem] w-[38rem] rounded-full bg-sage/[0.16] blur-[220px]"
+        style={still ? undefined : { y: driftDown }}
+      />
+      <motion.div
+        className="absolute -right-32 top-[18%] h-[34rem] w-[34rem] rounded-full bg-gold-star/[0.14] blur-[220px]"
+        style={still ? undefined : { y: driftUp }}
+      />
+      <motion.div
+        className="absolute left-1/4 top-[52%] h-[30rem] w-[30rem] rounded-full bg-clay/[0.09] blur-[220px]"
+        style={still ? undefined : { x: driftSide }}
+      />
+      <div className="absolute -right-40 bottom-[-8%] h-[36rem] w-[36rem] rounded-full bg-forest/[0.10] blur-[220px]" />
+      <NoiseTexture opacity={0.03} />
+    </div>
+  );
+}
+
+const ORGANIC_EDGE_FILL: Record<"linen" | "sand" | "canvas", string> = {
+  linen: "fill-linen",
+  sand: "fill-sand",
+  canvas: "fill-canvas",
+};
+
+/**
+ * OrganicEdge — V7 "One World" (DESIGN_V3.md V7 addendum). A reusable,
+ * hand-authored SVG wave divider for blending a raised content band into
+ * the shared `PublicAtmosphere` instead of cutting it off on a hard
+ * rectangular edge. Purely decorative — `aria-hidden`, non-interactive.
+ */
+export function OrganicEdge({
+  className,
+  position = "bottom",
+  tone = "linen",
+}: {
+  className?: string;
+  position?: "top" | "bottom";
+  tone?: "linen" | "sand" | "canvas";
+}) {
+  return (
+    <svg
+      aria-hidden="true"
+      viewBox="0 0 1440 120"
+      preserveAspectRatio="none"
+      className={cn(
+        "pointer-events-none absolute inset-x-0 h-20 w-full",
+        position === "top" ? "top-0 -translate-y-[calc(100%-1px)] rotate-180" : "bottom-0 translate-y-[calc(100%-1px)]",
+        className
+      )}
+    >
+      <path
+        d="M0,64 C240,110 480,10 720,48 C960,86 1200,20 1440,56 L1440,120 L0,120 Z"
+        className={ORGANIC_EDGE_FILL[tone]}
+      />
+    </svg>
   );
 }

@@ -142,6 +142,11 @@ which stay on the flatness sweep this document has always specified.
 
 ## V5 — "Ambient Light" (landing page only, supersedes V4's scope on that one page)
 
+> **Status: superseded by V7 below** for the whole public surface (V5 was
+> landing-only; V7 extends the idea app-wide and consolidates the palette).
+> Kept here for history until Milestone 2 of the V7 rollout migrates
+> landing's code off this system.
+
 Explicit, repeated direction from the project owner: the landing page's
 background moves from a flat warm canvas to a layered, cool-toned ambient
 light system — soft blue/cyan/lavender/indigo blooms behind every section,
@@ -207,6 +212,10 @@ elsewhere in the app silently shifted tone.
 
 ## V6 — "The Journey" (landing hero only, scoped narrower than V5)
 
+> **Status: superseded by V7 below** — the `FlightTrail` motif and dawn
+> palette are re-tuned into V7's unified system in Milestone 2 rather than
+> discarded. Kept here for history.
+
 Explicit direction from the project owner requested a much larger,
 cinematic 12-chapter reinterpretation of the whole landing page (a
 photorealistic 3D aircraft-and-book concept, Three.js/React Three Fiber,
@@ -252,3 +261,111 @@ documented above. The real tutor preview cards, search form, and trust
 chips in the hero keep their existing data, copy, and behavior — only the
 surrounding atmosphere and headline typography changed. No fabricated
 statistics, no new heavy dependencies, no 3D.
+
+## V7 — "One World" (public experience: Landing, global public nav/footer,
+Search, Tutor Profile, Courses, About/Trust/Support/Legal, public auth)
+
+Explicit, written project-direction change: the entire public-facing
+surface should feel like one continuous, atmospheric world rather than a
+stack of white SaaS sections — while staying honestly buildable in React
++ Tailwind + Framer Motion (no 3D, no fabricated features/stats, brand
+blue preserved as the interactive identity). Authenticated portals
+(Student/Tutor/Parent/Institute/Admin) are **explicitly out of scope**,
+deferred to a future V8 — shared primitives those portals depend on keep
+their existing defaults untouched.
+
+### Design Principles
+
+**Background philosophy.** The public app is one continuous atmosphere,
+not a stack of sectioned pages. A single fixed `PublicAtmosphere` layer
+(`components/ui/Surface.tsx`) mounts once per page (`LandingPage.tsx`,
+`PublicLayout.tsx`) and sits behind everything; individual sections stop
+painting their own opaque background fills and instead float translucent
+surfaces over the shared atmosphere. Nothing resets to flat white between
+sections or between pages — a visitor moving from Landing to Search to a
+Tutor Profile stays inside the same visual world throughout.
+
+**Color system.** Brand blue (`primary`) is preserved exactly as-is, but
+its role narrows to interactive elements only — buttons, links, focus
+rings, active states — never a background fill. The atmosphere itself
+runs on warm editorial neutrals and botanical accents: new `linen` (warm
+ivory base) and `sand` (deeper warm neutral) tokens replace `canvas`/white
+as the public surface's dominant tone; new `clay` (muted terracotta) plus
+the already-existing `forest`/`sage` (botanical green, from V6) and
+`gold-star` (warm gold, pre-existing) tokens supply sparing, non-
+background accent color. `secondary`/`accent`/`navy`/`slate`/semantic
+tokens are unchanged. Every token added is scoped to one job (background
+base, background variant, or sparing accent) and reused across every
+public page rather than invented per-page.
+
+**Motion principles.** The atmosphere itself evolves — bloom positions
+drift and the overall tone slowly warms as the page scrolls (Framer
+Motion `useScroll`/`useTransform`), so the background is never static,
+but the effect stays subliminal: slow, low-amplitude, never something a
+visitor consciously clocks as "an animation." Content motion (entrances,
+hovers) keeps using the canonical `lib/motion/tokens.ts` system
+(`DURATION`, `EASE_OUT`, `riseInit`, `staggerContainer`/`staggerItem`).
+Every scroll-linked or looping animation is gated by
+`prefersReducedMotion()` with a fully static fallback — no exceptions.
+
+**Component language.** Shared primitives (`Button`, `Card`, `Input`,
+etc. in `components/ui/*`) keep their existing default exports untouched
+— dashboards depend on them and are out of scope until V8. Public pages
+layer richer surfaces on top via explicit `className` overrides
+(translucent `bg-linen/70`, `border-sand` borders) rather than changing
+shared defaults — additive, not invasive, the same discipline V5 used.
+
+**Spacing.** Unchanged: 8pt grid, existing radius scale (8–24px,
+`rounded-xl` buttons).
+
+**Accessibility.** WCAG AA contrast is verified against the new warm base
+tones the same way it was for V5's dark footer (manual luminance
+calculation, then live computed-style confirmation) — translucent
+surfaces over a moving background need this checked, not assumed. Every
+scroll/loop animation respects `prefers-reduced-motion`. Focus-visible
+rings, 44px touch targets, and semantic HTML are unchanged requirements.
+
+**Responsive behavior.** `PublicAtmosphere`'s gradient blooms are
+unclipped, oversized, and blurred enough that breakpoint changes don't
+require separate mobile/desktop compositions — verified at
+390/834/1440px for zero horizontal overflow, the same check every other
+primitive this session has gone through.
+
+### New tokens (`tailwind.config.ts`)
+- `linen` (`#F6F1E7`) — warm ivory background base for public pages.
+- `sand` (`#EDE4D3`) — deeper warm neutral for section variation, borders,
+  dividers.
+- `clay` (`#B5714B`) — muted terracotta/copper accent, sparing decorative
+  use only, never a background fill.
+- Reused, not reinvented: `forest`/`sage` (V6) and `gold-star`
+  (pre-existing) cover the rest of the botanical/warm-accent need.
+
+### New primitives (`components/ui/Surface.tsx`)
+- **`PublicAtmosphere`** — the background system itself: multi-layer
+  radial gradient blooms (`sage`/`gold-star`/`clay`/`forest` at 8–16%
+  opacity, 200–220px blur) over a `linen` base, plus the existing
+  `NoiseTexture` grain at 3% opacity. `fixed inset-0 -z-10`, mounted once
+  per page. Blooms drift via scroll-linked `y` transforms, static under
+  reduced motion.
+- **`OrganicEdge`** — a reusable hand-authored SVG wave divider
+  (`top`/`bottom` position, tone-selectable fill) for blending a raised
+  content band into the shared atmosphere instead of a hard rectangular
+  cut.
+- **`AmbientWash`** — tone union extended from `blue | cyan | sky |
+  lavender | indigo` to also include `sand | clay | forest | gold`, so
+  existing call sites can blend warm tones in without a new primitive.
+
+### Rollout ledger
+- ✅ **Milestone 1** — this section, new tokens, `PublicAtmosphere` /
+  `OrganicEdge` / extended `AmbientWash`, mounted in `LandingPage.tsx` and
+  `PublicLayout.tsx` (root backgrounds made transparent so the shared
+  atmosphere shows through immediately; individual page sections still
+  have their own opaque fills at this point — those open up below).
+- ⬜ Milestone 2 — Landing (reconcile V5/V6 onto V7, open sections to
+  translucent surfaces).
+- ⬜ Milestone 3 — global public nav/footer.
+- ⬜ Milestone 4 — auth brand panel.
+- ⬜ Milestone 5 — Search + Tutor Profile.
+- ⬜ Milestone 6 — Courses (list + detail).
+- ⬜ Milestone 7 — static/legal pages (About, Trust & Safety, Support,
+  Terms, Privacy, Refunds).
