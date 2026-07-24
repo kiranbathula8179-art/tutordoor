@@ -25,6 +25,7 @@ dist/
 build/
 .vite/
 *.local
+tsconfig.tsbuildinfo
 
 # --- Editor / OS ---
 .vscode/
