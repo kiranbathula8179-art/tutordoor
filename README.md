@@ -4,6 +4,8 @@
 
 Built with Django REST Framework + PostgreSQL + Redis/Celery/Channels on the backend and React + TypeScript + Tailwind (Vite) on the frontend, shipped as Docker services behind nginx.
 
+<!-- CI trigger check: 2026-07-24 -->
+
 > Design identity: the UI is built around *the tools of tutoring* — chalkboard greens, notebook paper, and a hand-drawn red-pen circle as the signature motif. Rationale in [`frontend/src/styles/DESIGN.md`](frontend/src/styles/DESIGN.md).
 
 ---
