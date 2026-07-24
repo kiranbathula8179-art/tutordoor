@@ -563,6 +563,31 @@ replaced wherever a milestone touches that page.
   (`ParentDashboardPage`, `ParentChildrenPage`, `ParentBookingsPage`,
   `ParentProgressPage`) gained the same `staggerContainer`/`staggerItem`
   entrance now consistent across every "my X" list in the app.
-- ⬜ Milestone 6 — Institute portal.
+- ✅ **Milestone 6** — Institute portal. `InstituteDashboardPage` was
+  already honest about its real data gap (one real stat — institute
+  rating — plus two action tiles, no invented numbers) and just needed
+  the same `rise()` stagger the other four portal homes already have, for
+  full cross-portal consistency. `InstituteTutorsPage` and
+  `InstituteStudentsPage` both had the raw-dashed-div empty state instead
+  of `Card`+`EmptyState` — fixed to match every other portal's empty
+  state. `InstituteStudentsPage`'s enrolled-student list was already
+  `Card`+`divide-y` — left untouched, same "already compliant" precedent
+  as `ParentPaymentsPage`. `InstituteProfileSettingsPage` gained the
+  standard entrance fade every other settings/detail page has.
+  `InstituteProfileSettingsPage` also needed zero real-data compromises —
+  verified live against the seeded institute account
+  (`contact@brightminds.test`, BrightMinds Learning Center) with a real
+  tutor on the roster and a real enrolled student.
+  A real bug was found and fixed during verification: the tutor-roster
+  grid overflowed horizontally at 390px because the grid-item wrapper
+  lacked `min-w-0`, so a long, non-wrapping role title
+  ("Senior Faculty – Mathematics") forced the CSS grid track wider than
+  its container despite the inner text already being `truncate`d — grid
+  track auto-sizing computes a min-content contribution from the whole
+  item subtree unless `min-w-0` breaks that chain. Fixed by adding
+  `min-w-0` to the grid item; the other `Card`+grid pages
+  (`ParentChildrenPage`, `StudentCoursesPage`, `TutorCoursesPage`) were
+  checked and don't hit this because their content is shorter — worth
+  keeping in mind if a future grid item ever holds long unwrapped text.
 - ⬜ Milestone 7 — Admin (Dashboard, Reports, Verifications).
 - ⬜ Milestone 8 — Admin (data-table-heavy pages — restrained pass only).

@@ -110,11 +110,13 @@ export function InstituteStudentsPage() {
           />
         </Card>
       ) : enrollments.length === 0 ? (
-        <div className="mt-6 flex flex-col items-center gap-3 rounded-card border border-dashed border-line py-16 text-center">
-          <Mail className="h-8 w-8 text-slate-400" />
-          <p className="font-medium text-navy">No students enrolled yet</p>
-          <p className="text-sm text-slate-500">Enroll students by the email on their TutorDoor account.</p>
-        </div>
+        <Card className="mt-6">
+          <EmptyState
+            icon={Mail}
+            title="No students enrolled yet"
+            description="Enroll students by the email on their TutorDoor account."
+          />
+        </Card>
       ) : (
         <Card className="mt-6">
           <div className="divide-y divide-line">

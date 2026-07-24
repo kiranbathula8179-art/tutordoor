@@ -1,5 +1,6 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { isAxiosError } from "axios";
+import { motion } from "framer-motion";
 import { AlertCircle, Save } from "lucide-react";
 import { useEffect, useState } from "react";
 import toast from "react-hot-toast";
@@ -18,6 +19,7 @@ import {
   updateMyInstituteProfile,
   type InstituteProfilePayload,
 } from "@/features/institute/api";
+import { DURATION, EASE_OUT, riseInit } from "@/lib/motion/tokens";
 import { getErrorMessage } from "@/lib/utils";
 
 const INITIAL_FORM: InstituteProfilePayload = {
@@ -115,7 +117,12 @@ export function InstituteProfileSettingsPage() {
   }
 
   return (
-    <div className="mx-auto max-w-3xl">
+    <motion.div
+      initial={riseInit(16)}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: DURATION.slow, ease: EASE_OUT }}
+      className="mx-auto max-w-3xl"
+    >
       <PageHeader
         title={noProfile ? "Set up your institute" : "Institute profile"}
         description={
@@ -193,6 +200,6 @@ export function InstituteProfileSettingsPage() {
           <Save className="h-4 w-4" /> {noProfile ? "Create profile" : "Save changes"}
         </Button>
       </div>
-    </div>
+    </motion.div>
   );
 }

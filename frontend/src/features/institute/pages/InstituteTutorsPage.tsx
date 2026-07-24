@@ -1,6 +1,7 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { isAxiosError } from "axios";
-import { AlertCircle, GraduationCap, Search, UserPlus } from "lucide-react";
+import { motion } from "framer-motion";
+import { AlertCircle, GraduationCap, Search, UserPlus, Users } from "lucide-react";
 import { useState } from "react";
 import { Link } from "react-router-dom";
 import toast from "react-hot-toast";
@@ -18,11 +19,14 @@ import { SectionLoader } from "@/components/ui/Spinner";
 import { StarRating } from "@/components/shared/StarRating";
 import { getMyInstituteProfile, inviteInstituteTutor, listInstituteTutors } from "@/features/institute/api";
 import { searchTutors } from "@/features/tutors/api";
+import { staggerContainer, staggerItem } from "@/lib/motion/tokens";
+import { prefersReducedMotion } from "@/lib/motion/quality";
 import { cn, formatDate, getErrorMessage } from "@/lib/utils";
 import type { TutorProfile } from "@/types";
 
 export function InstituteTutorsPage() {
   const [inviteOpen, setInviteOpen] = useState(false);
+  const still = prefersReducedMotion();
 
   const {
     isError: profileFetchFailed,
@@ -100,33 +104,43 @@ export function InstituteTutorsPage() {
           />
         </Card>
       ) : links.length === 0 ? (
-        <div className="mt-6 rounded-card border border-dashed border-line py-16 text-center">
-          <p className="font-medium text-navy">No tutors on the roster yet</p>
-          <p className="mt-1 text-sm text-slate-500">Invitations appear here as pending until the tutor accepts.</p>
-        </div>
+        <Card className="mt-6">
+          <EmptyState
+            icon={Users}
+            title="No tutors on the roster yet"
+            description="Invitations appear here as pending until the tutor accepts."
+          />
+        </Card>
       ) : (
-        <div className="mt-6 grid gap-4 md:grid-cols-2">
+        <motion.div
+          initial={still ? false : "hidden"}
+          animate="show"
+          variants={staggerContainer}
+          className="mt-6 grid gap-4 md:grid-cols-2"
+        >
           {links.map((link) => (
-            <Card key={link.id}>
-              <CardBody className="flex items-center gap-4">
-                <Avatar
-                  src={link.tutor.user.avatar}
-                  firstName={link.tutor.user.first_name}
-                  lastName={link.tutor.user.last_name}
-                  size="lg"
-                />
-                <div className="min-w-0 flex-1">
-                  <p className="font-semibold text-navy">{link.tutor.user.full_name}</p>
-                  <p className="truncate text-sm text-slate-500">{link.role_title || link.tutor.headline || "Tutor"}</p>
-                  {link.joined_at && (
-                    <p className="mt-0.5 text-xs text-slate-400">Joined {formatDate(link.joined_at)}</p>
-                  )}
-                </div>
-                <Badge tone={statusToTone(link.status)}>{link.status}</Badge>
-              </CardBody>
-            </Card>
+            <motion.div key={link.id} variants={staggerItem} className="min-w-0">
+              <Card>
+                <CardBody className="flex items-center gap-4">
+                  <Avatar
+                    src={link.tutor.user.avatar}
+                    firstName={link.tutor.user.first_name}
+                    lastName={link.tutor.user.last_name}
+                    size="lg"
+                  />
+                  <div className="min-w-0 flex-1">
+                    <p className="font-semibold text-navy">{link.tutor.user.full_name}</p>
+                    <p className="truncate text-sm text-slate-500">{link.role_title || link.tutor.headline || "Tutor"}</p>
+                    {link.joined_at && (
+                      <p className="mt-0.5 text-xs text-slate-400">Joined {formatDate(link.joined_at)}</p>
+                    )}
+                  </div>
+                  <Badge tone={statusToTone(link.status)}>{link.status}</Badge>
+                </CardBody>
+              </Card>
+            </motion.div>
           ))}
-        </div>
+        </motion.div>
       )}
 
       <InviteTutorModal isOpen={inviteOpen} onClose={() => setInviteOpen(false)} />

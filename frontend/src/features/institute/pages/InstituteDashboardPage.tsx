@@ -1,5 +1,6 @@
 import { useQuery } from "@tanstack/react-query";
 import { isAxiosError } from "axios";
+import { motion } from "framer-motion";
 import { ArrowRight, GraduationCap, Star, Users } from "lucide-react";
 import { Link } from "react-router-dom";
 
@@ -9,6 +10,7 @@ import { StatCard } from "@/components/shared/StatCard";
 import { Card } from "@/components/ui/Card";
 import { SectionLoader } from "@/components/ui/Spinner";
 import { getMyInstituteProfile } from "@/features/institute/api";
+import { DURATION, EASE_OUT, motionSafe, riseInit } from "@/lib/motion/tokens";
 import { useAuthStore } from "@/store/auth-store";
 
 function ActionTile({ icon: Icon, kicker, title, to }: { icon: typeof Users; kicker: string; title: string; to: string }) {
@@ -45,6 +47,12 @@ export function InstituteDashboardPage() {
   const noProfile = isError && isAxiosError(error) && error.response?.status === 404;
   const hasError = isError && !noProfile;
 
+  const rise = (delay: number) => ({
+    initial: riseInit(18),
+    animate: { opacity: 1, y: 0 },
+    transition: motionSafe({ duration: DURATION.slow, delay, ease: EASE_OUT }),
+  });
+
   if (isLoading) return <SectionLoader />;
 
   if (noProfile || hasError || !institute) {
@@ -72,7 +80,7 @@ export function InstituteDashboardPage() {
         }
       />
 
-      <div className="grid gap-4 sm:grid-cols-3">
+      <motion.div {...rise(0.08)} className="grid gap-4 sm:grid-cols-3">
         <StatCard
           icon={Star}
           tint="accent"
@@ -82,7 +90,7 @@ export function InstituteDashboardPage() {
         />
         <ActionTile icon={Users} kicker="Manage your" title="Tutor roster" to="/institute/tutors" />
         <ActionTile icon={GraduationCap} kicker="Enroll and track" title="Students" to="/institute/students" />
-      </div>
+      </motion.div>
     </div>
   );
 }
