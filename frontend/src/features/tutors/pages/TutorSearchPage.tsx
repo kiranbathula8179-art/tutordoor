@@ -10,6 +10,7 @@ import { EmptyState } from "@/components/ui/EmptyState";
 import { Input } from "@/components/ui/Input";
 import { Select } from "@/components/ui/Select";
 import { Skeleton } from "@/components/ui/Skeleton";
+import { AmbientWash } from "@/components/ui/Surface";
 import { Paginator } from "@/features/admin/components/Paginator";
 import { getSubjects, searchTutors } from "@/features/tutors/api";
 import { TutorResultCard } from "@/features/tutors/components/TutorResultCard";
@@ -17,11 +18,15 @@ import { prefersReducedMotion } from "@/lib/motion/quality";
 import { cn } from "@/lib/utils";
 
 /**
- * Tutor Search — V3 premium redesign. Gradient hero, quick-filter chips,
- * sticky filter card, enriched result cards, skeletons, empty state, and
- * pagination. The URL param contract is byte-identical across four
- * redesigns now: q, subject_id, teaching_mode, min_price, max_price,
- * min_rating (+ page) — every deep link keeps working.
+ * Tutor Search — V7 "One World" (DESIGN_V3.md V7 addendum). TutorDoor's
+ * highest-traffic workflow: readability wins over visual effects here.
+ * Sits on the shared `PublicAtmosphere` (mounted once by `PublicLayout`)
+ * instead of its own opaque hero fill; result cards stay solid/light —
+ * deliberately NOT translucent like Landing's marketing cards — so
+ * scanning a dense results grid stays effortless. The URL param contract
+ * is byte-identical across five redesigns now: q, subject_id,
+ * teaching_mode, min_price, max_price, min_rating (+ page) — every deep
+ * link keeps working.
  */
 
 const QUICK_FILTERS = [
@@ -102,17 +107,10 @@ export function TutorSearchPage() {
   const isQuickActive = (key: string, value: string) => searchParams.get(key) === value;
 
   return (
-    <div className="bg-surface">
-      {/* ---------------------------------------------- Gradient hero */}
-      <section className="relative overflow-hidden border-b border-line">
-        <div
-          aria-hidden="true"
-          className="pointer-events-none absolute inset-0 bg-gradient-to-br from-primary via-primary-dark to-secondary"
-        />
-        <div
-          aria-hidden="true"
-          className="pointer-events-none absolute inset-0 bg-[radial-gradient(rgba(255,255,255,0.14)_1px,transparent_1px)] [background-size:24px_24px] opacity-40"
-        />
+    <div className="relative">
+      {/* ---------------------------------------------- Hero (on the shared atmosphere) */}
+      <section className="relative overflow-hidden border-b border-sand/50">
+        <AmbientWash tones={["gold", "sand"]} />
         <div className="container-page relative py-12 sm:py-16">
           <motion.div
             initial={still ? false : { opacity: 0, y: 16 }}
@@ -120,18 +118,18 @@ export function TutorSearchPage() {
             transition={{ duration: 0.45, ease: [0.16, 1, 0.3, 1] }}
             className="max-w-2xl"
           >
-            <span className="inline-flex items-center gap-1.5 rounded-full bg-white/15 px-3 py-1 text-xs font-semibold text-white backdrop-blur-sm">
+            <span className="inline-flex items-center gap-1.5 rounded-full bg-forest-subtle px-3 py-1 text-xs font-bold uppercase tracking-[0.14em] text-forest">
               <Sparkles className="h-3.5 w-3.5" /> Every tutor verified by review
             </span>
-            <h1 className="mt-4 font-display text-3xl font-extrabold tracking-tight text-white sm:text-4xl lg:text-5xl">
+            <h1 className="mt-4 font-display text-3xl font-extrabold tracking-tight text-navy sm:text-4xl lg:text-5xl">
               Find your perfect tutor
             </h1>
-            <p className="mt-3 max-w-lg text-blue-100">
+            <p className="mt-3 max-w-lg text-slate-600">
               Search by subject, price, and rating — then book straight into real availability.
             </p>
 
-            {/* Search bar */}
-            <div className="mt-6 flex items-center gap-2 rounded-2xl bg-canvas p-2 pl-4 shadow-dialog">
+            {/* Search bar — solid, not translucent: this is the primary input, contrast wins */}
+            <div className="mt-6 flex items-center gap-2 rounded-2xl border border-sand bg-white p-2 pl-4 shadow-dialog">
               <Search className="h-5 w-5 shrink-0 text-slate-400" />
               <input
                 value={queryInput}
@@ -154,10 +152,10 @@ export function TutorSearchPage() {
                     key={chip.label}
                     onClick={() => updateFilter(chip.key, active ? "" : chip.value)}
                     className={cn(
-                      "rounded-full px-3.5 py-1.5 text-sm font-medium backdrop-blur-sm transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/60",
+                      "rounded-full px-3.5 py-1.5 text-sm font-medium transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/30",
                       active
-                        ? "bg-canvas text-primary shadow-soft"
-                        : "bg-white/15 text-white hover:bg-white/25"
+                        ? "bg-primary text-white shadow-soft"
+                        : "border border-sand bg-white text-slate-700 hover:border-primary/30 hover:text-navy"
                     )}
                   >
                     {chip.label}
@@ -173,7 +171,7 @@ export function TutorSearchPage() {
         <div className="grid gap-6 lg:grid-cols-[280px_1fr]">
           {/* -------------------------------------------- Filter rail */}
           <aside className={cn("lg:block", filtersOpen ? "block" : "hidden")}>
-            <Card className="sticky top-24">
+            <Card className="sticky top-24 border-sand/70 bg-white shadow-soft">
               <CardBody className="p-5 pt-5">
                 <div className="mb-5 flex items-center justify-between">
                   <h2 className="font-display font-bold text-navy">Filters</h2>
@@ -274,7 +272,7 @@ export function TutorSearchPage() {
                 ))}
               </div>
             ) : isError ? (
-              <Card>
+              <Card className="border-sand/70 bg-white">
                 <EmptyState
                   icon={AlertCircle}
                   title="We couldn't load tutors"
@@ -295,7 +293,7 @@ export function TutorSearchPage() {
                       initial={still ? false : { opacity: 0, y: 16 }}
                       animate={{ opacity: 1, y: 0 }}
                       transition={{ duration: 0.35, delay: still ? 0 : Math.min(index, 8) * 0.04, ease: [0.16, 1, 0.3, 1] }}
-                      className="h-full"
+                      className="h-full min-w-0"
                     >
                       <TutorResultCard tutor={tutor} />
                     </motion.div>
@@ -309,7 +307,7 @@ export function TutorSearchPage() {
                 />
               </>
             ) : (
-              <Card>
+              <Card className="border-sand/70 bg-white">
                 <EmptyState
                   icon={SearchX}
                   title="No tutors match these filters"

@@ -24,7 +24,7 @@ import { Button } from "@/components/ui/Button";
 import { Card, CardBody } from "@/components/ui/Card";
 import { EmptyState } from "@/components/ui/EmptyState";
 import { PageLoader } from "@/components/ui/Spinner";
-import { BrandMesh } from "@/components/ui/Surface";
+import { AmbientWash } from "@/components/ui/Surface";
 import { StarRating } from "@/components/shared/StarRating";
 import { BookingModal } from "@/features/bookings/components/BookingModal";
 import { getTutorById } from "@/features/tutors/api";
@@ -36,10 +36,15 @@ import { useAuthStore } from "@/store/auth-store";
 import type { PaginatedResponse, TutorProfile, TutorReview } from "@/types";
 
 /**
- * Tutor public profile — premium rebuild (Airbnb meets LinkedIn). Cover hero,
- * overlapping identity card, animated stat tiles, rich subject/language
- * sections, review composition with a rating-distribution bar, and an
- * elevated sticky booking panel + mobile booking bar.
+ * Tutor public profile — V7 "One World" (DESIGN_V3.md V7 addendum),
+ * editorial and trustworthy. Sits on the shared `PublicAtmosphere`
+ * (mounted once by `PublicLayout`); the cover band moved from a saturated
+ * blue `BrandMesh` fill to a warm ambient wash so the page's one big color
+ * block isn't blue (V7 reserves blue for interactive elements). Overlapping
+ * identity card, animated stat tiles, rich subject/language sections,
+ * review composition with a rating-distribution bar, and an elevated
+ * sticky booking panel + mobile booking bar — all kept solid/light
+ * surfaces, not translucent, for trust-signal legibility.
  *
  * PRESERVED VERBATIM: both queries and their keys, the auth redirect (with
  * `state.from`), the student/parent booking guard, the demo-class truth, and
@@ -87,7 +92,7 @@ export function TutorProfilePage() {
 
   if (!tutor) {
     return (
-      <Card className="mx-auto mt-10 max-w-lg">
+      <Card className="mx-auto mt-10 max-w-lg border-sand/70 bg-white">
         <EmptyState
           icon={SearchX}
           title="Tutor not found"
@@ -105,9 +110,10 @@ export function TutorProfilePage() {
   const ratingValue = Number(tutor.rating_average);
 
   return (
-    <div className="min-h-screen bg-surface pb-24 lg:pb-16">
+    <div className="relative pb-24 lg:pb-16">
       <section className="relative h-44 overflow-hidden sm:h-56">
-        <BrandMesh />
+        <AmbientWash tones={["gold", "forest"]} />
+        <div className="absolute inset-0 bg-gradient-to-br from-[#FFF8E8]/60 via-transparent to-forest-subtle/40" />
       </section>
 
       <div className="container-page relative">
@@ -115,7 +121,7 @@ export function TutorProfilePage() {
           initial={riseInit(24)}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: DURATION.slow, ease: EASE_OUT }}
-          className="relative -mt-20 rounded-3xl border border-line bg-canvas p-6 shadow-dialog sm:p-8"
+          className="relative -mt-20 rounded-3xl border border-sand/70 bg-white p-6 shadow-dialog sm:p-8"
         >
           <div className="flex flex-col gap-6 sm:flex-row sm:items-start">
             <Avatar
@@ -123,11 +129,11 @@ export function TutorProfilePage() {
               firstName={tutor.user.first_name}
               lastName={tutor.user.last_name}
               size="xl"
-              className="h-28 w-28 shrink-0 text-3xl shadow-hover ring-4 ring-canvas"
+              className="h-28 w-28 shrink-0 text-3xl shadow-hover ring-4 ring-white"
             />
             <div className="min-w-0 flex-1">
               <div className="flex flex-wrap items-center gap-2.5">
-                <h1 className="font-display text-3xl font-extrabold tracking-tight text-navy">
+                <h1 className="font-editorial text-3xl font-semibold tracking-tight text-navy">
                   {tutor.user.full_name}
                 </h1>
                 {tutor.is_verified && (
@@ -165,7 +171,7 @@ export function TutorProfilePage() {
                   href={tutor.intro_video_url}
                   target="_blank"
                   rel="noreferrer"
-                  className="mt-4 inline-flex items-center gap-1.5 rounded-xl border border-line bg-canvas px-3.5 py-2 text-sm font-semibold text-primary shadow-soft transition-all hover:-translate-y-0.5 hover:shadow-hover focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/30"
+                  className="mt-4 inline-flex items-center gap-1.5 rounded-xl border border-sand bg-white px-3.5 py-2 text-sm font-semibold text-primary shadow-soft transition-all hover:-translate-y-0.5 hover:shadow-hover focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/30"
                 >
                   <PlayCircle className="h-4 w-4" /> Watch intro video
                 </a>
@@ -177,7 +183,7 @@ export function TutorProfilePage() {
             variants={staggerContainer}
             initial="hidden"
             animate="show"
-            className="mt-6 grid grid-cols-2 gap-3 border-t border-line pt-6 sm:grid-cols-4"
+            className="mt-6 grid grid-cols-2 gap-3 border-t border-sand/70 pt-6 sm:grid-cols-4"
           >
             <ProfileStat icon={Star} tint="accent" value={tutor.rating_count > 0 ? ratingValue.toFixed(1) : "New"} label={tutor.rating_count > 0 ? `${tutor.rating_count} reviews` : "No reviews yet"} />
             <ProfileStat icon={Users} tint="primary" value={tutor.total_sessions_completed} label="Sessions taught" />
@@ -200,7 +206,7 @@ export function TutorProfilePage() {
                   {tutor.tutor_subjects.map((ts) => (
                     <div
                       key={ts.id}
-                      className="flex items-center gap-3 rounded-xl border border-line bg-surface/60 p-3.5 transition-colors hover:border-primary/40"
+                      className="flex items-center gap-3 rounded-xl border border-sand/70 bg-linen/40 p-3.5 transition-colors hover:border-primary/40"
                     >
                       <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-primary-subtle text-primary">
                         <BookOpen className="h-4 w-4" />
@@ -244,7 +250,7 @@ export function TutorProfilePage() {
                   />
                 )}
                 {reviews?.results.map((review) => (
-                  <div key={review.id} className="rounded-2xl border border-line bg-surface/50 p-4">
+                  <div key={review.id} className="rounded-2xl border border-sand/70 bg-linen/40 p-4">
                     <div className="flex items-center justify-between gap-3">
                       <div className="flex min-w-0 items-center gap-2.5">
                         <Avatar
@@ -265,7 +271,7 @@ export function TutorProfilePage() {
                       <p className="mt-3 text-sm leading-relaxed text-slate-600">{review.comment}</p>
                     )}
                     {review.tutor_response && (
-                      <div className="mt-3 rounded-xl bg-canvas p-3.5 text-sm ring-1 ring-line">
+                      <div className="mt-3 rounded-xl bg-white p-3.5 text-sm ring-1 ring-sand">
                         <p className="font-semibold text-navy">Tutor&apos;s response</p>
                         <p className="mt-1 leading-relaxed text-slate-600">{review.tutor_response}</p>
                       </div>
@@ -282,7 +288,7 @@ export function TutorProfilePage() {
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: DURATION.slow, delay: still ? 0 : 0.15, ease: EASE_OUT }}
             >
-              <Card className="overflow-hidden border-primary/20 shadow-hover">
+              <Card className="overflow-hidden border-primary/20 bg-white shadow-hover">
                 <div className="relative bg-gradient-to-br from-primary-subtle to-secondary-subtle px-6 py-5">
                   <p className="font-display text-4xl font-extrabold tracking-tight text-navy">
                     {formatCurrency(tutor.hourly_rate, tutor.currency)}
@@ -300,7 +306,7 @@ export function TutorProfilePage() {
                     </p>
                   )}
 
-                  <dl className="mt-6 space-y-3 border-t border-line pt-5 text-sm">
+                  <dl className="mt-6 space-y-3 border-t border-sand/70 pt-5 text-sm">
                     <StatRow label="Sessions completed" value={tutor.total_sessions_completed} />
                     <StatRow label="Experience" value={`${tutor.experience_years} years`} />
                     <StatRow label="Teaching mode" value={tutor.teaching_mode === "both" ? "Online & in-person" : tutor.teaching_mode} capitalize />
@@ -313,7 +319,7 @@ export function TutorProfilePage() {
         </div>
       </div>
 
-      <div className="fixed inset-x-0 bottom-0 z-30 border-t border-line bg-canvas/95 backdrop-blur-xl lg:hidden">
+      <div className="fixed inset-x-0 bottom-0 z-30 border-t border-sand/70 bg-white/95 backdrop-blur-xl lg:hidden">
         <div className="container-page flex items-center justify-between gap-3 py-3">
           <div>
             <p className="font-display text-xl font-extrabold text-navy">
@@ -352,7 +358,7 @@ function ProfileStat({
   tint: keyof typeof STAT_TINTS;
 }) {
   return (
-    <motion.div variants={staggerItem} className="rounded-2xl border border-line bg-surface/50 p-3.5 text-center sm:text-left">
+    <motion.div variants={staggerItem} className="rounded-2xl border border-sand/70 bg-linen/40 p-3.5 text-center sm:text-left">
       <span className={cn("inline-flex h-9 w-9 items-center justify-center rounded-lg", STAT_TINTS[tint])}>
         <Icon className="h-4 w-4" />
       </span>
@@ -381,7 +387,7 @@ function SectionCard({
       viewport={{ once: true, margin: "-60px" }}
       transition={{ duration: DURATION.base, delay: still ? 0 : delay, ease: EASE_OUT }}
     >
-      <Card>
+      <Card className="border-sand/70 bg-white">
         <CardBody className="p-6 pt-6">
           <h2 className="flex items-center gap-2 font-display text-xl font-bold text-navy">
             <span className="flex h-8 w-8 items-center justify-center rounded-lg bg-primary-subtle text-primary">
@@ -414,7 +420,7 @@ function ReviewSummary({
   }));
 
   return (
-    <div className="flex flex-col gap-6 rounded-2xl border border-line bg-surface/50 p-5 sm:flex-row sm:items-center">
+    <div className="flex flex-col gap-6 rounded-2xl border border-sand/70 bg-linen/40 p-5 sm:flex-row sm:items-center">
       <div className="text-center sm:w-40 sm:shrink-0">
         <p className="font-display text-5xl font-extrabold tracking-tight text-navy">
           {tutor.rating_count > 0 ? ratingValue.toFixed(1) : "—"}

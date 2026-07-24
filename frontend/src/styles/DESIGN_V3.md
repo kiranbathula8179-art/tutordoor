@@ -398,7 +398,28 @@ primitive this session has gone through.
   stays mostly opaque (`bg-linen/90`) — the one place V7 intentionally
   leans away from translucency, for input legibility. The five auth page
   files themselves remain untouched.
-- ⬜ Milestone 5 — Search + Tutor Profile.
+- ✅ **Milestone 5** — Search + Tutor Profile, TutorDoor's highest-traffic
+  workflow: readability over visual effects, so this milestone was
+  deliberately restrained. Both pages already sat inside `PublicLayout`
+  (their `PublicAtmosphere` was live since Milestone 1) but painted their
+  own opaque `bg-surface` root and a saturated blue hero/cover
+  (`bg-gradient-to-br from-primary...`/`BrandMesh`) over it — both
+  removed in favor of `AmbientWash` warm blooms so the shared atmosphere
+  shows through. Result cards and the filter rail stayed deliberately
+  **solid** (`bg-white`, no backdrop-blur) per the explicit "avoid heavy
+  glassmorphism on tutor cards" instruction — Search/Profile is the one
+  place in V7 that intentionally does NOT lean translucent, because
+  scanning a dense results grid needs maximum legibility. Tutor Profile's
+  name headline moved to `font-editorial` for the "editorial and
+  trustworthy" feel; its cover band and section-card borders moved to the
+  warm palette (`border-sand`, `bg-linen/40` for secondary surfaces).
+  Found and fixed a real pre-existing mobile overflow bug while verifying
+  this milestone: the results grid's item wrapper lacked `min-w-0`, so
+  CSS Grid's default `min-width: auto` let a card's intrinsic content
+  width force the single-column track wider than its container below the
+  `sm` breakpoint (confirmed via `getComputedStyle` + ancestor-clipping
+  analysis, not the `PublicAtmosphere` blooms a naive widest-element scan
+  initially pointed at — those were correctly clipped red herrings).
 - ⬜ Milestone 6 — Courses (list + detail).
 - ⬜ Milestone 7 — static/legal pages (About, Trust & Safety, Support,
   Terms, Privacy, Refunds).

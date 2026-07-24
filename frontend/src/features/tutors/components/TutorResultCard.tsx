@@ -29,12 +29,12 @@ export function TutorResultCard({ tutor }: { tutor: TutorProfile }) {
   return (
     <Link
       to={`/tutors/${tutor.id}`}
-      className="group relative flex h-full flex-col overflow-hidden rounded-2xl border border-line bg-canvas shadow-soft transition-all hover:-translate-y-1 hover:border-primary/40 hover:shadow-hover focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/30"
+      className="group relative flex h-full flex-col overflow-hidden rounded-2xl border border-sand/70 bg-white shadow-soft transition-all hover:-translate-y-1 hover:border-primary/40 hover:shadow-hover focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/30"
     >
-      {/* Gradient header wash */}
+      {/* Gradient header wash — solid card, just a soft warm tint at the top */}
       <div
         aria-hidden="true"
-        className="pointer-events-none absolute inset-x-0 top-0 h-20 bg-gradient-to-br from-primary-subtle via-secondary-subtle to-transparent opacity-70 transition-opacity group-hover:opacity-100"
+        className="pointer-events-none absolute inset-x-0 top-0 h-20 bg-gradient-to-br from-forest-subtle via-[#FFF8E8] to-transparent opacity-70 transition-opacity group-hover:opacity-100"
       />
 
       <div className="relative p-5">
@@ -50,14 +50,14 @@ export function TutorResultCard({ tutor }: { tutor: TutorProfile }) {
               firstName={tutor.user.first_name}
               lastName={tutor.user.last_name}
               size="lg"
-              className="ring-4 ring-canvas"
+              className="ring-4 ring-white"
             />
             {tutor.is_accepting_students && (
               <span
-                className="absolute -bottom-0.5 -right-0.5 flex h-4 w-4 items-center justify-center rounded-full bg-canvas"
+                className="absolute -bottom-0.5 -right-0.5 flex h-4 w-4 items-center justify-center rounded-full bg-white"
                 title="Accepting students"
               >
-                <span className="h-2.5 w-2.5 rounded-full bg-success ring-2 ring-canvas" />
+                <span className="h-2.5 w-2.5 rounded-full bg-success ring-2 ring-white" />
               </span>
             )}
           </div>
@@ -98,7 +98,7 @@ export function TutorResultCard({ tutor }: { tutor: TutorProfile }) {
         )}
 
         {/* Meta grid */}
-        <dl className="mt-4 grid grid-cols-2 gap-x-3 gap-y-2 border-t border-line pt-4 text-xs text-slate-500">
+        <dl className="mt-4 grid grid-cols-2 gap-x-3 gap-y-2 border-t border-sand/70 pt-4 text-xs text-slate-500">
           <div className="flex items-center gap-1.5">
             <ModeIcon className="h-3.5 w-3.5 text-slate-400" />
             <span className="truncate">{modeLabel}</span>
@@ -123,7 +123,7 @@ export function TutorResultCard({ tutor }: { tutor: TutorProfile }) {
       </div>
 
       {/* Footer: price + CTA */}
-      <div className="relative mt-auto flex items-center justify-between border-t border-line bg-surface/60 px-5 py-3.5">
+      <div className="relative mt-auto flex items-center justify-between border-t border-sand/70 bg-linen/40 px-5 py-3.5">
         <p className="font-display text-lg font-bold text-navy">
           {formatCurrency(tutor.hourly_rate, tutor.currency)}
           <span className="text-xs font-normal text-slate-400">/hr</span>
