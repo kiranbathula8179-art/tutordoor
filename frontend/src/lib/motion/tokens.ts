@@ -1,4 +1,4 @@
-import type { Transition, Variants } from "framer-motion";
+import type { Target, Transition, Variants } from "framer-motion";
 
 import { prefersReducedMotion } from "@/lib/motion/quality";
 
@@ -45,9 +45,17 @@ export function motionSafe(transition: Transition): Transition {
   return prefersReducedMotion() ? { duration: 0 } : transition;
 }
 
-/** initial-state helper: `y`-rise normally, opacity-only under reduced motion. */
-export function riseInit(y = 16) {
-  return prefersReducedMotion() ? { opacity: 0 } : { opacity: 0, y };
+/**
+ * initial-state helper: `y`-rise normally; `false` under reduced motion so
+ * framer-motion skips the enter animation entirely and renders directly in
+ * its `animate` state. A zero-duration `{ opacity: 0 }` initial relying on
+ * `motionSafe`'s instant transition to correct it can get stuck mid-animation
+ * in some browsers (the native Web Animation never advances past its `from`
+ * frame), leaving real content permanently invisible — the one outcome
+ * reduced-motion support must never produce.
+ */
+export function riseInit(y = 16): Target | false {
+  return prefersReducedMotion() ? false : { opacity: 0, y };
 }
 
 // ---- Reusable variants ------------------------------------------------------

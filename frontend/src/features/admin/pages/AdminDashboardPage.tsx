@@ -1,4 +1,5 @@
 import { useQuery } from "@tanstack/react-query";
+import { motion } from "framer-motion";
 import { AlertCircle, ArrowRight, BadgeCheck, CalendarDays, TrendingUp, Users } from "lucide-react";
 import { Link } from "react-router-dom";
 
@@ -9,6 +10,7 @@ import { Card, CardBody } from "@/components/ui/Card";
 import { EmptyState } from "@/components/ui/EmptyState";
 import { SectionLoader } from "@/components/ui/Spinner";
 import { apiClient } from "@/lib/api-client";
+import { DURATION, EASE_OUT, motionSafe, riseInit } from "@/lib/motion/tokens";
 import { cn, formatCurrency } from "@/lib/utils";
 
 interface AdminDashboardSummary {
@@ -80,6 +82,12 @@ export function AdminDashboardPage() {
     queryFn: fetchAdminSummary,
   });
 
+  const rise = (delay: number) => ({
+    initial: riseInit(18),
+    animate: { opacity: 1, y: 0 },
+    transition: motionSafe({ duration: DURATION.slow, delay, ease: EASE_OUT }),
+  });
+
   if (isLoading) return <SectionLoader />;
 
   if (isError) {
@@ -114,7 +122,7 @@ export function AdminDashboardPage() {
         description="A live snapshot of TutorDoor right now."
       />
 
-      <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+      <motion.div {...rise(0.08)} className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
         <StatCard
           icon={Users}
           tint="primary"
@@ -130,7 +138,7 @@ export function AdminDashboardPage() {
           label="Pending verifications"
           value={summary?.pending_tutor_verifications ?? 0}
         />
-      </div>
+      </motion.div>
 
       {(summary?.pending_tutor_verifications ?? 0) > 0 && (
         <Link
@@ -141,14 +149,14 @@ export function AdminDashboardPage() {
         </Link>
       )}
 
-      <div className="mt-6 grid gap-6 lg:grid-cols-2">
+      <motion.div {...rise(0.16)} className="mt-6 grid gap-6 lg:grid-cols-2">
         <DistributionCard title="Users by role" entries={Object.entries(summary?.users_by_role ?? {})} />
         <DistributionCard
           title="Bookings by status"
           entries={Object.entries(summary?.bookings_by_status ?? {})}
           barClass={(key) => STATUS_BAR[key] ?? "bg-slate-400"}
         />
-      </div>
+      </motion.div>
     </div>
   );
 }

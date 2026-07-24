@@ -589,5 +589,46 @@ replaced wherever a milestone touches that page.
   (`ParentChildrenPage`, `StudentCoursesPage`, `TutorCoursesPage`) were
   checked and don't hit this because their content is shorter — worth
   keeping in mind if a future grid item ever holds long unwrapped text.
-- ⬜ Milestone 7 — Admin (Dashboard, Reports, Verifications).
+- ✅ **Milestone 7** — Admin (Dashboard, Reports, Verifications).
+  `AdminDashboardPage` gained the same `rise()` entrance the other four
+  portal homes have, for full cross-portal consistency — its
+  `DistributionCard`s (users-by-role, bookings-by-status) were already a
+  well-built real-data component and needed no structural change.
+  `VerificationQueuePage`'s tutor-review cards gained the standard
+  `staggerContainer`/`staggerItem` list entrance. `AdminReportsPage` is
+  data-dense (two live charts, a revenue breakdown, two leaderboards) —
+  per Principle 4, it gets one restrained root fade-in only, not
+  per-chart stagger, which would read as decoration on a data tool.
+  Verified live against the seeded admin account, with real platform
+  data throughout (15 users, real revenue/bookings distributions, live
+  chart data, a populated top-tutors/top-subjects leaderboard).
+  A second, more serious bug was found during this milestone's
+  reduced-motion check — and it wasn't scoped to Milestone 7 at all.
+  Every page across the entire V8 rollout (Milestones 1–7) using the
+  `rise()`/`riseInit()` entrance pattern — all five portal dashboards,
+  every settings/detail page, `DashboardHero` itself, plus several V7
+  pages sharing the same helper (`TutorProfilePage`, `AuthLayout`,
+  `AdvancedSearchV3`) — went permanently invisible (`opacity: 0`, stuck)
+  under `prefers-reduced-motion: reduce`. `getAnimations()` on the
+  affected elements showed why: framer-motion's inline style already
+  said `opacity: 1`, but a native Web Animation it had scheduled with
+  `duration: 0` (from `motionSafe()`) never advanced past `localTime: 0`
+  in this browser, and with `fill: backwards` that holds the element at
+  its *from* frame forever — the opposite of what reduced motion is
+  supposed to guarantee. The proven-safe pattern already used by
+  `staggerContainer` (`initial={still ? false : "hidden"}`, which skips
+  the animation outright under reduced motion instead of running a
+  zero-duration one) doesn't have this failure mode. Fixed centrally in
+  `riseInit()` itself (`@/lib/motion/tokens.ts`) — it now returns `false`
+  under reduced motion instead of `{ opacity: 0 }` — which every one of
+  its ~18 call sites inherits automatically with no per-page changes
+  needed. Re-verified with `getAnimations()`-level introspection on both
+  `/tutor` and `/admin` post-fix: zero stuck-opacity elements, only the
+  two intentional decorative-overlay opacities (`0.3`, `0.05`) remain
+  below 1. This was a real, severe, pre-existing accessibility bug — not
+  something this milestone introduced — caught only because this
+  milestone's manual reduced-motion check happened to inspect computed
+  opacity with enough rigor (`getAnimations()`) to see the animation was
+  stuck rather than assuming "opacity < 1 after N seconds" meant a
+  simple timing issue.
 - ⬜ Milestone 8 — Admin (data-table-heavy pages — restrained pass only).

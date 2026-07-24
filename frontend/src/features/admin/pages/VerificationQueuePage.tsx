@@ -1,4 +1,5 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { motion } from "framer-motion";
 import { AlertCircle, BadgeCheck, Check, ExternalLink, Inbox, X } from "lucide-react";
 import { useMemo, useState } from "react";
 import toast from "react-hot-toast";
@@ -19,6 +20,8 @@ import {
   reviewDocument,
   type AdminVerificationDocument,
 } from "@/features/admin/api";
+import { staggerContainer, staggerItem } from "@/lib/motion/tokens";
+import { prefersReducedMotion } from "@/lib/motion/quality";
 import { formatDate, getErrorMessage } from "@/lib/utils";
 import type { DocumentType } from "@/types";
 
@@ -41,6 +44,7 @@ export function VerificationQueuePage() {
   const [rejectReason, setRejectReason] = useState("");
   const [approveTarget, setApproveTarget] = useState<TutorGroup["tutor"] | null>(null);
   const [documentNotes, setDocumentNotes] = useState<Record<string, string>>({});
+  const still = prefersReducedMotion();
 
   const {
     data: documents = [],
@@ -130,9 +134,15 @@ export function VerificationQueuePage() {
           <EmptyState icon={Inbox} title="Queue is clear" description="No documents are waiting for review right now." />
         </Card>
       ) : (
-        <div className="mt-6 space-y-5">
+        <motion.div
+          initial={still ? false : "hidden"}
+          animate="show"
+          variants={staggerContainer}
+          className="mt-6 space-y-5"
+        >
           {groups.map((group) => (
-            <Card key={group.tutor.id}>
+            <motion.div key={group.tutor.id} variants={staggerItem}>
+            <Card>
               <CardBody>
                 {/* ------------------------------------ Tutor header */}
                 <div className="flex flex-wrap items-center justify-between gap-3">
@@ -211,8 +221,9 @@ export function VerificationQueuePage() {
                 </div>
               </CardBody>
             </Card>
+            </motion.div>
           ))}
-        </div>
+        </motion.div>
       )}
 
       {/* ------------------------------------------------ Approve-tutor modal */}

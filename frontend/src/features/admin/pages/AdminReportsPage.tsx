@@ -1,5 +1,6 @@
 import { useQuery } from "@tanstack/react-query";
 import { format, subDays } from "date-fns";
+import { motion } from "framer-motion";
 import { AlertCircle, BarChart3 } from "lucide-react";
 import { useState } from "react";
 import {
@@ -27,6 +28,7 @@ import {
   getTopSubjects,
   getTopTutors,
 } from "@/features/admin/api";
+import { DURATION, EASE_OUT, riseInit } from "@/lib/motion/tokens";
 import { formatCurrency, formatDate } from "@/lib/utils";
 
 const COLORS = {
@@ -97,7 +99,11 @@ export function AdminReportsPage() {
   const maxSubjectCount = Math.max(1, ...topSubjects.map((subject) => subject.booking_count));
 
   return (
-    <div>
+    <motion.div
+      initial={riseInit(16)}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: DURATION.slow, ease: EASE_OUT }}
+    >
       <PageHeader
         title="Reports"
         description="Daily platform snapshots, revenue, and leaderboards."
@@ -319,6 +325,6 @@ export function AdminReportsPage() {
           </CardBody>
         </Card>
       </div>
-    </div>
+    </motion.div>
   );
 }
