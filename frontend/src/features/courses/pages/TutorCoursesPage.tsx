@@ -1,5 +1,6 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { isAxiosError } from "axios";
+import { motion } from "framer-motion";
 import { useMasterData } from "@/lib/master-data";
 import { AlertCircle, BookOpen, Plus, ShieldAlert, Users } from "lucide-react";
 import { useState } from "react";
@@ -10,6 +11,7 @@ import { PageHeader } from "@/components/shared/PageHeader";
 import { RequireTutorProfile } from "@/components/shared/RequireTutorProfile";
 import { Badge, statusToTone } from "@/components/ui/Badge";
 import { Button } from "@/components/ui/Button";
+import { Card } from "@/components/ui/Card";
 import { EmptyState } from "@/components/ui/EmptyState";
 import { Input } from "@/components/ui/Input";
 import { Modal } from "@/components/ui/Modal";
@@ -19,6 +21,8 @@ import { Textarea } from "@/components/ui/Textarea";
 import { Tabs } from "@/components/ui/Tabs";
 import { createCourse, listMyTeachingCourses } from "@/features/courses/api";
 import { getMyTutorProfile, getSubjects } from "@/features/tutors/api";
+import { staggerContainer, staggerItem } from "@/lib/motion/tokens";
+import { prefersReducedMotion } from "@/lib/motion/quality";
 import { formatCurrency, formatDate, getErrorMessage } from "@/lib/utils";
 
 const STATUS_TABS = [
@@ -30,6 +34,7 @@ const STATUS_TABS = [
 export function TutorCoursesPage() {
   const [statusFilter, setStatusFilter] = useState<string>("");
   const [createOpen, setCreateOpen] = useState(false);
+  const still = prefersReducedMotion();
 
   const {
     data: profile,
@@ -109,7 +114,7 @@ export function TutorCoursesPage() {
         {isLoading ? (
           <SectionLoader />
         ) : coursesError ? (
-          <div className="rounded-card border border-line bg-canvas shadow-soft">
+          <Card>
             <EmptyState
               icon={AlertCircle}
               title="We couldn't load your courses"
@@ -120,7 +125,7 @@ export function TutorCoursesPage() {
                 </Button>
               }
             />
-          </div>
+          </Card>
         ) : courses.length === 0 ? (
           <div className="rounded-card border border-dashed border-line py-16 text-center">
             <p className="font-medium text-navy">No courses here yet</p>
@@ -129,12 +134,17 @@ export function TutorCoursesPage() {
             </p>
           </div>
         ) : (
-          <div className="grid gap-4 md:grid-cols-2">
+          <motion.div
+            initial={still ? false : "hidden"}
+            animate="show"
+            variants={staggerContainer}
+            className="grid gap-4 md:grid-cols-2"
+          >
             {courses.map((course) => (
+              <motion.div key={course.id} variants={staggerItem}>
               <Link
-                key={course.id}
                 to={`/tutor/courses/${course.id}`}
-                className="group rounded-card border border-line bg-canvas p-5 transition-all hover:-translate-y-0.5 hover:shadow-hover"
+                className="group flex h-full flex-col rounded-card border border-line bg-canvas p-5 shadow-soft transition-all hover:-translate-y-0.5 hover:border-primary/40 hover:shadow-hover focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/30"
               >
                 <div className="flex items-start justify-between gap-3">
                   <div className="min-w-0">
@@ -153,12 +163,13 @@ export function TutorCoursesPage() {
                   {course.start_date && <span>Starts {formatDate(course.start_date)}</span>}
                 </div>
 
-                <p className="mt-3 font-mono text-lg font-semibold text-navy">
+                <p className="mt-auto pt-3 font-mono text-lg font-semibold text-navy">
                   {formatCurrency(course.price, course.currency)}
                 </p>
               </Link>
+              </motion.div>
             ))}
-          </div>
+          </motion.div>
         )}
       </div>
 

@@ -2,10 +2,11 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { isAxiosError } from "axios";
 import { motion } from "framer-motion";
 import { useMasterData } from "@/lib/master-data";
-import { AlertCircle, GraduationCap, MapPin, Plus, Save, Trash2, UserRound, Wallet } from "lucide-react";
+import { AlertCircle, BadgeCheck, Eye, GraduationCap, MapPin, Plus, Save, Trash2, UserRound, Video, Wallet } from "lucide-react";
 import { useEffect, useState } from "react";
 import toast from "react-hot-toast";
 
+import { Avatar } from "@/components/ui/Avatar";
 import { Badge, statusToTone } from "@/components/ui/Badge";
 import { Button } from "@/components/ui/Button";
 import { Card, CardBody } from "@/components/ui/Card";
@@ -22,7 +23,8 @@ import {
   type TutorProfilePayload,
 } from "@/features/tutors/api";
 import { DURATION, EASE_OUT, riseInit } from "@/lib/motion/tokens";
-import { getErrorMessage } from "@/lib/utils";
+import { formatCurrency, getErrorMessage } from "@/lib/utils";
+import { useAuthStore } from "@/store/auth-store";
 
 interface SubjectRow {
   subject_id: string;
@@ -72,6 +74,7 @@ function SectionHeading({ icon: Icon, children }: { icon: typeof UserRound; chil
 export function TutorProfileSettingsPage() {
   const queryClient = useQueryClient();
   const { optionsFor } = useMasterData(["skill_level"]);
+  const user = useAuthStore((state) => state.user);
 
   const {
     data: profile,
@@ -207,6 +210,59 @@ export function TutorProfileSettingsPage() {
         </div>
         {profile && <Badge tone={statusToTone(profile.verification_status)}>{profile.verification_status.replace("_", " ")}</Badge>}
       </div>
+
+      {/* ------------------------------------------------ Live preview — built
+          entirely from real, current values (the authenticated user's real
+          identity plus this form's own live state), not a mock of the shared
+          TutorResultCard. A tutor editing their public storefront should be
+          able to see what changes before saving, without this preview ever
+          claiming data (rating, verification) that hasn't actually happened
+          yet for a still-unsaved edit. */}
+      <Card className="mt-6 border-sand/70">
+        <CardBody>
+          <p className="flex items-center gap-1.5 text-xs font-bold uppercase tracking-[0.1em] text-slate-400">
+            <Eye className="h-3.5 w-3.5" /> How students will see you
+          </p>
+          <div className="mt-3 flex items-start gap-3.5">
+            <Avatar
+              src={user?.avatar}
+              firstName={user?.first_name ?? ""}
+              lastName={user?.last_name ?? ""}
+              size="lg"
+            />
+            <div className="min-w-0 flex-1">
+              <p className="flex items-center gap-1.5 font-display font-bold text-navy">
+                <span className="truncate">{user?.full_name ?? "Your name"}</span>
+                {profile?.is_verified && <BadgeCheck className="h-4 w-4 shrink-0 text-primary" aria-label="Verified" />}
+              </p>
+              <p className="mt-0.5 truncate text-sm text-slate-500">{form.headline || "Add a headline above"}</p>
+              <div className="mt-2 flex flex-wrap items-center gap-3 text-xs text-slate-500">
+                <span className="flex items-center gap-1">
+                  {form.teaching_mode === "offline" ? <MapPin className="h-3.5 w-3.5" /> : <Video className="h-3.5 w-3.5" />}
+                  {form.teaching_mode === "online"
+                    ? "Online"
+                    : form.teaching_mode === "offline"
+                      ? form.city || "In-person"
+                      : "Online · In-person"}
+                </span>
+                {subjectRows.some((row) => row.subject_id) && (
+                  <span>
+                    {subjectRows
+                      .filter((row) => row.subject_id)
+                      .map((row) => allSubjects.find((s) => s.id === row.subject_id)?.name)
+                      .filter(Boolean)
+                      .slice(0, 3)
+                      .join(", ")}
+                  </span>
+                )}
+              </div>
+            </div>
+            <p className="shrink-0 font-mono font-semibold text-navy">
+              {form.hourly_rate ? `${formatCurrency(form.hourly_rate)}/hr` : "Set a rate"}
+            </p>
+          </div>
+        </CardBody>
+      </Card>
 
       {/* ------------------------------------------------ Basics */}
       <Card className="mt-6">

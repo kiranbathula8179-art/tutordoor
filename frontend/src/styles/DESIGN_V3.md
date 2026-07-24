@@ -536,7 +536,24 @@ replaced wherever a milestone touches that page.
   same stagger pattern now established for "my X" list pages
   (`BookingsListPage` in Milestone 2) — one consistent motion language
   across comparable list surfaces, per Principle 6.
-- ⬜ Milestone 4 — Tutor portal.
+- ✅ **Milestone 4** — Tutor portal. `TutorDashboardPage` gained the same
+  staggered `rise()` entrance `StudentDashboardPage` already had (a real,
+  previously-unfixed inconsistency between the two portal-home pages).
+  `AvailabilityPage` gained a real week-at-a-glance summary strip
+  (computed from the same draft state already being edited below it, not
+  a new data model or a separate calendar surface) — a full calendar-grid
+  rewrite was considered and deliberately not attempted, since restructuring
+  the working add/remove/edit interaction for a "polish" milestone was a
+  bigger risk than the milestone's scope justified. `TutorCoursesPage`'s
+  course cards and error/empty states moved from raw bordered `div`s to
+  `Card` (plus a missing focus ring found and fixed along the way).
+  `TutorCourseDetailPage` and `VerificationPage` gained the same entrance
+  fade already established for comparable detail pages. `TutorProfileSettingsPage`
+  gained a real live preview ("How students will see you") built entirely
+  from the authenticated user's real identity and the form's own current
+  values — deliberately not a reuse of the shared `TutorResultCard`
+  (which would have needed rating/verification fields a mid-edit, unsaved
+  profile can't honestly claim yet).
 - ⬜ Milestone 5 — Parent portal.
 - ⬜ Milestone 6 — Institute portal.
 - ⬜ Milestone 7 — Admin (Dashboard, Reports, Verifications).

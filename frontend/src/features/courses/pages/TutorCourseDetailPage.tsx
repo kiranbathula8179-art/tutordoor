@@ -1,4 +1,5 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { motion } from "framer-motion";
 import { AlertCircle, ArrowLeft, CalendarPlus, Plus, Rocket, SearchX, Trash2, Users } from "lucide-react";
 import { useState } from "react";
 import { Link, useParams } from "react-router-dom";
@@ -18,6 +19,7 @@ import {
   publishCourse,
   type SessionScheduleEntry,
 } from "@/features/courses/api";
+import { DURATION, EASE_OUT, riseInit } from "@/lib/motion/tokens";
 import { formatCurrency, formatDateTime, getErrorMessage } from "@/lib/utils";
 
 interface DraftSessionRow {
@@ -122,7 +124,12 @@ export function TutorCourseDetailPage() {
   }
 
   return (
-    <div className="mx-auto max-w-3xl">
+    <motion.div
+      initial={riseInit(16)}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: DURATION.slow, ease: EASE_OUT }}
+      className="mx-auto max-w-3xl"
+    >
       <Link to="/tutor/courses" className="mb-4 flex items-center gap-1.5 text-sm font-medium text-slate-400 hover:text-navy">
         <ArrowLeft className="h-4 w-4" /> Back to my courses
       </Link>
@@ -278,6 +285,6 @@ export function TutorCourseDetailPage() {
           )}
         </CardBody>
       </Card>
-    </div>
+    </motion.div>
   );
 }

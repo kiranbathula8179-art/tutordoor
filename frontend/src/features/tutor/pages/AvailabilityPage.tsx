@@ -1,5 +1,6 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { isAxiosError } from "axios";
+import { motion } from "framer-motion";
 import { AlertCircle, CalendarOff, CalendarPlus, Check, Plus, Save, Trash2 } from "lucide-react";
 import { useEffect, useState } from "react";
 import toast from "react-hot-toast";
@@ -20,9 +21,12 @@ import {
   removeAvailabilityException,
   setMyWeeklyAvailability,
 } from "@/features/tutors/api";
+import { staggerContainer, staggerItem } from "@/lib/motion/tokens";
+import { prefersReducedMotion } from "@/lib/motion/quality";
 import { cn, formatDate, getErrorMessage } from "@/lib/utils";
 
 const DAY_NAMES = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"];
+const DAY_ABBR = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
 
 interface DraftSlot {
   start_time: string; // "HH:MM"
@@ -35,6 +39,7 @@ const emptyWeek = (): WeeklyDraft => Object.fromEntries(DAY_NAMES.map((_, index)
 
 export function AvailabilityPage() {
   const queryClient = useQueryClient();
+  const still = prefersReducedMotion();
 
   const { isError: profileFetchFailed, error: profileError, refetch: refetchProfile } = useQuery({
     queryKey: ["my-tutor-profile"],
@@ -171,9 +176,36 @@ export function AvailabilityPage() {
           </Button>
         </div>
       ) : (
-        <div className="mt-6 space-y-3">
+        <>
+          {/* Week-at-a-glance — a real, computed summary of the draft below, not a
+              separate data model or a different editing surface. */}
+          <div className="mt-6 flex gap-2" role="img" aria-label="Week availability summary">
+            {DAY_ABBR.map((abbr, day) => {
+              const hasSlots = week[day].length > 0;
+              return (
+                <div
+                  key={day}
+                  className={cn(
+                    "flex flex-1 flex-col items-center gap-1 rounded-xl border py-2.5 text-xs font-semibold",
+                    hasSlots ? "border-success/30 bg-success-subtle text-success-dark" : "border-line bg-canvas text-slate-400"
+                  )}
+                >
+                  {abbr}
+                  <span className={cn("h-1.5 w-1.5 rounded-full", hasSlots ? "bg-success" : "bg-line")} />
+                </div>
+              );
+            })}
+          </div>
+
+          <motion.div
+            initial={still ? false : "hidden"}
+            animate="show"
+            variants={staggerContainer}
+            className="mt-4 space-y-3"
+          >
           {DAY_NAMES.map((dayName, day) => (
-            <Card key={day}>
+            <motion.div key={day} variants={staggerItem}>
+            <Card>
               <CardBody className="flex flex-col gap-3 py-4 sm:flex-row sm:items-start">
                 <div className="w-28 shrink-0 pt-2">
                   <p className="font-semibold text-navy">{dayName}</p>
@@ -216,8 +248,10 @@ export function AvailabilityPage() {
                 </div>
               </CardBody>
             </Card>
+            </motion.div>
           ))}
-        </div>
+          </motion.div>
+        </>
       )}
 
       {/* ------------------------------------------------ Exceptions */}

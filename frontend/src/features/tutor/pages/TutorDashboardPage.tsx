@@ -1,4 +1,5 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { motion } from "framer-motion";
 import { AlertCircle, ArrowRight, Building2, CalendarClock, Star, TrendingUp, Wallet } from "lucide-react";
 import { Link } from "react-router-dom";
 import toast from "react-hot-toast";
@@ -10,6 +11,7 @@ import { Card, CardBody } from "@/components/ui/Card";
 import { EmptyState } from "@/components/ui/EmptyState";
 import { listMyInstituteInvites, respondToInstituteInvite } from "@/features/institute/api";
 import { apiClient } from "@/lib/api-client";
+import { DURATION, EASE_OUT, motionSafe, riseInit } from "@/lib/motion/tokens";
 import { formatCurrency, getErrorMessage } from "@/lib/utils";
 import { useAuthStore } from "@/store/auth-store";
 
@@ -48,6 +50,12 @@ export function TutorDashboardPage() {
     retry: false,
   });
   const pendingInvites = instituteLinks.filter((link) => link.status === "pending");
+
+  const rise = (delay: number) => ({
+    initial: riseInit(18),
+    animate: { opacity: 1, y: 0 },
+    transition: motionSafe({ duration: DURATION.slow, delay, ease: EASE_OUT }),
+  });
 
   const respondMutation = useMutation({
     mutationFn: ({ instituteId, accept }: { instituteId: string; accept: boolean }) =>
@@ -113,21 +121,23 @@ export function TutorDashboardPage() {
       )}
 
       {isError ? (
-        <Card>
-          <EmptyState
-            icon={AlertCircle}
-            title="We couldn't load your stats"
-            description="Something went wrong reaching the server. Try again in a moment."
-            action={
-              <Button variant="outline" onClick={() => refetch()}>
-                Retry
-              </Button>
-            }
-          />
-        </Card>
+        <motion.div {...rise(0.08)}>
+          <Card>
+            <EmptyState
+              icon={AlertCircle}
+              title="We couldn't load your stats"
+              description="Something went wrong reaching the server. Try again in a moment."
+              action={
+                <Button variant="outline" onClick={() => refetch()}>
+                  Retry
+                </Button>
+              }
+            />
+          </Card>
+        </motion.div>
       ) : (
         <>
-          <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+          <motion.div {...rise(0.08)} className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
             <StatCard icon={CalendarClock} tint="primary" label="Upcoming sessions" value={summary?.upcoming_sessions ?? 0} isLoading={isLoading} />
             <StatCard
               icon={Star}
@@ -139,10 +149,10 @@ export function TutorDashboardPage() {
             />
             <StatCard icon={TrendingUp} tint="success" label="Completion rate" value={`${summary?.completion_rate_percent ?? 0}%`} isLoading={isLoading} />
             <StatCard icon={Wallet} tint="info" label="Wallet balance" value={formatCurrency(summary?.wallet_balance ?? 0)} isLoading={isLoading} />
-          </div>
+          </motion.div>
 
           {/* Earnings spotlight */}
-          <div className="mt-6 rounded-2xl border border-primary/20 bg-primary-subtle p-6 sm:p-8">
+          <motion.div {...rise(0.16)} className="mt-6 rounded-2xl border border-primary/20 bg-primary-subtle p-6 sm:p-8">
             <div className="flex flex-col items-start justify-between gap-5 sm:flex-row sm:items-center">
               <div>
                 <p className="text-sm font-medium text-primary-dark">Total earnings to date</p>
@@ -162,7 +172,7 @@ export function TutorDashboardPage() {
                 </Link>
               </div>
             </div>
-          </div>
+          </motion.div>
         </>
       )}
     </div>

@@ -1,5 +1,6 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { isAxiosError } from "axios";
+import { motion } from "framer-motion";
 import { useMasterData } from "@/lib/master-data";
 import { AlertCircle, BadgeCheck, CheckCircle2, Clock3, FileUp, ShieldAlert, XCircle } from "lucide-react";
 import { useRef, useState } from "react";
@@ -18,6 +19,7 @@ import {
   listMyVerificationDocuments,
   uploadVerificationDocument,
 } from "@/features/tutors/api";
+import { DURATION, EASE_OUT, riseInit } from "@/lib/motion/tokens";
 import { formatDate, getErrorMessage } from "@/lib/utils";
 import type { DocumentType } from "@/types";
 
@@ -93,7 +95,11 @@ export function VerificationPage() {
   const uploadedTypes = new Set(documents.map((document) => document.document_type));
 
   return (
-    <div>
+    <motion.div
+      initial={riseInit(16)}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: DURATION.slow, ease: EASE_OUT }}
+    >
       <PageHeader title="Verification" description="Verified tutors appear in search and can accept bookings." />
 
       {/* ------------------------------------------------ Status banner */}
@@ -142,7 +148,7 @@ export function VerificationPage() {
             {documentsLoading ? (
               <SectionLoader />
             ) : documentsError ? (
-              <div className="rounded-card border border-line bg-canvas shadow-soft">
+              <Card>
                 <EmptyState
                   icon={AlertCircle}
                   title="We couldn't load your documents"
@@ -153,7 +159,7 @@ export function VerificationPage() {
                     </Button>
                   }
                 />
-              </div>
+              </Card>
             ) : documents.length === 0 ? (
               <p className="rounded-card border border-dashed border-line px-4 py-8 text-center text-sm text-slate-500">
                 No documents uploaded yet.
@@ -216,7 +222,7 @@ export function VerificationPage() {
           </CardBody>
         </Card>
       </div>
-    </div>
+    </motion.div>
   );
 }
 
