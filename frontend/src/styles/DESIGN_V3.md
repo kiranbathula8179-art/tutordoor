@@ -513,8 +513,19 @@ replaced wherever a milestone touches that page.
 
 ### Rollout ledger
 - ✅ **Milestone 1** — Foundation (`PortalHeroMesh`, this section).
-- ⬜ Milestone 2 — shared cross-portal components (bookings, chat,
-  wallet, enrollment payment consistency).
+- ✅ **Milestone 2** — shared cross-portal components. `WalletPage`
+  moved to `PortalHeroMesh` (the other of `BrandMesh`'s two call sites,
+  after `DashboardHero` in Milestone 1). `BookingsListPage`/
+  `BookingDetailPage` gained entrance motion where there was previously
+  none (real content loading is a real state change). The "quiet moment"
+  gap flagged in the plan — `EnrollmentPaymentPage` sharply less polished
+  than its sibling `BookingPaymentPage` despite identical purpose — fixed
+  by extracting the shared `CheckoutSteps` component and bringing
+  enrollment payment up to booking payment's standard (mesh background,
+  entrance motion, trust footer, `celebrate()` on success). `ChatPage`
+  audited and left untouched — no `BrandMesh`/blue-dominant-background
+  issue found, and its socket/read-receipt logic isn't worth the risk of
+  touching without a concrete finding.
 - ⬜ Milestone 3 — Student portal.
 - ⬜ Milestone 4 — Tutor portal.
 - ⬜ Milestone 5 — Parent portal.
