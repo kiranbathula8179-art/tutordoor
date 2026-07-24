@@ -18,7 +18,7 @@ import { TestimonialsV3 } from "@/features/landing/v3/TestimonialsV3";
  */
 export function LandingPage() {
   return (
-    <div className="min-h-screen bg-canvas text-navy antialiased">
+    <div className="min-h-screen bg-ice text-navy antialiased">
       <AnnouncementBar />
       <NavV3 />
       <main>

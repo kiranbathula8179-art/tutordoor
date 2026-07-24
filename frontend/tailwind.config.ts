@@ -65,12 +65,19 @@ export default {
         line: "#E6D8C3",
         navy: { subtle: "#EAF0F6", DEFAULT: "#1E3A5F", dark: "#152A46" },
         brick: { subtle: "#F3E4DC", DEFAULT: "#A65A3A", dark: "#8A4A2F" },
+        /* ---- V5 "Ambient Light" (see DESIGN_V3.md V5 addendum) — superseded on landing hero by V6, kept for the rest of the page ---- */
+        ice: "#F7FAFF",
+        /* ---- V6 "The Journey" hero (see DESIGN_V3.md V6 addendum) — landing hero only ---- */
+        forest: { subtle: "#EAF0EA", DEFAULT: "#2F5233", dark: "#1F3A23" },
+        sage: "#8BA888",
       },
       fontFamily: {
         /* V3 (DESIGN_V3.md): Jakarta for display, Inter for everything else.
            grotesk remains only until the v2 dark surfaces are restaged. */
         display: ["\"Plus Jakarta Sans\"", "Inter", "ui-sans-serif", "system-ui", "sans-serif"],
         jakarta: ["\"Plus Jakarta Sans\"", "Inter", "ui-sans-serif", "system-ui", "sans-serif"],
+        /* V6 hero only — editorial serif display, paired with the existing sans body */
+        editorial: ["Fraunces", "ui-serif", "Georgia", "serif"],
         sans: ["Inter", "ui-sans-serif", "system-ui", "sans-serif"],
         mono: ["\"IBM Plex Mono\"", "ui-monospace", "SFMono-Regular", "monospace"],
       },

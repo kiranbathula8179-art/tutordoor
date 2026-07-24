@@ -131,7 +131,124 @@ to working surfaces (dashboards, tables, forms), which is where "gradient
 overload" and "template look" actually come from.
 
 ### Rollout
-Nothing here is implemented yet. Once approved, it lands as its own scoped
-pass — `GlassPanel`/`AuroraWash` built in `Surface.tsx` first, then adopted on
-exactly the named surfaces, verified with the same build/lint/browser
-checklist as every other change this session — not a landing-page rebuild.
+✅ Implemented. `GlassPanel`/`AuroraWash` built in `Surface.tsx`, adopted on
+the landing hero background, the sticky nav's post-scroll state, and the
+auth `BrandMesh` panel's trust-stats card. Landing was then further extended
+by V5 below (explicit, repeated direction from the project owner) — V4's
+"hero/auth/nav only" boundary for glass and gradient effects **no longer
+applies to the landing page**; it still governs every other page (auth
+forms, all five portals, admin, search, tutor profiles, static pages),
+which stay on the flatness sweep this document has always specified.
+
+## V5 — "Ambient Light" (landing page only, supersedes V4's scope on that one page)
+
+Explicit, repeated direction from the project owner: the landing page's
+background moves from a flat warm canvas to a layered, cool-toned ambient
+light system — soft blue/cyan/lavender/indigo blooms behind every section,
+not just hero/auth. This is a deliberate, acknowledged departure from V3's
+"never a page's primary background" rule and from V4's narrow scoping,
+**confined to `frontend/src/features/landing/**`** — nothing else in the app
+changes tone or gets a new background system.
+
+### New tokens (`tailwind.config.ts`)
+- `ice` (`#F7FAFF`) — the landing page's own near-white base, replacing
+  `canvas`/`surface` (both intentionally warm) on that page only. Set once,
+  at `LandingPage.tsx`'s root `<div>`.
+- Ambient bloom hues reuse Tailwind's own default palette (`sky-400`,
+  `violet-300`, `indigo-400`/`indigo-500`, already available since this
+  config uses `theme.extend`, not a full palette replacement) alongside the
+  existing `primary`/`secondary` brand tokens — no new saturated colors were
+  invented, only combined at very low opacity.
+
+### New primitive: `AmbientWash` (`components/ui/Surface.tsx`)
+One or two very large, very soft blurred blooms — `blur-[220px]`,
+opacity `0.06`–`0.09` — positioned in opposite corners of a section,
+suggesting light drifting behind the content rather than a flat fill.
+Takes 1–2 `tone`s from `blue | cyan | sky | lavender | indigo`. Each
+landing section gets a different tone pairing instead of alternating solid
+`canvas`/`surface` blocks:
+
+| Section | Tones |
+| --- | --- |
+| Hero | `blue`, `lavender` (layered with the existing `AuroraWash`) |
+| Advanced search | `blue` |
+| Categories | `cyan`, `blue` |
+| Featured tutors | `blue` |
+| How it works | `blue` |
+| Trust ("Why TutorDoor") | `sky` |
+| Testimonials | `lavender` |
+| FAQ | `blue` |
+
+Cards on every one of these sections are now genuine `bg-white` (was
+`bg-canvas`, which reads warm) with `border-line/60` (softer than the
+default `border-line`) — "white surfaces floating on ambient light," not
+white-on-white.
+
+### CTA and Footer — the two intentional exceptions to "restrained"
+- **CTA**: `bg-primary` solid → `bg-gradient-to-br from-primary via-primary-dark
+  to-indigo-600`, a genuine multi-stop gradient (still just the brand blue
+  extended toward indigo, not a new hue family), plus the same two soft
+  interior blooms it already had.
+- **Footer**: the one deliberate dark surface in the app, explicitly
+  requested and confirmed by name. `bg-gradient-to-b from-navy to-navy-dark`
+  with one soft indigo bloom and every text color flipped to a white-based
+  scale (`text-white/40` through `text-white`) for contrast. This is a
+  **named, one-page exception** to the "avoid black/dark backgrounds" rule —
+  it does not open the door to dark surfaces anywhere else; portals,
+  dashboards, and every other page's footer-adjacent chrome stay light.
+
+### What does not change
+Everything outside `features/landing/**`: every portal, admin, auth forms,
+search, tutor profiles, static pages, and all shared `components/ui/*`
+defaults (`Card` still defaults to `bg-canvas`, `canvas`/`surface`/`line`
+tokens are untouched globally). V5 is layered on top of a page via explicit
+per-usage `className` overrides, not a global token change — so nothing
+elsewhere in the app silently shifted tone.
+
+## V6 — "The Journey" (landing hero only, scoped narrower than V5)
+
+Explicit direction from the project owner requested a much larger,
+cinematic 12-chapter reinterpretation of the whole landing page (a
+photorealistic 3D aircraft-and-book concept, Three.js/React Three Fiber,
+bespoke illustrated "chapters" replacing every section). That is not
+something this codebase can honestly deliver: it would require a bespoke
+3D-art pipeline this project doesn't have, new heavy runtime dependencies
+with real performance cost, and fabricated marketing claims (invented
+tutor/session counts) that violate the project's real-data-only rule. V6
+is the honest, scoped response — one real chapter, not twelve invented
+ones: the **hero section only**, rebuilt with techniques that actually
+ship (Framer Motion SVG path-drawing, no WebGL/Three.js), everything below
+it untouched on V5.
+
+### New tokens (`tailwind.config.ts`)
+- `forest` (`DEFAULT #2F5233`, `subtle #EAF0EA`, `dark #1F3A23`) and `sage`
+  (`#8BA888`) — a botanical accent pair for the hero's eyebrow badge, trust
+  chips, and headline gradient. `gold-star` (pre-existing token) is reused
+  for the headline's warm accent instead of inventing a new gold.
+- `editorial` font family (Fraunces, a variable serif) added alongside the
+  existing `display`/`sans` — used only for the hero `<h1>`, nowhere else.
+
+### New primitive: `FlightTrail` (`features/landing/v3/FlightTrail.tsx`)
+A small aircraft silhouette animates along a hand-authored SVG curve while
+a matching gradient stroke "draws" itself in sync, using Framer Motion's
+`pathLength` animation. Purely atmospheric — `aria-hidden`, no navigation
+role, `pointer-events-none`, and collapses to a fully-drawn static path
+under `prefers-reduced-motion` (verified: `still` branch renders
+`pathLength: 1` immediately, no animation). Desktop only (`hidden
+lg:block`) — confirmed zero horizontal overflow and correct
+show/hide at 390px, 834px, and 1440px.
+
+### Hero background
+`bg-gradient-to-b from-[#FFF8E8] via-[#FDFBF3] to-canvas` (warm dawn wash)
+replaces V5's cool ambient-blue treatment on the hero specifically, with
+drifting white/sage cloud blooms in place of the blue/lavender
+`AmbientWash`. The rest of the page (search, categories, featured tutors,
+how-it-works, trust, testimonials, FAQ, CTA, footer) keeps V5's ambient
+system unchanged — this is a hero-only palette shift, not a page-wide one.
+
+### What does not change
+Everything below the hero fold stays on V5 "Ambient Light" exactly as
+documented above. The real tutor preview cards, search form, and trust
+chips in the hero keep their existing data, copy, and behavior — only the
+surrounding atmosphere and headline typography changed. No fabricated
+statistics, no new heavy dependencies, no 3D.

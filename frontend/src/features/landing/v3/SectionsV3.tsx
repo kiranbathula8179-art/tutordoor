@@ -5,6 +5,7 @@ import { Link } from "react-router-dom";
 
 import { Logo } from "@/components/shared/Logo";
 import { Skeleton } from "@/components/ui/Skeleton";
+import { AmbientWash } from "@/components/ui/Surface";
 import { SectionHeading } from "@/features/landing/v3/SectionHeading";
 import { iconForSubject } from "@/features/landing/v3/subjectIcons";
 import { useLandingTutorPool } from "@/features/landing/v3/useTutorPool";
@@ -43,14 +44,15 @@ export function CategoriesV3() {
   if (shown.length === 0) return null;
 
   return (
-    <section className="container-page py-20">
+    <section className="container-page relative py-20">
+      <AmbientWash tones={["cyan", "blue"]} />
       <SectionHeading eyebrow="Categories" title="Popular subjects to explore" />
       <motion.div
         initial={still ? false : "hidden"}
         whileInView="show"
         viewport={{ once: true, margin: "-60px" }}
         variants={staggerContainer}
-        className="mt-8 grid grid-cols-2 gap-4 md:grid-cols-4"
+        className="relative mt-8 grid grid-cols-2 gap-4 md:grid-cols-4"
       >
         {shown.map((subject, index) => {
           const Icon = iconForSubject(subject.name);
@@ -61,7 +63,7 @@ export function CategoriesV3() {
               <Link
                 to={`/search?subject_id=${subject.id}`}
                 className={cn(
-                  "group flex h-full flex-col justify-between rounded-2xl border border-line bg-canvas shadow-soft transition-all hover:-translate-y-0.5 hover:border-primary/40 hover:shadow-hover focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/30",
+                  "group flex h-full flex-col justify-between rounded-2xl border border-line/60 bg-white shadow-soft transition-all hover:-translate-y-0.5 hover:border-primary/40 hover:shadow-hover focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/30",
                   featured ? "p-6" : "p-5"
                 )}
               >
@@ -105,14 +107,15 @@ export function FeaturedTutorsV3() {
   if (!isLoading && featured.length === 0) return null;
 
   return (
-    <section className="container-page py-20">
+    <section className="container-page relative py-20">
+      <AmbientWash tones={["blue"]} />
       <SectionHeading eyebrow="Tutors" title="Learn from verified tutors" />
       <motion.div
         initial={still ? false : "hidden"}
         whileInView="show"
         viewport={{ once: true, margin: "-60px" }}
         variants={staggerContainer}
-        className="mt-8 grid gap-5 sm:grid-cols-2 lg:grid-cols-3"
+        className="relative mt-8 grid gap-5 sm:grid-cols-2 lg:grid-cols-3"
       >
         {isLoading
           ? Array.from({ length: 3 }).map((_, i) => <Skeleton key={i} className="h-72 rounded-2xl" />)
@@ -122,10 +125,10 @@ export function FeaturedTutorsV3() {
               </motion.div>
             ))}
       </motion.div>
-      <div className="mt-8 flex justify-center">
+      <div className="relative mt-8 flex justify-center">
         <Link
           to="/search"
-          className="inline-flex items-center gap-1.5 rounded-xl border border-line bg-canvas px-5 py-2.5 text-sm font-semibold text-navy shadow-soft transition-all hover:-translate-y-0.5 hover:border-primary/40 hover:shadow-hover focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/30 active:scale-[0.97]"
+          className="inline-flex items-center gap-1.5 rounded-xl border border-line/60 bg-white px-5 py-2.5 text-sm font-semibold text-navy shadow-soft transition-all hover:-translate-y-0.5 hover:border-primary/40 hover:shadow-hover focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/30 active:scale-[0.97]"
         >
           Browse all tutors <ArrowRight className="h-4 w-4" />
         </Link>
@@ -156,8 +159,9 @@ const STEPS = [
 export function HowItWorksV3() {
   const still = prefersReducedMotion();
   return (
-    <section className="bg-surface py-20">
-      <div className="container-page">
+    <section className="relative py-20">
+      <AmbientWash tones={["blue"]} />
+      <div className="container-page relative">
         <SectionHeading eyebrow="How it works" title="From search to session in three steps" />
         <motion.div
           initial={still ? false : "hidden"}
@@ -173,10 +177,10 @@ export function HowItWorksV3() {
           />
           {STEPS.map((step, index) => (
             <motion.div key={step.title} variants={staggerItem} className="relative">
-              <span className="relative z-10 flex h-11 w-11 items-center justify-center rounded-full bg-primary text-sm font-bold text-white shadow-soft ring-4 ring-surface">
+              <span className="relative z-10 flex h-11 w-11 items-center justify-center rounded-full bg-primary text-sm font-bold text-white shadow-soft ring-4 ring-ice">
                 {index + 1}
               </span>
-              <div className="mt-5 rounded-2xl border border-line bg-canvas p-6 shadow-soft transition-all hover:-translate-y-0.5 hover:shadow-hover">
+              <div className="mt-5 rounded-2xl border border-line/60 bg-white p-6 shadow-soft transition-all hover:-translate-y-0.5 hover:shadow-hover">
                 <h3 className="font-display text-lg font-bold text-navy">{step.title}</h3>
                 <p className="mt-2 text-sm leading-relaxed text-slate-600">{step.body}</p>
               </div>
@@ -202,8 +206,9 @@ const FEATURES = [
 export function WhyV3() {
   const still = prefersReducedMotion();
   return (
-    <section className="py-20">
-      <div className="container-page">
+    <section className="relative py-20">
+      <AmbientWash tones={["sky"]} />
+      <div className="container-page relative">
         <div className="grid gap-10 lg:grid-cols-[0.85fr_1.15fr] lg:items-center">
           {/* Asymmetric split, not another grid-of-cards — the section makes a claim, then proves it. */}
           <div>
@@ -242,7 +247,7 @@ export function WhyV3() {
               <motion.div
                 key={title}
                 variants={staggerItem}
-                className="rounded-2xl border border-line bg-canvas p-5 shadow-soft transition-all hover:-translate-y-0.5 hover:shadow-hover"
+                className="rounded-2xl border border-line/60 bg-white p-5 shadow-soft transition-all hover:-translate-y-0.5 hover:shadow-hover"
               >
                 <span className="flex h-10 w-10 items-center justify-center rounded-xl bg-primary-subtle text-primary">
                   <Icon className="h-5 w-5" />
@@ -274,8 +279,9 @@ const FAQS = [
 export function FaqV3() {
   const still = prefersReducedMotion();
   return (
-    <section className="bg-surface py-20">
-      <div className="container-page max-w-3xl">
+    <section className="relative py-20">
+      <AmbientWash tones={["blue"]} />
+      <div className="container-page relative max-w-3xl">
         <SectionHeading eyebrow="FAQ" title="Questions, answered" />
         <motion.div
           initial={still ? false : "hidden"}
@@ -288,7 +294,7 @@ export function FaqV3() {
             <motion.details
               key={question}
               variants={staggerItem}
-              className="group rounded-2xl border border-line bg-canvas px-5 shadow-soft open:shadow-hover"
+              className="group rounded-2xl border border-line/60 bg-white px-5 shadow-soft open:shadow-hover"
             >
               <summary className="flex cursor-pointer list-none items-center justify-between gap-3 py-4 font-medium text-navy focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/30 [&::-webkit-details-marker]:hidden">
                 {question}
@@ -317,11 +323,11 @@ export function CtaV3() {
         viewport={{ once: true, margin: "-60px" }}
         variants={fadeRise}
         transition={motionSafe({ duration: DURATION.slow, ease: EASE_OUT })}
-        className="relative overflow-hidden rounded-3xl bg-primary px-8 py-14 shadow-hover sm:px-14"
+        className="relative overflow-hidden rounded-3xl bg-gradient-to-br from-primary via-primary-dark to-indigo-600 px-8 py-14 shadow-hover sm:px-14"
       >
-        {/* Soft internal light — the same bg-white/10 + bg-secondary blur-3xl blooms BrandMesh already uses. */}
+        {/* Soft internal light on top of the blue→indigo gradient. */}
         <div aria-hidden="true" className="pointer-events-none absolute -right-20 -top-20 h-72 w-72 rounded-full bg-white/10 blur-3xl" />
-        <div aria-hidden="true" className="pointer-events-none absolute -bottom-24 -left-10 h-64 w-64 rounded-full bg-secondary/20 blur-3xl" />
+        <div aria-hidden="true" className="pointer-events-none absolute -bottom-24 -left-10 h-64 w-64 rounded-full bg-violet-400/20 blur-3xl" />
         <div className="relative flex flex-col items-start gap-8 lg:flex-row lg:items-center lg:justify-between">
           <h2 className="max-w-xl font-display text-3xl font-bold tracking-tight text-white sm:text-4xl">
             Start learning with a tutor who's actually available.
@@ -354,25 +360,23 @@ const FOOTER_GROUPS = [
 
 export function FooterV3() {
   return (
-    <footer className="relative border-t border-line bg-canvas">
-      <div
-        aria-hidden="true"
-        className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-primary/30 to-transparent"
-      />
-      <div className="container-page grid gap-12 py-14 md:grid-cols-[1.4fr_repeat(3,1fr)]">
+    <footer className="relative overflow-hidden bg-gradient-to-b from-navy to-navy-dark">
+      {/* One soft indigo bloom — enough to keep the dark surface from reading as flat/generic-dark. */}
+      <div aria-hidden="true" className="pointer-events-none absolute -right-24 top-0 h-80 w-80 rounded-full bg-indigo-500/10 blur-[220px]" />
+      <div className="container-page relative grid gap-12 py-14 md:grid-cols-[1.4fr_repeat(3,1fr)]">
         <div>
-          <Logo />
-          <p className="mt-4 max-w-xs text-sm leading-relaxed text-slate-500">
+          <Logo dark />
+          <p className="mt-4 max-w-xs text-sm leading-relaxed text-white/60">
             Verified tutors, real availability, and payments you can audit — for every learner.
           </p>
         </div>
         {FOOTER_GROUPS.map((group) => (
           <nav key={group.heading} aria-label={group.heading}>
-            <p className="text-xs font-bold uppercase tracking-[0.12em] text-slate-400">{group.heading}</p>
+            <p className="text-xs font-bold uppercase tracking-[0.12em] text-white/60">{group.heading}</p>
             <ul className="mt-4 space-y-2.5">
               {group.links.map(([label, to]) => (
                 <li key={to}>
-                  <Link to={to} className="text-sm text-slate-600 transition-colors hover:text-primary">
+                  <Link to={to} className="text-sm text-white/70 transition-colors hover:text-white">
                     {label}
                   </Link>
                 </li>
@@ -381,8 +385,8 @@ export function FooterV3() {
           </nav>
         ))}
       </div>
-      <div className="border-t border-line py-5">
-        <div className="container-page flex flex-col items-center justify-between gap-2 text-xs text-slate-400 sm:flex-row">
+      <div className="relative border-t border-white/10 py-5">
+        <div className="container-page flex flex-col items-center justify-between gap-2 text-xs text-white/60 sm:flex-row">
           <p>© {new Date().getFullYear()} TutorDoor. All rights reserved.</p>
           <p className="flex items-center gap-1.5">
             <ShieldCheck className="h-3.5 w-3.5" /> Verified tutors · Secure payments

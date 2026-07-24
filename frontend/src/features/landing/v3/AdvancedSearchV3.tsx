@@ -8,6 +8,7 @@ import { Button } from "@/components/ui/Button";
 import { Card, CardBody } from "@/components/ui/Card";
 import { Input } from "@/components/ui/Input";
 import { Select } from "@/components/ui/Select";
+import { AmbientWash } from "@/components/ui/Surface";
 import { useLandingTutorPool } from "@/features/landing/v3/useTutorPool";
 import { getSubjects } from "@/features/tutors/api";
 import { DURATION, EASE_OUT, motionSafe, riseInit } from "@/lib/motion/tokens";
@@ -50,13 +51,14 @@ export function AdvancedSearchV3() {
 
   return (
     <section className="container-page relative -mt-10 pb-4 sm:-mt-14 sm:pb-8">
+      <AmbientWash tones={["blue"]} />
       <motion.div
         initial={riseInit(20)}
         whileInView={{ opacity: 1, y: 0 }}
         viewport={{ once: true, margin: "-40px" }}
         transition={motionSafe({ duration: DURATION.slow, ease: EASE_OUT })}
       >
-        <Card className="relative overflow-hidden rounded-3xl shadow-dialog">
+        <Card className="relative overflow-hidden rounded-3xl border-line/60 bg-white shadow-dialog">
           {/* A single confident accent edge — the search card reads as the product's centerpiece, not another panel. */}
           <div aria-hidden="true" className="absolute inset-x-0 top-0 h-1.5 bg-gradient-to-r from-primary via-primary-light to-secondary" />
           <CardBody className="p-6 sm:p-8">

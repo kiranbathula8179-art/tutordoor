@@ -123,6 +123,51 @@ export const GlassPanel = forwardRef<HTMLDivElement, HTMLAttributes<HTMLDivEleme
 GlassPanel.displayName = "GlassPanel";
 
 /**
+ * AmbientWash — V5 "Ambient Light" (DESIGN_V3.md V5 addendum, landing page
+ * only). One or two very large, extremely soft blurred color blooms —
+ * 200-400px blur, ~4-12% opacity — suggesting light drifting behind the
+ * section rather than a flat fill. Each landing section gets its own tone
+ * combination instead of alternating solid backgrounds.
+ */
+type AmbientTone = "blue" | "cyan" | "sky" | "lavender" | "indigo";
+
+const AMBIENT_TONE_CLASSES: Record<AmbientTone, string> = {
+  blue: "bg-primary/[0.08]",
+  cyan: "bg-secondary/[0.08]",
+  sky: "bg-sky-400/[0.09]",
+  lavender: "bg-violet-300/[0.08]",
+  indigo: "bg-indigo-400/[0.07]",
+};
+
+export function AmbientWash({
+  tones,
+  className,
+}: {
+  /** One or two tones — rendered as large blooms in opposite corners. */
+  tones: [AmbientTone] | [AmbientTone, AmbientTone];
+  className?: string;
+}) {
+  return (
+    <div aria-hidden="true" className={cn("pointer-events-none absolute inset-0 overflow-hidden", className)}>
+      <div
+        className={cn(
+          "absolute -left-32 -top-32 h-[420px] w-[420px] rounded-full blur-[220px]",
+          AMBIENT_TONE_CLASSES[tones[0]]
+        )}
+      />
+      {tones[1] && (
+        <div
+          className={cn(
+            "absolute -right-24 bottom-0 h-[380px] w-[380px] rounded-full blur-[220px]",
+            AMBIENT_TONE_CLASSES[tones[1]]
+          )}
+        />
+      )}
+    </div>
+  );
+}
+
+/**
  * MeshBackground — a full light mesh-gradient wash for app page shells.
  * Layers a canvas tint with two off-screen color blooms and optional dot grid.
  * This is the default "alive but calm" backdrop for authenticated pages.

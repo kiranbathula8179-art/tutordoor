@@ -1,22 +1,23 @@
 import { motion } from "framer-motion";
-import { ArrowRight, BadgeCheck, CalendarCheck, GraduationCap, Lock, Search, ShieldCheck, Sparkles, X } from "lucide-react";
+import { ArrowRight, BadgeCheck, CalendarCheck, Lock, Search, ShieldCheck, Sparkles, X } from "lucide-react";
 import { useState, type FormEvent } from "react";
 import { Link, useNavigate } from "react-router-dom";
 
 import { StarRating } from "@/components/shared/StarRating";
 import { Avatar } from "@/components/ui/Avatar";
-import { AuroraWash, DotGrid, GlassPanel } from "@/components/ui/Surface";
+import { GlassPanel } from "@/components/ui/Surface";
+import { FlightTrail } from "@/features/landing/v3/FlightTrail";
 import { useLandingTutorPool } from "@/features/landing/v3/useTutorPool";
 import { DURATION, EASE_OUT, motionSafe, riseInit } from "@/lib/motion/tokens";
 import { cn, formatCurrency } from "@/lib/utils";
 import type { TutorProfile } from "@/types";
 
 /**
- * Landing V3 — bright hero (DESIGN_V3.md, migration step 3).
- *
- * The hero's visual is REAL top-rated tutors from the live search API — the
- * product itself is the illustration, so nothing is faked. No WebGL, no dark
- * field; canvas white, one subtle primary wash, Jakarta display type.
+ * Landing V6 hero — "The Journey" (DESIGN_V3.md V6 addendum). A dawn-sky
+ * gradient, slow-drifting cloud blooms, and an original aircraft-and-trail
+ * motif (FlightTrail.tsx) replace V5's cool ambient-blue treatment on the
+ * hero specifically. Real tutors remain the illustration on the right —
+ * still no invented imagery there, just a warmer atmosphere around it.
  */
 
 // ---------------------------------------------------------------------------
@@ -103,30 +104,36 @@ export function HeroV3() {
   };
 
   return (
-    <section className="relative overflow-hidden">
-      {/* Layered depth: radial wash → AuroraWash's slow-drifting orbs (V4 addendum, Surface.tsx) */}
+    <section className="relative overflow-hidden bg-gradient-to-b from-[#FFF8E8] via-[#FDFBF3] to-canvas">
+      {/* Dawn sky: soft gold-to-cream wash, drifting cloud blooms, and the flight trail. */}
       <div aria-hidden="true" className="pointer-events-none absolute inset-0 overflow-hidden">
-        <div className="absolute inset-x-0 top-0 h-[480px] bg-[radial-gradient(60%_100%_at_50%_0%,#EFF6FF_0%,transparent_70%)]" />
-        {/* Editorial watermark — the kind of oversized, near-invisible mark that gives a hero room to breathe. */}
-        <GraduationCap className="absolute -right-16 -top-10 hidden h-[420px] w-[420px] text-primary/[0.035] lg:block" />
+        <div className="absolute inset-x-0 top-0 h-[420px] bg-[radial-gradient(70%_90%_at_30%_0%,rgba(244,180,0,0.12)_0%,transparent_70%)]" />
+        <div className="absolute -left-24 top-8 h-64 w-[32rem] animate-float-slow rounded-[50%] bg-white/70 blur-3xl motion-reduce:animate-none" />
+        <div
+          className="absolute -right-16 top-28 h-56 w-[28rem] animate-float-slow rounded-[50%] bg-white/60 blur-3xl motion-reduce:animate-none"
+          style={{ animationDelay: "-3.5s" }}
+        />
+        <div
+          className="absolute left-1/3 top-4 h-40 w-80 animate-float-slow rounded-[50%] bg-sage/[0.12] blur-3xl motion-reduce:animate-none"
+          style={{ animationDelay: "-5s" }}
+        />
       </div>
-      <AuroraWash className="h-[480px]" />
-      <DotGrid size={22} className="h-[480px] opacity-60" />
+      <FlightTrail className="pointer-events-none absolute inset-x-0 top-0 hidden h-[420px] lg:block" />
       <div className="container-page relative grid items-center gap-12 py-16 lg:grid-cols-[1.1fr_0.9fr] lg:py-24">
         <div>
           <motion.span
             {...arriveProps(0)}
-            className="inline-flex items-center gap-1.5 rounded-full bg-primary-subtle px-3 py-1 text-xs font-bold uppercase tracking-[0.14em] text-primary"
+            className="inline-flex items-center gap-1.5 rounded-full bg-forest-subtle px-3 py-1 text-xs font-bold uppercase tracking-[0.14em] text-forest"
           >
             <Sparkles className="h-3.5 w-3.5" /> Verified tutors, real availability
           </motion.span>
           <motion.h1
             {...arriveProps(0.05)}
-            className="mt-4 max-w-xl font-display text-[2.75rem] font-extrabold leading-[1.03] tracking-[-0.03em] text-navy sm:text-6xl lg:text-[4.1rem]"
+            className="mt-4 max-w-xl font-editorial text-[2.75rem] font-semibold leading-[1.05] tracking-[-0.02em] text-navy sm:text-6xl lg:text-[4.1rem]"
           >
-            The right tutor for{" "}
-            <span className="bg-gradient-to-r from-primary via-primary-light to-secondary bg-clip-text text-transparent">
-              every learner.
+            The right tutor,{" "}
+            <span className="bg-gradient-to-r from-forest via-forest to-gold-star bg-clip-text italic text-transparent">
+              one page away.
             </span>
           </motion.h1>
           <motion.p {...arriveProps(0.12)} className="mt-5 max-w-lg text-lg leading-relaxed text-slate-600">
@@ -161,7 +168,7 @@ export function HeroV3() {
           >
             {TRUST_CHIPS.map(({ icon: Icon, text }) => (
               <span key={text} className="flex items-center gap-2 text-sm font-medium text-slate-600">
-                <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-lg bg-primary-subtle text-primary">
+                <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-lg bg-forest-subtle text-forest">
                   <Icon className="h-3.5 w-3.5" />
                 </span>
                 {text}

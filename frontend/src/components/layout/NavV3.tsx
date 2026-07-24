@@ -88,7 +88,7 @@ export function NavV3() {
     <header
       className={cn(
         "sticky top-0 z-40 transition-colors duration-300",
-        scrolled ? cn(GLASS_PANEL_CLASSES, "border-x-0 border-t-0") : "border-b border-line bg-canvas/80 backdrop-blur-xl"
+        scrolled ? cn(GLASS_PANEL_CLASSES, "border-x-0 border-t-0") : "border-b border-line bg-white/80 backdrop-blur-xl"
       )}
     >
       <div className="container-page flex h-16 items-center justify-between gap-4">

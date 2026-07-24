@@ -6,6 +6,7 @@ import { Link } from "react-router-dom";
 import { StarRating } from "@/components/shared/StarRating";
 import { Avatar } from "@/components/ui/Avatar";
 import { Skeleton } from "@/components/ui/Skeleton";
+import { AmbientWash } from "@/components/ui/Surface";
 import { SectionHeading } from "@/features/landing/v3/SectionHeading";
 import { useLandingTutorPool } from "@/features/landing/v3/useTutorPool";
 import { getTutorReviews } from "@/features/reviews/api";
@@ -77,19 +78,20 @@ export function TestimonialsV3() {
   const [featured, ...rest] = testimonials;
 
   return (
-    <section className="container-page py-20">
+    <section className="container-page relative py-20">
+      <AmbientWash tones={["lavender"]} />
       <SectionHeading eyebrow="Testimonials" title="What learners say" />
       <motion.div
         initial={still ? false : "hidden"}
         whileInView="show"
         viewport={{ once: true, margin: "-60px" }}
         variants={staggerContainer}
-        className={cn("mt-8 grid gap-5", rest.length > 0 && "lg:grid-cols-[1.3fr_1fr]")}
+        className={cn("relative mt-8 grid gap-5", rest.length > 0 && "lg:grid-cols-[1.3fr_1fr]")}
       >
         {/* Editorial pull-quote treatment for the strongest real review. */}
         <motion.div
           variants={staggerItem}
-          className="relative flex flex-col justify-between rounded-3xl border border-line bg-canvas p-8 shadow-soft sm:p-10"
+          className="relative flex flex-col justify-between rounded-3xl border border-line/60 bg-white p-8 shadow-soft sm:p-10"
         >
           <Quote className="h-10 w-10 shrink-0 text-primary/20" aria-hidden="true" />
           <p className="mt-4 flex-1 font-display text-xl leading-relaxed text-navy sm:text-2xl">
@@ -121,7 +123,7 @@ export function TestimonialsV3() {
               <motion.div
                 key={review.id}
                 variants={staggerItem}
-                className="flex flex-1 flex-col rounded-2xl border border-line bg-canvas p-6 shadow-soft"
+                className="flex flex-1 flex-col rounded-2xl border border-line/60 bg-white p-6 shadow-soft"
               >
                 <Quote className="h-5 w-5 shrink-0 text-primary/25" aria-hidden="true" />
                 <p className="mt-3 flex-1 text-sm leading-relaxed text-slate-600">&ldquo;{review.comment}&rdquo;</p>
