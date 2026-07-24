@@ -631,4 +631,38 @@ replaced wherever a milestone touches that page.
   opacity with enough rigor (`getAnimations()`) to see the animation was
   stuck rather than assuming "opacity < 1 after N seconds" meant a
   simple timing issue.
-- ⬜ Milestone 8 — Admin (data-table-heavy pages — restrained pass only).
+- ✅ **Milestone 8** — Admin (data-table-heavy pages: Users, Bookings,
+  Payments, Coupons, Master data). Restrained pass only, per Principle 4
+  and the plan's own explicit scope — no hero, mesh, or motion added
+  anywhere in this milestone. `AdminCouponsPage` and
+  `AdminMasterDataPage` were already fully compliant (`Card`+`EmptyState`
+  throughout, and a properly restrained dense data table respectively) —
+  zero changes, same "already compliant" precedent as
+  `ParentPaymentsPage`. The one real, in-scope fix: `AdminUsersPage`,
+  `AdminBookingsPage`, and `AdminPaymentsPage` all had a raw dashed-`div`
+  "no results" state instead of `Card`+`EmptyState` — fixed to match
+  every other list page in the app, with no motion added (consistency,
+  not decoration).
+  A real, pre-existing horizontal-overflow bug was also found and fixed
+  during 390px verification: `AdminBookingsPage`'s status-tab row
+  overflowed the viewport by ~100px. The tab bar's own container already
+  had `overflow-x-auto` (correct, scrollable-within-itself behavior), but
+  the page's outer wrapper `div` around it had no width constraint, so
+  as a flex item its default `min-width: auto` let it grow to the
+  content's full width and push the whole page wider — the same
+  grid/flex auto-sizing failure mode fixed for `InstituteTutorsPage` in
+  Milestone 6, this time on a flex tab bar instead of a grid card. Fixed
+  by adding `min-w-0` to that wrapper. Not present on `AdminUsersPage` or
+  `AdminPaymentsPage`, which don't wrap their filter controls the same
+  way.
+  Verified live against the seeded admin account with real platform data
+  throughout (18 real users, real bookings/payments/coupons). Zero
+  horizontal overflow at 390/834/1440px after the fix. Zero stuck-opacity
+  elements (confirmed post-Milestone-7 `riseInit` fix holds). Keyboard
+  reachability at the same baseline as every other portal page.
+
+This closes the V8 "Authenticated Portals" rollout — all 8 milestones
+shipped, verified, and committed. Every dashboard applies the Design DNA
+from first paint; the one severe cross-cutting bug this rollout
+surfaced (the reduced-motion `riseInit` stuck-animation issue, Milestone
+7) was root-caused and fixed centrally rather than patched per page.

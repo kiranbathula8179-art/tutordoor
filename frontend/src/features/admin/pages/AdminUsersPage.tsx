@@ -102,9 +102,9 @@ export function AdminUsersPage() {
             />
           </Card>
         ) : !data || data.results.length === 0 ? (
-          <div className="rounded-card border border-dashed border-line py-16 text-center">
-            <p className="font-medium text-navy">No users match these filters.</p>
-          </div>
+          <Card>
+            <EmptyState icon={Search} title="No users match these filters" description="Try a different search term or filter." />
+          </Card>
         ) : (
           <>
             <Card className={cn(isFetching && "opacity-60")}>

@@ -37,7 +37,7 @@ export function AdminBookingsPage() {
       <PageHeader title="Bookings" description="Every 1-on-1 session across the platform." />
 
       <div className="mt-5 flex flex-wrap items-end gap-3">
-        <div className="flex flex-wrap gap-1 border-b border-line">
+        <div className="min-w-0 flex flex-wrap gap-1 border-b border-line">
           <Tabs
             items={STATUS_TABS.map(({ key, label }) => ({ value: key, label }))}
             value={status}
@@ -76,9 +76,9 @@ export function AdminBookingsPage() {
             />
           </Card>
         ) : !data || data.results.length === 0 ? (
-          <div className="rounded-card border border-dashed border-line py-16 text-center">
-            <p className="font-medium text-navy">No bookings match these filters.</p>
-          </div>
+          <Card>
+            <EmptyState icon={Search} title="No bookings match these filters" description="Try a different search term or filter." />
+          </Card>
         ) : (
           <>
             <Card className={cn(isFetching && "opacity-60")}>
