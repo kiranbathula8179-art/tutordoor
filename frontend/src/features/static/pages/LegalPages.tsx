@@ -4,7 +4,7 @@ import { LegalNote, Section, StaticPageShell } from "@/features/static/StaticPag
 
 export function TermsPage() {
   return (
-    <StaticPageShell title="Terms of Service" updated="July 2026">
+    <StaticPageShell title="Terms of Service" updated="July 2026" mood="quiet">
       <LegalNote />
 
       <Section title="1. The service">
@@ -78,7 +78,7 @@ export function TermsPage() {
 
 export function PrivacyPage() {
   return (
-    <StaticPageShell title="Privacy Policy" updated="July 2026">
+    <StaticPageShell title="Privacy Policy" updated="July 2026" mood="quiet">
       <LegalNote />
 
       <Section title="What we collect">
@@ -135,7 +135,7 @@ export function PrivacyPage() {
 
 export function RefundsPage() {
   return (
-    <StaticPageShell title="Refund & Cancellation Policy" updated="July 2026">
+    <StaticPageShell title="Refund & Cancellation Policy" updated="July 2026" mood="quiet">
       <Section title="1-on-1 sessions">
         <p>
           Cancel <strong className="text-navy">12 or more hours</strong> before the scheduled start and you're eligible

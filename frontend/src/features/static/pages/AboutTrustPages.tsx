@@ -64,6 +64,7 @@ export function TrustSafetyPage() {
     <StaticPageShell
       title="Trust & Safety"
       subtitle="The systems that make a marketplace of strangers safe enough for your family."
+      mood="calm"
     >
       <Section title="Tutor verification">
         <p>

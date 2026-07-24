@@ -435,5 +435,25 @@ primitive this session has gone through.
   immediately), and a reveal animation would fight task completion —
   documented as a "choose clarity" case per the Manifesto's own
   guidance, not an oversight.
-- ⬜ Milestone 7 — static/legal pages (About, Trust & Safety, Support,
-  Terms, Privacy, Refunds).
+- ✅ **Milestone 7** — static/legal pages (About, Trust & Safety, Support,
+  Terms, Privacy, Refunds). The last milestone in the V7 rollout — every
+  public page is now on the unified system. These six pages had *zero*
+  visual system before this pass (no Card/Surface/motion at all, per the
+  original audit), so one shared-shell rewrite (`StaticPageShell.tsx`)
+  cascaded to all six at once: `font-editorial` on the one page title
+  (used with real scarcity, matching the typography philosophy), a
+  restrained per-page `AmbientWash` mood (`warm`/`calm`/`quiet`), and a
+  thin `border-sand` rule between sections replacing undifferentiated
+  whitespace — the editorial-magazine direction from the Creative
+  Strategy applied more directly here than anywhere else, since these
+  are the only pages in the product that are purely read, not operated.
+  Deliberately no signature threshold moment — these aren't thresholds,
+  and forcing the Door motif here would have been exactly the mistake
+  the Manifesto warns against. The `LegalNote` disclaimer's honest
+  "have qualified counsel review it" wording is untouched on purpose.
+
+**V7 "One World" rollout complete.** Every public page — Landing, global
+nav/footer, Search, Tutor Profile, Courses, public auth, and every
+static/legal page — now shares one background system, one warm palette,
+and one documented set of restraint rules. Authenticated portals remain
+on V4/V3, deferred to a future V8.

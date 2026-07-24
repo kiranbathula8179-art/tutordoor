@@ -33,7 +33,7 @@ export function SupportPage() {
       <Section title="Frequently asked">
         <div className="space-y-3">
           {FAQS.map((faq) => (
-            <details key={faq.q} className="group rounded-card border border-line bg-canvas px-5 py-4">
+            <details key={faq.q} className="group rounded-card border border-sand/70 bg-white px-5 py-4">
               <summary className="cursor-pointer list-none font-medium text-navy marker:content-none">
                 {faq.q}
               </summary>

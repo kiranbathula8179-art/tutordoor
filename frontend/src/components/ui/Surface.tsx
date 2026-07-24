@@ -131,7 +131,7 @@ GlassPanel.displayName = "GlassPanel";
  * section rather than a flat fill. Each landing section gets its own tone
  * combination instead of alternating solid backgrounds.
  */
-type AmbientTone = "blue" | "cyan" | "sky" | "lavender" | "indigo" | "sand" | "clay" | "forest" | "gold";
+export type AmbientTone = "blue" | "cyan" | "sky" | "lavender" | "indigo" | "sand" | "clay" | "forest" | "gold";
 
 const AMBIENT_TONE_CLASSES: Record<AmbientTone, string> = {
   blue: "bg-primary/[0.08]",
