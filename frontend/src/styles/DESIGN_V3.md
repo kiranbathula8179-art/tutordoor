@@ -457,3 +457,67 @@ nav/footer, Search, Tutor Profile, Courses, public auth, and every
 static/legal page — now shares one background system, one warm palette,
 and one documented set of restraint rules. Authenticated portals remain
 on V4/V3, deferred to a future V8.
+
+## V8 — Authenticated Portals (Student/Tutor/Parent/Institute/Admin)
+
+The deferral above is lifted. V8 governs the five authenticated portals,
+under the permanent **Design DNA** (a separate, higher-level constitution
+approved alongside this rollout — ten technology-agnostic principles
+under four pillars: Honesty, Proportion, Coherence, Respect). This
+section records how the DNA is applied here; it does not restate the DNA
+itself.
+
+### The governing decision: register follows stakes
+
+Dashboards are task/trust register almost entirely — a logged-in user
+managing real bookings, payments, verification, or admin data. V7's
+public-page atmosphere (`PublicAtmosphere`, translucent cards, warm
+marketing tone) is **not** imported into dashboards wholesale. This
+isn't a new rule invented for V8 — `DashboardLayout`'s existing
+`MeshBackground` treatment (quiet, functional, warm-toned `surface`/
+`canvas` tokens already, not flat white) and this document's own
+pre-existing V3-era note that "admin/institute tables, settings forms,
+and course pages keep the flatness sweep only — heroes/mesh would be
+decoration there" already reached the same conclusion independently.
+V8 keeps that restraint and fixes what's actually inconsistent with it,
+rather than replacing it with something more atmospheric.
+
+### Milestone 1 — Foundation
+
+**Audited, found already compliant, left alone:** `DashboardLayout.tsx`'s
+chrome (sidebar, topbar, mobile drawer, the `layoutId`-animated active-nav
+pill). Its surface tokens were warm-toned from the original V3 system,
+not cool neutrals — no change needed, and none made. Stated here so the
+absence of a diff isn't mistaken for an unaudited gap.
+
+**Found and fixed:** `DashboardHero` (and, from Milestone 2 onward,
+`WalletPage`'s balance card) used `BrandMesh` — a solid blue-to-cyan
+gradient — as a full-bleed background. This is the same "blue as a
+dominant background" issue already corrected twice on the public surface
+(`AuthLayout`, `TutorProfilePage`), for the same standing reason: blue is
+reserved for interactive elements, not backgrounds. New primitive
+**`PortalHeroMesh`** (`components/ui/Surface.tsx`) replaces it —
+`forest`→`forest-dark`→`navy-dark` gradient, one warm `gold-star` accent
+bloom, dot texture, grain — dark enough to keep the existing white text
+readable, restrained to one gradient plus one bloom rather than a public-
+page `AmbientWash` treatment, per the register decision above.
+`BrandMesh` itself is untouched — it remains available for any future
+caller that still wants the blue treatment deliberately.
+
+### Standard adopted for all later V8 milestones
+
+List-row treatment across portal pages was inconsistent — some pages use
+`Card` + `divide-y`, others hand-roll bordered `div`s directly. `Card` +
+`divide-y` is the standard from here forward; the raw-`div` pattern is
+replaced wherever a milestone touches that page.
+
+### Rollout ledger
+- ✅ **Milestone 1** — Foundation (`PortalHeroMesh`, this section).
+- ⬜ Milestone 2 — shared cross-portal components (bookings, chat,
+  wallet, enrollment payment consistency).
+- ⬜ Milestone 3 — Student portal.
+- ⬜ Milestone 4 — Tutor portal.
+- ⬜ Milestone 5 — Parent portal.
+- ⬜ Milestone 6 — Institute portal.
+- ⬜ Milestone 7 — Admin (Dashboard, Reports, Verifications).
+- ⬜ Milestone 8 — Admin (data-table-heavy pages — restrained pass only).

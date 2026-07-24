@@ -214,6 +214,36 @@ export function BrandMesh({ className }: { className?: string }) {
 }
 
 /**
+ * PortalHeroMesh — V8 addendum (DESIGN_V3.md V8 section). A saturated hero
+ * background for authenticated-portal welcome banners (`DashboardHero`,
+ * `WalletPage`'s balance card) — replaces `BrandMesh`'s blue-to-cyan
+ * gradient there, since blue is reserved for interactive elements, not
+ * backgrounds (the same fix already made twice on the public surface, in
+ * `AuthLayout` and `TutorProfilePage`). Dark enough to keep white text
+ * readable; restrained per Design DNA Principle 4 — dashboards are
+ * task-register, not marketing-register, so this stays one confident
+ * gradient plus one soft accent bloom, not a public-page atmosphere
+ * treatment. `BrandMesh` itself is left untouched for any other caller.
+ */
+export function PortalHeroMesh({ className }: { className?: string }) {
+  return (
+    <div aria-hidden="true" className={cn("pointer-events-none absolute inset-0 overflow-hidden", className)}>
+      <div className="absolute inset-0 bg-gradient-to-br from-forest via-forest-dark to-navy-dark" />
+      <div
+        className="absolute inset-0 opacity-30"
+        style={{
+          backgroundImage: "radial-gradient(rgb(255 255 255 / 0.12) 1px, transparent 1px)",
+          backgroundSize: "24px 24px",
+        }}
+      />
+      <div className="absolute -right-16 -top-16 h-72 w-72 rounded-full bg-gold-star/20 blur-3xl" />
+      <div className="absolute -bottom-20 -left-10 h-64 w-64 rounded-full bg-white/5 blur-3xl" />
+      <NoiseTexture opacity={0.05} />
+    </div>
+  );
+}
+
+/**
  * PublicAtmosphere — V7 "One World" (DESIGN_V3.md V7 addendum). The
  * background system for the entire public surface (Landing, global public
  * nav/footer, Search, Tutor Profile, Courses, About/Trust/Support/Legal,
