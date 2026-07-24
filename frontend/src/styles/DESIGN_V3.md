@@ -420,6 +420,20 @@ primitive this session has gone through.
   `sm` breakpoint (confirmed via `getComputedStyle` + ancestor-clipping
   analysis, not the `PublicAtmosphere` blooms a naive widest-element scan
   initially pointed at — those were correctly clipped red herrings).
-- ⬜ Milestone 6 — Courses (list + detail).
+- ✅ **Milestone 6** — Courses (list + detail). First milestone run under
+  the pre-milestone brief process (Manifesto principles → emotional
+  outcome → signature moment → anti-pattern check → implement). Both
+  pages already sat inside `PublicLayout`, so `PublicAtmosphere` was live
+  with no opaque root to remove — only surface tokens moved
+  (`border-line`→`border-sand`, `bg-canvas`→`bg-white`), plus a small
+  `AmbientWash` near the catalog header. Cards stayed solid, matching
+  Search's readability-first discipline (a curated catalog is still a
+  browsing/scanning task). The real, data-backed "seats left" indicator
+  was kept exactly as-is — honest scarcity, not the fake-urgency
+  anti-pattern. Deliberately did **not** add a signature threshold
+  moment to the enroll flow: it's fast and transactional (navigates away
+  immediately), and a reveal animation would fight task completion —
+  documented as a "choose clarity" case per the Manifesto's own
+  guidance, not an oversight.
 - ⬜ Milestone 7 — static/legal pages (About, Trust & Safety, Support,
   Terms, Privacy, Refunds).

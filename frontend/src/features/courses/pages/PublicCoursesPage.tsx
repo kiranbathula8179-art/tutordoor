@@ -9,10 +9,20 @@ import { EmptyState } from "@/components/ui/EmptyState";
 import { Skeleton } from "@/components/ui/Skeleton";
 import { Badge } from "@/components/ui/Badge";
 import { Select } from "@/components/ui/Select";
+import { AmbientWash } from "@/components/ui/Surface";
 import { listPublishedCourses } from "@/features/courses/api";
 import { getSubjects } from "@/features/tutors/api";
 import { cn, formatCurrency, formatDate } from "@/lib/utils";
 
+/**
+ * Public course catalog — V7 "One World" (DESIGN_V3.md V7 addendum).
+ * Sits on the shared `PublicAtmosphere` (mounted once by `PublicLayout`) —
+ * this page never painted its own opaque background, so only surface
+ * tokens needed to move to the warm palette. Cards stay solid/light
+ * (same readability-first discipline as Search) — this is a browsing
+ * decision, not a marketing moment. The real, data-backed "seats left"
+ * indicator is honest scarcity and is kept exactly as-is.
+ */
 export function PublicCoursesPage() {
   const [searchParams, setSearchParams] = useSearchParams();
   const { optionsFor } = useMasterData(["skill_level"]);
@@ -40,7 +50,8 @@ export function PublicCoursesPage() {
   };
 
   return (
-    <div className="container-page py-10">
+    <div className="container-page relative py-10">
+      <AmbientWash tones={["gold", "sand"]} className="-z-10" />
       <h1 className="font-display text-display-sm font-bold tracking-tight text-navy">Group courses</h1>
       <p className="mt-2 max-w-lg text-slate-500">
         Structured programs with a fixed schedule, limited seats, and one price for the whole series.
@@ -80,7 +91,7 @@ export function PublicCoursesPage() {
             ))}
           </div>
         ) : !data || data.results.length === 0 ? (
-          <div className="rounded-card border border-line bg-canvas shadow-soft">
+          <div className="rounded-card border border-sand/70 bg-white shadow-soft">
             <EmptyState
               icon={BookOpen}
               title="No courses match these filters yet"
@@ -100,7 +111,7 @@ export function PublicCoursesPage() {
               <Link
                 key={course.id}
                 to={`/courses/${course.id}`}
-                className="group flex flex-col rounded-card border border-line bg-canvas p-5 shadow-soft transition-all hover:-translate-y-0.5 hover:border-primary/40 hover:shadow-hover focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/30"
+                className="group flex flex-col rounded-card border border-sand/70 bg-white p-5 shadow-soft transition-all hover:-translate-y-0.5 hover:border-primary/40 hover:shadow-hover focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/30"
               >
                 <div className="flex items-start justify-between gap-2">
                   <Badge tone="neutral">{course.subject.name}</Badge>

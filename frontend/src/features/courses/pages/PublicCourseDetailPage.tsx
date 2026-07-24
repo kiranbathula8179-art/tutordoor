@@ -14,6 +14,15 @@ import { enrollInCourse, getCourse } from "@/features/courses/api";
 import { cn, formatCurrency, formatDate, formatDateTime, getErrorMessage } from "@/lib/utils";
 import { useAuthStore } from "@/store/auth-store";
 
+/**
+ * Course detail + enrollment — V7 "One World" (DESIGN_V3.md V7 addendum).
+ * Sits on the shared `PublicAtmosphere`. Enrollment is transactional and
+ * navigates away immediately on success (to payment or the dashboard) —
+ * deliberately NOT given a signature threshold moment here: a reveal
+ * animation would fight the speed a real purchase decision needs. Solid
+ * white surfaces throughout for the same trust-legibility reasons as the
+ * Tutor Profile booking panel.
+ */
 export function PublicCourseDetailPage() {
   const { courseId } = useParams<{ courseId: string }>();
   const navigate = useNavigate();
@@ -50,7 +59,7 @@ export function PublicCourseDetailPage() {
 
   if (!course) {
     return (
-      <Card className="mx-auto mt-10 max-w-lg">
+      <Card className="mx-auto mt-10 max-w-lg border-sand/70 bg-white">
         <EmptyState
           icon={SearchX}
           title="Course not found"
@@ -84,7 +93,7 @@ export function PublicCourseDetailPage() {
 
           <h1 className="mt-3 font-display text-3xl font-extrabold tracking-tight text-navy">{course.title}</h1>
 
-          <Link to={`/tutors/${course.tutor.id}`} className="mt-4 inline-flex items-center gap-3 rounded-xl border border-line bg-canvas p-3 pr-5 transition-shadow hover:shadow-soft">
+          <Link to={`/tutors/${course.tutor.id}`} className="mt-4 inline-flex items-center gap-3 rounded-xl border border-sand bg-white p-3 pr-5 transition-shadow hover:shadow-soft">
             <Avatar
               src={course.tutor.user.avatar}
               firstName={course.tutor.user.first_name}
@@ -112,7 +121,7 @@ export function PublicCourseDetailPage() {
             {course.sessions.length === 0 ? (
               <p className="mt-2 text-slate-400">Session times will be announced by the tutor.</p>
             ) : (
-              <div className="mt-3 divide-y divide-line rounded-card border border-line bg-canvas">
+              <div className="mt-3 divide-y divide-sand/70 rounded-card border border-sand/70 bg-white">
                 {course.sessions.map((session) => {
                   const isPast = new Date(session.scheduled_start) < new Date();
                   return (
@@ -142,7 +151,7 @@ export function PublicCourseDetailPage() {
 
         {/* ------------------------------------------------ Enroll card */}
         <div className="hidden lg:sticky lg:top-24 lg:block lg:h-fit">
-          <Card className="border-primary/20 shadow-hover">
+          <Card className="border-primary/20 bg-white shadow-hover">
             <CardBody className="p-6 pt-6">
               <p className="font-display text-4xl font-extrabold tracking-tight text-navy">
                 {isFree ? "Free" : formatCurrency(course.price, course.currency)}
@@ -162,7 +171,7 @@ export function PublicCourseDetailPage() {
                 <p className="mt-2 text-center text-xs text-slate-400">Log in with a student account to enroll.</p>
               )}
 
-              <dl className="mt-6 space-y-2.5 border-t border-line pt-4 text-sm">
+              <dl className="mt-6 space-y-2.5 border-t border-sand/70 pt-4 text-sm">
                 <div className="flex items-center justify-between">
                   <dt className="flex items-center gap-1.5 text-slate-400">
                     <Users className="h-4 w-4" /> Seats left
@@ -197,7 +206,7 @@ export function PublicCourseDetailPage() {
       </div>
 
       {/* ------------------------------------------------ Mobile enroll bar */}
-      <div className="fixed inset-x-0 bottom-0 z-30 border-t border-line bg-canvas/95 backdrop-blur-xl lg:hidden">
+      <div className="fixed inset-x-0 bottom-0 z-30 border-t border-sand/70 bg-white/95 backdrop-blur-xl lg:hidden">
         <div className="container-page flex items-center justify-between gap-3 py-3">
           <div>
             <p className="font-display text-xl font-extrabold text-navy">
