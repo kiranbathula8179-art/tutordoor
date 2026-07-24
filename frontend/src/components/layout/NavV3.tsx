@@ -1,3 +1,4 @@
+import { AnimatePresence, motion } from "framer-motion";
 import { Menu as HeadlessMenu, Transition } from "@headlessui/react";
 import { ChevronDown, LogOut, Menu as MenuIcon, X } from "lucide-react";
 import { Fragment, useEffect, useState } from "react";
@@ -6,7 +7,6 @@ import { Link, NavLink } from "react-router-dom";
 import { NotificationBell } from "@/components/layout/NotificationBell";
 import { type DashboardNavItem } from "@/components/layout/DashboardLayout";
 import { Avatar } from "@/components/ui/Avatar";
-import { GLASS_PANEL_CLASSES } from "@/components/ui/Surface";
 import { Logo } from "@/components/shared/Logo";
 import { useAuth } from "@/features/auth/use-auth";
 import { adminNavItems } from "@/features/admin/nav";
@@ -14,6 +14,8 @@ import { instituteNavItems } from "@/features/institute/nav";
 import { parentNavItems } from "@/features/parent/nav";
 import { studentNavItems } from "@/features/student/nav";
 import { tutorNavItems } from "@/features/tutor/nav";
+import { DURATION, EASE_OUT, motionSafe } from "@/lib/motion/tokens";
+import { prefersReducedMotion } from "@/lib/motion/quality";
 import { cn } from "@/lib/utils";
 import type { UserRole } from "@/types";
 
@@ -24,6 +26,10 @@ import type { UserRole } from "@/types";
  * dashboard sidebar uses (single source of truth, zero drift) — plus the
  * existing NotificationBell and an avatar menu with Logout. Guests keep the
  * marketing links. Fixes the "stuck on /search with no way back" gap.
+ *
+ * V7 (DESIGN_V3.md V7 addendum): the bar itself is a translucent `linen`/
+ * `white` wash over the shared `PublicAtmosphere` instead of an opaque white
+ * strip — it reads as part of the same world, not a layer floating above it.
  */
 
 const ROLE_NAVS: Record<UserRole, DashboardNavItem[]> = {
@@ -70,13 +76,15 @@ export function NavV3() {
   const { user, logout } = useAuth();
   const [mobileOpen, setMobileOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
+  const still = prefersReducedMotion();
 
   const roleItems = user ? ROLE_NAVS[user.role] ?? [] : [];
   const primary = roleItems.slice(0, PRIMARY_LINKS);
   const overflow = roleItems.slice(PRIMARY_LINKS);
 
-  // V4 addendum (DESIGN_V3.md): the sticky nav picks up the GlassPanel
-  // treatment once scrolled past the hero — a flat translucent bar before that.
+  // V7: the bar reads as a lighter wash over the atmosphere by default, and
+  // firms up (more opaque, a resting shadow) once content is scrolling
+  // underneath it — same two-state idea as before, warm palette now.
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 24);
     onScroll();
@@ -84,11 +92,24 @@ export function NavV3() {
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
 
+  // Escape closes the mobile panel — it isn't a modal (no focus trap needed,
+  // content stays reachable behind it), but Escape-to-close is expected.
+  useEffect(() => {
+    if (!mobileOpen) return;
+    const onKey = (event: KeyboardEvent) => {
+      if (event.key === "Escape") setMobileOpen(false);
+    };
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+  }, [mobileOpen]);
+
   return (
     <header
       className={cn(
         "sticky top-0 z-40 transition-colors duration-300",
-        scrolled ? cn(GLASS_PANEL_CLASSES, "border-x-0 border-t-0") : "border-b border-line bg-white/80 backdrop-blur-xl"
+        scrolled
+          ? "border-b border-sand/60 bg-white/75 shadow-dropdown backdrop-blur-xl"
+          : "border-b border-sand/30 bg-linen/50 backdrop-blur-xl"
       )}
     >
       <div className="container-page flex h-16 items-center justify-between gap-4">
@@ -97,7 +118,7 @@ export function NavV3() {
         </Link>
 
         {/* ---------------------------------------------- Center links (desktop) */}
-        <nav className="hidden items-center gap-6 md:flex" aria-label="Primary">
+        <nav className="hidden items-center gap-8 md:flex" aria-label="Primary">
           {user
             ? primary.map((item) => <TopNavLink key={item.to} item={item} end={item.end} />)
             : GUEST_LINKS.map((item) => <TopNavLink key={item.to} item={item} />)}
@@ -122,7 +143,7 @@ export function NavV3() {
                   leaveFrom="opacity-100"
                   leaveTo="opacity-0"
                 >
-                  <HeadlessMenu.Items className="absolute right-0 mt-2 w-60 origin-top-right rounded-2xl border border-line bg-canvas p-2 shadow-dropdown focus:outline-none">
+                  <HeadlessMenu.Items className="absolute right-0 mt-2 w-60 origin-top-right rounded-2xl border border-sand/70 bg-white/95 p-2 shadow-dropdown backdrop-blur-xl focus:outline-none">
                     <div className="border-b border-line px-3 pb-2.5 pt-1.5">
                       <p className="truncate text-sm font-semibold text-navy">{user.full_name}</p>
                       <p className="truncate text-xs text-slate-500">{user.email}</p>
@@ -195,64 +216,71 @@ export function NavV3() {
       </div>
 
       {/* ---------------------------------------------- Mobile panel */}
-      {mobileOpen && (
-        <nav
-          aria-label="Mobile"
-          className="border-t border-line bg-canvas shadow-dropdown md:hidden"
-        >
-          <div className="container-page space-y-0.5 py-3">
-            {(user ? roleItems : GUEST_LINKS.map((g) => ({ ...g, icon: undefined as never, end: undefined }))).map(
-              (item) => (
-                <NavLink
-                  key={item.to}
-                  to={item.to}
-                  end={"end" in item ? item.end : undefined}
-                  onClick={() => setMobileOpen(false)}
-                  className={({ isActive }) =>
-                    cn(
-                      "flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm",
-                      isActive
-                        ? "bg-primary-subtle font-semibold text-primary-dark"
-                        : "font-medium text-slate-600 hover:bg-surface-3 hover:text-navy"
-                    )
-                  }
+      <AnimatePresence>
+        {mobileOpen && (
+          <motion.nav
+            key="mobile-nav"
+            aria-label="Mobile"
+            initial={still ? false : { opacity: 0, height: 0 }}
+            animate={{ opacity: 1, height: "auto" }}
+            exit={still ? { opacity: 0 } : { opacity: 0, height: 0 }}
+            transition={motionSafe({ duration: DURATION.base, ease: EASE_OUT })}
+            className="overflow-hidden border-t border-sand/50 bg-white/95 shadow-dropdown backdrop-blur-xl md:hidden"
+          >
+            <div className="container-page space-y-0.5 py-3">
+              {(user ? roleItems : GUEST_LINKS.map((g) => ({ ...g, icon: undefined as never, end: undefined }))).map(
+                (item) => (
+                  <NavLink
+                    key={item.to}
+                    to={item.to}
+                    end={"end" in item ? item.end : undefined}
+                    onClick={() => setMobileOpen(false)}
+                    className={({ isActive }) =>
+                      cn(
+                        "flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm transition-colors",
+                        isActive
+                          ? "bg-primary-subtle font-semibold text-primary-dark"
+                          : "font-medium text-slate-600 hover:bg-sand/40 hover:text-navy"
+                      )
+                    }
+                  >
+                    {"icon" in item && item.icon && <item.icon className="h-[1.1rem] w-[1.1rem]" />}
+                    {item.label}
+                  </NavLink>
+                )
+              )}
+              {user ? (
+                <button
+                  onClick={() => {
+                    setMobileOpen(false);
+                    logout();
+                  }}
+                  className="flex w-full items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-medium text-slate-600 transition-colors hover:bg-sand/40 hover:text-navy"
                 >
-                  {"icon" in item && item.icon && <item.icon className="h-[1.1rem] w-[1.1rem]" />}
-                  {item.label}
-                </NavLink>
-              )
-            )}
-            {user ? (
-              <button
-                onClick={() => {
-                  setMobileOpen(false);
-                  logout();
-                }}
-                className="flex w-full items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-medium text-slate-600 hover:bg-surface-3 hover:text-navy"
-              >
-                <LogOut className="h-[1.1rem] w-[1.1rem]" /> Log out
-              </button>
-            ) : (
-              <div className="flex gap-2 pt-2">
-                <Link
-                  to="/login"
-                  onClick={() => setMobileOpen(false)}
-                  className="flex-1 rounded-xl border border-line px-4 py-2.5 text-center text-sm font-medium text-slate-700 hover:bg-surface"
-                >
-                  Log in
-                </Link>
-                <Link
-                  to="/register"
-                  onClick={() => setMobileOpen(false)}
-                  className="flex-1 rounded-xl bg-primary px-4 py-2.5 text-center text-sm font-semibold text-white"
-                >
-                  Get started
-                </Link>
-              </div>
-            )}
-          </div>
-        </nav>
-      )}
+                  <LogOut className="h-[1.1rem] w-[1.1rem]" /> Log out
+                </button>
+              ) : (
+                <div className="flex gap-2 pt-2">
+                  <Link
+                    to="/login"
+                    onClick={() => setMobileOpen(false)}
+                    className="flex-1 rounded-xl border border-sand px-4 py-2.5 text-center text-sm font-medium text-slate-700 transition-colors hover:bg-sand/30"
+                  >
+                    Log in
+                  </Link>
+                  <Link
+                    to="/register"
+                    onClick={() => setMobileOpen(false)}
+                    className="flex-1 rounded-xl bg-primary px-4 py-2.5 text-center text-sm font-semibold text-white transition-colors hover:bg-primary-dark"
+                  >
+                    Get started
+                  </Link>
+                </div>
+              )}
+            </div>
+          </motion.nav>
+        )}
+      </AnimatePresence>
     </header>
   );
 }

@@ -364,8 +364,11 @@ export function FooterV3() {
       {/* Softens the one hard color boundary left on the page — the shared
           atmosphere flows down into the footer's deliberate dark surface. */}
       <OrganicEdge position="top" tone="linen" />
-      {/* One soft indigo bloom — enough to keep the dark surface from reading as flat/generic-dark. */}
-      <div aria-hidden="true" className="pointer-events-none absolute -right-24 top-0 h-80 w-80 rounded-full bg-indigo-500/10 blur-[220px]" />
+      {/* V7: a dusk-toned ember glow (was a cool indigo bloom) — the page's
+          dawn-gold hero and this dusk-gold footer bookend the same warm
+          journey instead of switching palettes at the very end. */}
+      <div aria-hidden="true" className="pointer-events-none absolute -right-24 top-0 h-80 w-80 rounded-full bg-gold-star/10 blur-[220px]" />
+      <div aria-hidden="true" className="pointer-events-none absolute -bottom-24 -left-16 h-72 w-72 rounded-full bg-forest/10 blur-[220px]" />
       <div className="container-page relative grid gap-12 py-14 md:grid-cols-[1.4fr_repeat(3,1fr)]">
         <div>
           <Logo dark />
@@ -375,11 +378,14 @@ export function FooterV3() {
         </div>
         {FOOTER_GROUPS.map((group) => (
           <nav key={group.heading} aria-label={group.heading}>
-            <p className="text-xs font-bold uppercase tracking-[0.12em] text-white/60">{group.heading}</p>
+            <p className="text-xs font-bold uppercase tracking-[0.14em] text-white/60">{group.heading}</p>
             <ul className="mt-4 space-y-2.5">
               {group.links.map(([label, to]) => (
                 <li key={to}>
-                  <Link to={to} className="text-sm text-white/70 transition-colors hover:text-white">
+                  <Link
+                    to={to}
+                    className="inline-block text-sm text-white/70 transition-all motion-safe:hover:translate-x-0.5 hover:text-white"
+                  >
                     {label}
                   </Link>
                 </li>

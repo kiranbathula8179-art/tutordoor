@@ -374,7 +374,18 @@ primitive this session has gone through.
   deliberate dark surface). CTA's blue gradient and the footer's dark
   surface are kept exactly as the two sanctioned "blue for CTA" / "one
   deliberate dark surface" exceptions — neither is a page background.
-- ⬜ Milestone 3 — global public nav/footer.
+- ✅ **Milestone 3** — Nav: the header bar itself moved from an opaque
+  `bg-white/80` strip to a translucent `linen`/`white` wash
+  (`bg-linen/50` idle → `bg-white/75` scrolled) over the shared
+  atmosphere, `border-sand` replacing `border-line`, link spacing opened
+  up (`gap-6`→`gap-8`); the mobile panel gained a real entrance/exit
+  animation (Framer Motion height+opacity, reduced-motion-safe) and
+  Escape-to-close, plus a warmer `bg-white/95` tone. Footer: the cool
+  indigo accent bloom swapped for a warm `gold-star` one (a second small
+  `forest` bloom added) so the page's dawn-gold hero and dusk-gold footer
+  bookend one palette instead of ending on a leftover cool tone; link
+  hover gained a subtle `motion-safe:hover:translate-x-0.5`. All nav
+  routes, role-aware logic, and footer links unchanged.
 - ⬜ Milestone 4 — auth brand panel.
 - ⬜ Milestone 5 — Search + Tutor Profile.
 - ⬜ Milestone 6 — Courses (list + detail).
