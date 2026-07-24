@@ -79,7 +79,9 @@ class InstituteEnrollmentStatus(models.TextChoices):
 class InstituteStudentEnrollment(BaseModel):
     institute = models.ForeignKey(InstituteProfile, on_delete=models.CASCADE, related_name="student_enrollments")
     student = models.ForeignKey(StudentProfile, on_delete=models.CASCADE, related_name="institute_enrollments")
-    status = models.CharField(max_length=20, choices=InstituteEnrollmentStatus.choices, default=InstituteEnrollmentStatus.ACTIVE)
+    status = models.CharField(
+        max_length=20, choices=InstituteEnrollmentStatus.choices, default=InstituteEnrollmentStatus.ACTIVE
+    )
     enrolled_at = models.DateTimeField(auto_now_add=True)
     notes = models.TextField(blank=True)
 

@@ -11,7 +11,15 @@ class ParentProfileSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = ParentProfile
-        fields = ("id", "user", "occupation", "city", "preferred_contact_method", "receives_progress_reports", "created_at")
+        fields = (
+            "id",
+            "user",
+            "occupation",
+            "city",
+            "preferred_contact_method",
+            "receives_progress_reports",
+            "created_at",
+        )
         read_only_fields = ("id", "created_at")
 
 

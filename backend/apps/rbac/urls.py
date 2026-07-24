@@ -8,5 +8,9 @@ urlpatterns = [
     path("admin/roles/", views.AdminRoleListCreateView.as_view(), name="rbac_admin_roles"),
     path("admin/roles/<uuid:role_id>/", views.AdminRoleDetailView.as_view(), name="rbac_admin_role"),
     path("admin/assignments/", views.AdminAssignmentListCreateView.as_view(), name="rbac_admin_assignments"),
-    path("admin/assignments/<uuid:assignment_id>/", views.AdminAssignmentDeleteView.as_view(), name="rbac_admin_assignment"),
+    path(
+        "admin/assignments/<uuid:assignment_id>/",
+        views.AdminAssignmentDeleteView.as_view(),
+        name="rbac_admin_assignment",
+    ),
 ]

@@ -165,7 +165,12 @@ class MasterDataService:
             created += int(was_created)
             updated += int(not was_created)
 
-        self._log(actor, AuditAction.IMPORTED, type_code="*", changes={"created": created, "updated": updated, "errors": len(errors)})
+        self._log(
+            actor,
+            AuditAction.IMPORTED,
+            type_code="*",
+            changes={"created": created, "updated": updated, "errors": len(errors)},
+        )
         return {"created": created, "updated": updated, "errors": errors}
 
 

@@ -6,7 +6,10 @@ from apps.users.models import User
 
 
 class Wallet(BaseModel):
-    """One wallet per user. Balance changes only ever happen through WalletTransaction + service methods, never direct writes."""
+    """One wallet per user.
+
+    Balance changes only ever happen through WalletTransaction + service methods, never direct writes.
+    """
 
     user = models.OneToOneField(User, on_delete=models.CASCADE, related_name="wallet")
     balance = models.DecimalField(max_digits=12, decimal_places=2, default=0, validators=[MinValueValidator(0)])
@@ -48,7 +51,9 @@ class WalletTransaction(BaseModel):
     description = models.CharField(max_length=255, blank=True)
 
     reference_type = models.CharField(
-        max_length=50, blank=True, help_text="e.g. 'booking', 'course_enrollment', 'payment' — lightweight polymorphic link."
+        max_length=50,
+        blank=True,
+        help_text="e.g. 'booking', 'course_enrollment', 'payment' — lightweight polymorphic link.",
     )
     reference_id = models.UUIDField(null=True, blank=True)
 
@@ -101,7 +106,9 @@ class Payment(BaseModel):
     amount = models.DecimalField(max_digits=10, decimal_places=2, validators=[MinValueValidator(0)])
     discount_amount = models.DecimalField(max_digits=10, decimal_places=2, default=0)
     currency = models.CharField(max_length=3, default="INR")
-    status = models.CharField(max_length=20, choices=PaymentStatus.choices, default=PaymentStatus.CREATED, db_index=True)
+    status = models.CharField(
+        max_length=20, choices=PaymentStatus.choices, default=PaymentStatus.CREATED, db_index=True
+    )
 
     gateway_order_id = models.CharField(max_length=255, blank=True, db_index=True)
     gateway_payment_id = models.CharField(max_length=255, blank=True, db_index=True)
@@ -167,7 +174,9 @@ class Coupon(BaseModel):
     max_discount_amount = models.DecimalField(max_digits=8, decimal_places=2, null=True, blank=True)
     min_order_amount = models.DecimalField(max_digits=8, decimal_places=2, default=0)
 
-    applicable_to = models.CharField(max_length=20, choices=CouponApplicability.choices, default=CouponApplicability.ALL)
+    applicable_to = models.CharField(
+        max_length=20, choices=CouponApplicability.choices, default=CouponApplicability.ALL
+    )
     valid_from = models.DateTimeField()
     valid_until = models.DateTimeField()
     usage_limit_total = models.PositiveIntegerField(null=True, blank=True, help_text="Blank = unlimited.")
@@ -238,7 +247,9 @@ class SubscriptionStatus(models.TextChoices):
 class UserSubscription(BaseModel):
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="subscriptions")
     plan = models.ForeignKey(SubscriptionPlan, on_delete=models.PROTECT, related_name="subscribers")
-    status = models.CharField(max_length=20, choices=SubscriptionStatus.choices, default=SubscriptionStatus.PENDING_PAYMENT)
+    status = models.CharField(
+        max_length=20, choices=SubscriptionStatus.choices, default=SubscriptionStatus.PENDING_PAYMENT
+    )
 
     started_at = models.DateTimeField()
     current_period_end = models.DateTimeField()

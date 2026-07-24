@@ -42,7 +42,11 @@ class MyInstituteProfileView(APIView):
 
         profile = InstituteProfileService().create_profile(request.user, **serializer.validated_data)
         return Response(
-            {"success": True, "message": "Institute profile created. Awaiting verification.", "profile": InstituteProfileSerializer(profile).data},
+            {
+                "success": True,
+                "message": "Institute profile created. Awaiting verification.",
+                "profile": InstituteProfileSerializer(profile).data,
+            },
             status=status.HTTP_201_CREATED,
         )
 
@@ -85,7 +89,9 @@ class AdminRejectInstituteView(APIView):
         serializer = InstituteRejectSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
 
-        updated = InstituteProfileService().reject(profile, reviewer=request.user, reason=serializer.validated_data["reason"])
+        updated = InstituteProfileService().reject(
+            profile, reviewer=request.user, reason=serializer.validated_data["reason"]
+        )
         return Response({"success": True, "profile": InstituteProfileSerializer(updated).data})
 
 

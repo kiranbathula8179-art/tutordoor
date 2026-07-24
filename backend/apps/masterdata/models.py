@@ -64,7 +64,11 @@ class AuditAction(models.TextChoices):
 
 class MasterDataAuditLog(BaseModel):
     actor = models.ForeignKey(
-        settings.AUTH_USER_MODEL, on_delete=models.SET_NULL, null=True, blank=True, related_name="masterdata_audit_entries"
+        settings.AUTH_USER_MODEL,
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True,
+        related_name="masterdata_audit_entries",
     )
     action = models.CharField(max_length=16, choices=AuditAction.choices)
     type_code = models.CharField(max_length=64)

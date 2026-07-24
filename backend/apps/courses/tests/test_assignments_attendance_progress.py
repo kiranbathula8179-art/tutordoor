@@ -80,7 +80,9 @@ class TestAttendanceAndProgress:
             scheduled_start=timezone.now(), scheduled_end=timezone.now() + datetime.timedelta(hours=1),
         )
 
-        record = AttendanceService().mark_attendance(session, student, status=AttendanceStatus.PRESENT, marked_by=course.tutor.user)
+        record = AttendanceService().mark_attendance(
+            session, student, status=AttendanceStatus.PRESENT, marked_by=course.tutor.user
+        )
         assert record.status == AttendanceStatus.PRESENT
 
     def test_progress_report_combines_attendance_and_assignments(self, enrolled_student_and_course):
@@ -89,7 +91,9 @@ class TestAttendanceAndProgress:
             course=course, session_number=1,
             scheduled_start=timezone.now(), scheduled_end=timezone.now() + datetime.timedelta(hours=1),
         )
-        AttendanceService().mark_attendance(session, student, status=AttendanceStatus.PRESENT, marked_by=course.tutor.user)
+        AttendanceService().mark_attendance(
+            session, student, status=AttendanceStatus.PRESENT, marked_by=course.tutor.user
+        )
 
         assignment = AssignmentFactory(course=course)
         submission = AssignmentService().submit(assignment, student, text_answer="Done")

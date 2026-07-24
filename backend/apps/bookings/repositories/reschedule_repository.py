@@ -10,7 +10,11 @@ class RescheduleRepository:
         return self.model.objects.create(**fields)
 
     def get_pending_for_booking(self, booking) -> Optional[RescheduleRequest]:
-        return self.model.objects.filter(booking=booking, status=RescheduleStatus.PENDING).order_by("-created_at").first()
+        return (
+            self.model.objects.filter(booking=booking, status=RescheduleStatus.PENDING)
+            .order_by("-created_at")
+            .first()
+        )
 
     def get_by_id(self, request_id) -> Optional[RescheduleRequest]:
         return self.model.objects.select_related("booking", "requested_by").filter(id=request_id).first()

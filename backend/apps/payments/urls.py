@@ -21,5 +21,9 @@ urlpatterns = [
     path("subscriptions/plans/", views.SubscriptionPlanListView.as_view(), name="subscription_plans"),
     path("subscriptions/subscribe/", views.SubscribeView.as_view(), name="subscribe"),
     path("subscriptions/me/", views.MySubscriptionView.as_view(), name="my_subscription"),
-    path("subscriptions/<uuid:subscription_id>/cancel/", views.CancelSubscriptionView.as_view(), name="cancel_subscription"),
+    path(
+        "subscriptions/<uuid:subscription_id>/cancel/",
+        views.CancelSubscriptionView.as_view(),
+        name="cancel_subscription",
+    ),
 ]

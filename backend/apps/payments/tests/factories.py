@@ -3,7 +3,15 @@ import datetime
 import factory
 from factory.django import DjangoModelFactory
 
-from apps.payments.models import Coupon, DiscountType, Payment, PaymentGateway, PaymentPurpose, PaymentStatus, SubscriptionPlan
+from apps.payments.models import (
+    Coupon,
+    DiscountType,
+    Payment,
+    PaymentGateway,
+    PaymentPurpose,
+    PaymentStatus,
+    SubscriptionPlan,
+)
 from apps.users.tests.factories import UserFactory
 
 
@@ -17,7 +25,9 @@ class CouponFactory(DjangoModelFactory):
     discount_value = 10
     applicable_to = "all"
     valid_from = factory.LazyFunction(lambda: datetime.datetime.now(datetime.timezone.utc) - datetime.timedelta(days=1))
-    valid_until = factory.LazyFunction(lambda: datetime.datetime.now(datetime.timezone.utc) + datetime.timedelta(days=30))
+    valid_until = factory.LazyFunction(
+        lambda: datetime.datetime.now(datetime.timezone.utc) + datetime.timedelta(days=30)
+    )
     usage_limit_per_user = 1
 
 

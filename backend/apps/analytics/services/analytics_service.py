@@ -12,7 +12,7 @@ class AdminAnalyticsService:
         from apps.bookings.models import Booking
         from apps.payments.models import Payment, UserSubscription
         from apps.tutors.models import TutorProfile, VerificationStatus
-        from apps.users.models import User, UserRole
+        from apps.users.models import User
 
         now = timezone.now()
         month_start = now.replace(day=1, hour=0, minute=0, second=0, microsecond=0)
@@ -28,7 +28,9 @@ class AdminAnalyticsService:
             "total_users": User.objects.count(),
             "users_by_role": users_by_role,
             "new_signups_this_month": User.objects.filter(created_at__gte=month_start).count(),
-            "pending_tutor_verifications": TutorProfile.objects.filter(verification_status=VerificationStatus.PENDING).count(),
+            "pending_tutor_verifications": TutorProfile.objects.filter(
+                verification_status=VerificationStatus.PENDING
+            ).count(),
             "bookings_by_status": bookings_by_status,
             "revenue_this_month": revenue_this_month,
             "active_subscriptions": UserSubscription.objects.filter(status="active").count(),

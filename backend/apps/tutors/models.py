@@ -1,4 +1,4 @@
-from django.core.validators import MaxValueValidator, MinValueValidator
+from django.core.validators import MinValueValidator
 from django.db import models
 
 from apps.core.models import BaseModel
@@ -73,7 +73,9 @@ class TutorProfile(BaseModel):
     country = models.CharField(max_length=100, blank=True, default="India")
     latitude = models.DecimalField(max_digits=9, decimal_places=6, null=True, blank=True)
     longitude = models.DecimalField(max_digits=9, decimal_places=6, null=True, blank=True)
-    travel_radius_km = models.PositiveSmallIntegerField(default=10, help_text="Max travel distance for in-person classes.")
+    travel_radius_km = models.PositiveSmallIntegerField(
+        default=10, help_text="Max travel distance for in-person classes."
+    )
 
     verification_status = models.CharField(
         max_length=20, choices=VerificationStatus.choices, default=VerificationStatus.NOT_SUBMITTED, db_index=True
@@ -181,7 +183,9 @@ class WeeklyAvailability(BaseModel):
         db_table = "tutor_weekly_availability"
         ordering = ["day_of_week", "start_time"]
         constraints = [
-            models.CheckConstraint(check=models.Q(end_time__gt=models.F("start_time")), name="availability_end_after_start")
+            models.CheckConstraint(
+                check=models.Q(end_time__gt=models.F("start_time")), name="availability_end_after_start"
+            )
         ]
         indexes = [models.Index(fields=["tutor", "day_of_week", "is_active"])]
 

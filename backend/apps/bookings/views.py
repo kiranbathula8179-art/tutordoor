@@ -116,15 +116,21 @@ class MyBookingsView(APIView):
             tutor_profile = TutorProfileRepository().get_by_user(request.user)
             if not tutor_profile:
                 raise ResourceNotFoundError("You have not created a tutor profile yet.")
-            queryset = booking_repository.list_for_tutor(tutor_profile, status=status_filter, upcoming_only=upcoming_only)
+            queryset = booking_repository.list_for_tutor(
+                tutor_profile, status=status_filter, upcoming_only=upcoming_only
+            )
         elif request.user.role == UserRole.PARENT:
             parent_profile = ParentProfileRepository().get_by_user(request.user)
             if not parent_profile:
                 raise ResourceNotFoundError("You have not created a parent profile yet.")
-            queryset = booking_repository.list_for_parent(parent_profile, status=status_filter, upcoming_only=upcoming_only)
+            queryset = booking_repository.list_for_parent(
+                parent_profile, status=status_filter, upcoming_only=upcoming_only
+            )
         else:
             student_profile = _get_requesting_student_profile(request)
-            queryset = booking_repository.list_for_student(student_profile, status=status_filter, upcoming_only=upcoming_only)
+            queryset = booking_repository.list_for_student(
+                student_profile, status=status_filter, upcoming_only=upcoming_only
+            )
 
         paginator = self.pagination_class()
         page = paginator.paginate_queryset(queryset, request)
@@ -160,7 +166,9 @@ class CancelBookingView(APIView):
         serializer = CancelBookingSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
 
-        updated = BookingService().cancel_booking(booking, by_user=request.user, reason=serializer.validated_data["reason"])
+        updated = BookingService().cancel_booking(
+            booking, by_user=request.user, reason=serializer.validated_data["reason"]
+        )
         return Response({"success": True, "message": "Booking cancelled.", "booking": BookingSerializer(updated).data})
 
 
@@ -211,7 +219,9 @@ class RescheduleRequestCreateView(APIView):
         serializer = RescheduleCreateSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
 
-        reschedule_request = RescheduleService().request_reschedule(booking, requested_by=request.user, **serializer.validated_data)
+        reschedule_request = RescheduleService().request_reschedule(
+            booking, requested_by=request.user, **serializer.validated_data
+        )
         return Response(
             {"success": True, "reschedule_request": RescheduleRequestSerializer(reschedule_request).data},
             status=status.HTTP_201_CREATED,
@@ -229,7 +239,9 @@ class RescheduleRequestRespondView(APIView):
         serializer = RescheduleRespondSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
 
-        updated = RescheduleService().respond(reschedule_request, responder=request.user, accept=serializer.validated_data["accept"])
+        updated = RescheduleService().respond(
+            reschedule_request, responder=request.user, accept=serializer.validated_data["accept"]
+        )
         return Response({"success": True, "reschedule_request": RescheduleRequestSerializer(updated).data})
 
 

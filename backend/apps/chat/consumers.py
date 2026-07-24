@@ -70,7 +70,9 @@ class ChatConsumer(AsyncWebsocketConsumer):
     async def typing_indicator(self, event):
         if event["user_id"] == str(self.user.id):
             return  # don't echo back to the sender
-        await self.send(text_data=json.dumps({"type": "typing", "user_id": event["user_id"], "is_typing": event["is_typing"]}))
+        await self.send(
+            text_data=json.dumps({"type": "typing", "user_id": event["user_id"], "is_typing": event["is_typing"]})
+        )
 
     async def read_receipt(self, event):
         await self.send(text_data=json.dumps({"type": "read_receipt", "user_id": event["user_id"]}))

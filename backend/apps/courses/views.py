@@ -10,7 +10,6 @@ from apps.core.pagination import StandardResultsSetPagination
 from apps.core.permissions import IsStudent, IsTutor, IsVerifiedTutor
 from apps.courses.models import CourseSessionStatus
 from apps.courses.repositories.assignment_repository import AssignmentRepository, SubmissionRepository
-from apps.courses.repositories.attendance_repository import AttendanceRepository
 from apps.courses.repositories.course_repository import CourseRepository, CourseSessionRepository, EnrollmentRepository
 from apps.courses.serializers import (
     AddSessionsSerializer,
@@ -147,8 +146,12 @@ class MyCourseEnrollmentsView(APIView):
         if not student_profile:
             raise ResourceNotFoundError("You have not created a student profile yet.")
 
-        enrollments = EnrollmentRepository().list_for_student(student_profile, status=request.query_params.get("status"))
-        return Response({"success": True, "results": CourseEnrollmentSerializer(enrollments, many=True).data})
+        enrollments = EnrollmentRepository().list_for_student(
+            student_profile, status=request.query_params.get("status")
+        )
+        return Response(
+            {"success": True, "results": CourseEnrollmentSerializer(enrollments, many=True).data}
+        )
 
 
 class MyTeachingCoursesView(APIView):
@@ -172,7 +175,9 @@ class CourseEnrollmentsListView(APIView):
     def get(self, request, course_id):
         course = _get_owned_course_or_403(request, course_id)
         enrollments = EnrollmentRepository().list_for_course(course, status=request.query_params.get("status"))
-        return Response({"success": True, "results": CourseEnrollmentSerializer(enrollments, many=True).data})
+        return Response(
+            {"success": True, "results": CourseEnrollmentSerializer(enrollments, many=True).data}
+        )
 
 
 class DropEnrollmentView(APIView):
@@ -204,7 +209,9 @@ class AssignmentListCreateView(APIView):
 
         assignment = AssignmentService().create_assignment(course, created_by=request.user, **serializer.validated_data)
         notify_new_assignment_task.delay(str(assignment.id))
-        return Response({"success": True, "assignment": AssignmentSerializer(assignment).data}, status=status.HTTP_201_CREATED)
+        return Response(
+            {"success": True, "assignment": AssignmentSerializer(assignment).data}, status=status.HTTP_201_CREATED
+        )
 
 
 class SubmitAssignmentView(APIView):
@@ -223,7 +230,9 @@ class SubmitAssignmentView(APIView):
         serializer.is_valid(raise_exception=True)
 
         submission = AssignmentService().submit(assignment, student_profile, **serializer.validated_data)
-        return Response({"success": True, "submission": SubmissionSerializer(submission).data}, status=status.HTTP_201_CREATED)
+        return Response(
+            {"success": True, "submission": SubmissionSerializer(submission).data}, status=status.HTTP_201_CREATED
+        )
 
 
 class AssignmentSubmissionsListView(APIView):

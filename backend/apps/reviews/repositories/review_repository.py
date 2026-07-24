@@ -30,7 +30,9 @@ class TutorReviewRepository:
     def average_and_count_for_tutor(self, tutor):
         from django.db.models import Avg, Count
 
-        result = self.model.objects.filter(tutor=tutor, is_flagged=False).aggregate(avg=Avg("rating"), count=Count("id"))
+        result = self.model.objects.filter(tutor=tutor, is_flagged=False).aggregate(
+            avg=Avg("rating"), count=Count("id")
+        )
         return result["avg"] or 0, result["count"] or 0
 
 
@@ -61,5 +63,7 @@ class CourseReviewRepository:
     def average_and_count_for_course(self, course):
         from django.db.models import Avg, Count
 
-        result = self.model.objects.filter(course=course, is_flagged=False).aggregate(avg=Avg("rating"), count=Count("id"))
+        result = self.model.objects.filter(course=course, is_flagged=False).aggregate(
+            avg=Avg("rating"), count=Count("id")
+        )
         return result["avg"] or 0, result["count"] or 0

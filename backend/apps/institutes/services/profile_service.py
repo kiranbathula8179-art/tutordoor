@@ -13,7 +13,9 @@ class InstituteProfileService:
 
     def create_profile(self, user, **fields):
         if user.role != UserRole.INSTITUTE_ADMIN:
-            raise ApplicationError("Only users registered with the institute_admin role can create an institute profile.")
+            raise ApplicationError(
+                "Only users registered with the institute_admin role can create an institute profile."
+            )
         if self.institute_repository.get_by_user(user):
             raise ConflictError("An institute profile already exists for this user.")
         return self.institute_repository.create(user=user, verification_status=VerificationStatus.PENDING, **fields)

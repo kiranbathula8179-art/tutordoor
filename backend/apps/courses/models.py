@@ -178,7 +178,9 @@ class AssignmentSubmission(BaseModel):
     status = models.CharField(max_length=20, choices=SubmissionStatus.choices, default=SubmissionStatus.SUBMITTED)
     score = models.PositiveSmallIntegerField(null=True, blank=True, validators=[MaxValueValidator(1000)])
     feedback = models.TextField(blank=True)
-    graded_by = models.ForeignKey(User, null=True, blank=True, on_delete=models.SET_NULL, related_name="submissions_graded")
+    graded_by = models.ForeignKey(
+        User, null=True, blank=True, on_delete=models.SET_NULL, related_name="submissions_graded"
+    )
     graded_at = models.DateTimeField(null=True, blank=True)
 
     class Meta:

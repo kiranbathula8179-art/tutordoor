@@ -35,7 +35,10 @@ class PayoutService:
             booking.tutor.user,
             amount=payout_amount,
             category="booking_payout",
-            description=f"Payout for session on {booking.start_time.strftime('%d %b %Y')} (commission: {commission_rate}%)",
+            description=(
+                f"Payout for session on {booking.start_time.strftime('%d %b %Y')} "
+                f"(commission: {commission_rate}%)"
+            ),
             reference_type="booking",
             reference_id=booking.id,
         )

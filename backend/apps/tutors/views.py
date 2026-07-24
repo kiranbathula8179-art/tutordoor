@@ -1,6 +1,6 @@
 from rest_framework import status
 from rest_framework.generics import get_object_or_404
-from rest_framework.permissions import AllowAny, IsAuthenticated
+from rest_framework.permissions import AllowAny
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
@@ -173,7 +173,9 @@ class AdminApproveTutorView(APIView):
     def post(self, request, tutor_id):
         profile = get_object_or_404(TutorProfile, id=tutor_id)
         updated = VerificationService().approve_tutor(profile, reviewer=request.user)
-        return Response({"success": True, "message": "Tutor approved.", "profile": TutorProfileSerializer(updated).data})
+        return Response(
+            {"success": True, "message": "Tutor approved.", "profile": TutorProfileSerializer(updated).data}
+        )
 
 
 class AdminRejectTutorView(APIView):
@@ -184,8 +186,12 @@ class AdminRejectTutorView(APIView):
         serializer = TutorRejectSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
 
-        updated = VerificationService().reject_tutor(profile, reviewer=request.user, reason=serializer.validated_data["reason"])
-        return Response({"success": True, "message": "Tutor rejected.", "profile": TutorProfileSerializer(updated).data})
+        updated = VerificationService().reject_tutor(
+            profile, reviewer=request.user, reason=serializer.validated_data["reason"]
+        )
+        return Response(
+            {"success": True, "message": "Tutor rejected.", "profile": TutorProfileSerializer(updated).data}
+        )
 
 
 class MyWeeklyAvailabilityView(APIView):

@@ -87,7 +87,9 @@ class BookingService:
             # race-condition case that slipped past the has_overlapping check above.
             raise ConflictError("This time slot was just booked by someone else. Please pick another slot.") from exc
 
-        self.booking_repository.record_status_change(booking, from_status="", to_status=booking.status, changed_by=booked_by)
+        self.booking_repository.record_status_change(
+            booking, from_status="", to_status=booking.status, changed_by=booked_by
+        )
 
         if booking.status == BookingStatus.CONFIRMED:
             self.live_class_service.provision_session(booking)
@@ -124,7 +126,10 @@ class BookingService:
 
         self.booking_repository.update(booking, status=BookingStatus.CONFIRMED, payment_status=PaymentStatus.PAID)
         self.booking_repository.record_status_change(
-            booking, from_status=BookingStatus.PENDING_PAYMENT, to_status=BookingStatus.CONFIRMED, reason="Payment received"
+            booking,
+            from_status=BookingStatus.PENDING_PAYMENT,
+            to_status=BookingStatus.CONFIRMED,
+            reason="Payment received",
         )
         self.live_class_service.provision_session(booking)
         notify_booking_event_task.delay(str(booking.id), "confirmed")

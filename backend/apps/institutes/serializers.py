@@ -17,7 +17,15 @@ class InstituteProfileSerializer(serializers.ModelSerializer):
             "established_year", "address", "city", "state", "country", "latitude", "longitude",
             "verification_status", "is_verified", "rejection_reason", "rating_average", "rating_count", "created_at",
         )
-        read_only_fields = ("id", "verification_status", "is_verified", "rejection_reason", "rating_average", "rating_count", "created_at")
+        read_only_fields = (
+            "id",
+            "verification_status",
+            "is_verified",
+            "rejection_reason",
+            "rating_average",
+            "rating_count",
+            "created_at",
+        )
 
 
 class InstituteProfileCreateSerializer(serializers.Serializer):

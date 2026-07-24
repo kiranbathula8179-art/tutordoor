@@ -72,7 +72,9 @@ class SubscriptionService:
         due = self.subscription_repository.list_due_for_expiry()
         count = 0
         for subscription in due:
-            new_status = SubscriptionStatus.CANCELLED if subscription.cancel_at_period_end else SubscriptionStatus.EXPIRED
+            new_status = (
+                SubscriptionStatus.CANCELLED if subscription.cancel_at_period_end else SubscriptionStatus.EXPIRED
+            )
             self.subscription_repository.update(subscription, status=new_status)
             count += 1
         return count

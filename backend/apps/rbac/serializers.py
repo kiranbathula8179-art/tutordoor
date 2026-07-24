@@ -47,7 +47,17 @@ class AssignmentSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = UserRoleAssignment
-        fields = ("id", "user", "user_email", "user_name", "role", "role_code", "role_name", "assigned_by_email", "created_at")
+        fields = (
+            "id",
+            "user",
+            "user_email",
+            "user_name",
+            "role",
+            "role_code",
+            "role_name",
+            "assigned_by_email",
+            "created_at",
+        )
         read_only_fields = fields
 
 

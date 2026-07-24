@@ -38,7 +38,9 @@ class AssignmentService:
 
     def grade(self, submission, *, graded_by, score: int, feedback: str = ""):
         if score > submission.assignment.max_score:
-            raise ApplicationError(f"Score cannot exceed the assignment's max score of {submission.assignment.max_score}.")
+            raise ApplicationError(
+                f"Score cannot exceed the assignment's max score of {submission.assignment.max_score}."
+            )
 
         return self.submission_repository.update(
             submission,

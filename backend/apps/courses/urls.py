@@ -17,7 +17,9 @@ urlpatterns = [
         name="assignment_submissions",
     ),
     path("sessions/<uuid:session_id>/attendance/mark/", views.MarkAttendanceView.as_view(), name="mark_attendance"),
-    path("sessions/<uuid:session_id>/attendance/", views.SessionAttendanceListView.as_view(), name="session_attendance"),
+    path(
+        "sessions/<uuid:session_id>/attendance/", views.SessionAttendanceListView.as_view(), name="session_attendance"
+    ),
     path("sessions/<uuid:session_id>/join/", views.CourseSessionJoinView.as_view(), name="session_join"),
     path("sessions/<uuid:session_id>/leave/", views.CourseSessionLeaveView.as_view(), name="session_leave"),
     path("<uuid:course_id>/", views.CourseDetailView.as_view(), name="detail"),

@@ -17,7 +17,9 @@ class TestInitiatePayment:
         mock_create_order.return_value = {"id": "order_abc123", "amount": 50000, "currency": "INR"}
         user = UserFactory()
 
-        payment, gateway_response = PaymentService().initiate_wallet_topup(user, amount=Decimal("500"), gateway="razorpay")
+        payment, gateway_response = PaymentService().initiate_wallet_topup(
+            user, amount=Decimal("500"), gateway="razorpay"
+        )
 
         assert payment.status == PaymentStatus.PENDING
         assert payment.gateway_order_id == "order_abc123"

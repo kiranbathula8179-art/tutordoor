@@ -20,7 +20,16 @@ class WalletService:
         return self.wallet_repository.get_or_create(user)
 
     @transaction.atomic
-    def credit(self, user, *, amount: Decimal, category: str, description: str = "", reference_type: str = "", reference_id=None):
+    def credit(
+        self,
+        user,
+        *,
+        amount: Decimal,
+        category: str,
+        description: str = "",
+        reference_type: str = "",
+        reference_id=None,
+    ):
         wallet = self.wallet_repository.get_or_create(user)
         wallet = self.wallet_repository.lock_for_update(wallet.id)
 
@@ -38,7 +47,16 @@ class WalletService:
         )
 
     @transaction.atomic
-    def debit(self, user, *, amount: Decimal, category: str, description: str = "", reference_type: str = "", reference_id=None):
+    def debit(
+        self,
+        user,
+        *,
+        amount: Decimal,
+        category: str,
+        description: str = "",
+        reference_type: str = "",
+        reference_id=None,
+    ):
         wallet = self.wallet_repository.get_or_create(user)
         wallet = self.wallet_repository.lock_for_update(wallet.id)
 

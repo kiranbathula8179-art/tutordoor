@@ -1,7 +1,6 @@
 import datetime
 
 import pytest
-from django.utils import timezone
 
 from apps.bookings.models import RescheduleStatus
 from apps.bookings.services.live_class_service import LiveClassService

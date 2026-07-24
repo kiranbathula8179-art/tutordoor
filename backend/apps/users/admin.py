@@ -7,7 +7,15 @@ from apps.users.models import EmailVerificationToken, LoginAuditLog, OTP, User
 @admin.register(User)
 class UserAdmin(DjangoUserAdmin):
     ordering = ("-created_at",)
-    list_display = ("email", "get_full_name", "role", "is_active", "is_email_verified", "is_phone_verified", "created_at")
+    list_display = (
+        "email",
+        "get_full_name",
+        "role",
+        "is_active",
+        "is_email_verified",
+        "is_phone_verified",
+        "created_at",
+    )
     list_filter = ("role", "is_active", "is_email_verified", "is_phone_verified", "signup_source")
     search_fields = ("email", "first_name", "last_name", "phone_number", "referral_code")
     readonly_fields = ("id", "referral_code", "created_at", "updated_at", "last_login_ip", "last_active_at")

@@ -12,7 +12,9 @@ class MessageService:
         self.message_repository = message_repository or MessageRepository()
         self.conversation_repository = conversation_repository or ConversationRepository()
 
-    def send_message(self, conversation, sender, *, content: str = "", attachment=None, message_type: str = MessageType.TEXT):
+    def send_message(
+        self, conversation, sender, *, content: str = "", attachment=None, message_type: str = MessageType.TEXT
+    ):
         if not self.conversation_repository.is_participant(conversation, sender):
             raise ApplicationError("You are not a participant in this conversation.")
         if not content and not attachment:
@@ -29,7 +31,9 @@ class MessageService:
         from apps.chat.tasks import notify_new_message_task
 
         for recipient in self.conversation_repository.other_participants(conversation, excluding_user=sender):
-            notify_new_message_task.delay(str(recipient.id), str(sender.id), str(conversation.id), message.content[:100])
+            notify_new_message_task.delay(
+                str(recipient.id), str(sender.id), str(conversation.id), message.content[:100]
+            )
 
     def get_history(self, conversation, since=None):
         return self.message_repository.list_for_conversation(conversation, since=since)

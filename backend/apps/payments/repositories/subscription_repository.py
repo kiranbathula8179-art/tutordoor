@@ -23,7 +23,12 @@ class UserSubscriptionRepository:
         return self.model.objects.create(**fields)
 
     def get_active_for_user(self, user) -> Optional[UserSubscription]:
-        return self.model.objects.filter(user=user, status="active").select_related("plan").order_by("-created_at").first()
+        return (
+            self.model.objects.filter(user=user, status="active")
+            .select_related("plan")
+            .order_by("-created_at")
+            .first()
+        )
 
     def get_by_id(self, subscription_id) -> Optional[UserSubscription]:
         return self.model.objects.select_related("plan", "user").filter(id=subscription_id).first()

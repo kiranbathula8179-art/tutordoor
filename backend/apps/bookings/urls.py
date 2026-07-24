@@ -22,5 +22,7 @@ urlpatterns = [
     ),
     path("<uuid:booking_id>/live-class/join/", views.LiveClassJoinView.as_view(), name="live_class_join"),
     path("<uuid:booking_id>/live-class/leave/", views.LiveClassLeaveView.as_view(), name="live_class_leave"),
-    path("<uuid:booking_id>/live-class/attendance/", views.SessionAttendanceView.as_view(), name="live_class_attendance"),
+    path(
+        "<uuid:booking_id>/live-class/attendance/", views.SessionAttendanceView.as_view(), name="live_class_attendance"
+    ),
 ]

@@ -1,7 +1,6 @@
 from rest_framework import serializers
 
 from apps.analytics.models import DailyPlatformMetrics
-from apps.tutors.serializers import TutorProfileSerializer
 
 
 class AdminDashboardSummarySerializer(serializers.Serializer):

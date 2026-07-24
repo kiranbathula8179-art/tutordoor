@@ -52,7 +52,10 @@ class RescheduleService:
 
         if not accept:
             self.reschedule_repository.update(
-                reschedule_request, status=RescheduleStatus.REJECTED, responded_by=responder, responded_at=timezone.now()
+                reschedule_request,
+                status=RescheduleStatus.REJECTED,
+                responded_by=responder,
+                responded_at=timezone.now(),
             )
             return reschedule_request
 

@@ -1,6 +1,5 @@
 from typing import Optional
 
-from django.db.models import Q
 from django.utils import timezone
 
 from apps.bookings.models import ACTIVE_BOOKING_STATUSES, Booking, BookingStatusHistory
@@ -10,7 +9,11 @@ class BookingRepository:
     model = Booking
 
     def get_by_id(self, booking_id) -> Optional[Booking]:
-        return self.model.objects.select_related("student__user", "tutor__user", "subject").filter(id=booking_id).first()
+        return (
+            self.model.objects.select_related("student__user", "tutor__user", "subject")
+            .filter(id=booking_id)
+            .first()
+        )
 
     def create(self, **fields) -> Booking:
         return self.model.objects.create(**fields)
@@ -21,7 +24,9 @@ class BookingRepository:
         booking.save(update_fields=list(fields.keys()) + ["updated_at"])
         return booking
 
-    def record_status_change(self, booking: Booking, *, from_status: str, to_status: str, changed_by=None, reason: str = ""):
+    def record_status_change(
+        self, booking: Booking, *, from_status: str, to_status: str, changed_by=None, reason: str = ""
+    ):
         return BookingStatusHistory.objects.create(
             booking=booking, from_status=from_status, to_status=to_status, changed_by=changed_by, reason=reason
         )

@@ -38,10 +38,25 @@ class VerificationDocumentInline(admin.TabularInline):
 
 @admin.register(TutorProfile)
 class TutorProfileAdmin(admin.ModelAdmin):
-    list_display = ("user", "verification_status", "hourly_rate", "rating_average", "city", "is_accepting_students", "created_at")
+    list_display = (
+        "user",
+        "verification_status",
+        "hourly_rate",
+        "rating_average",
+        "city",
+        "is_accepting_students",
+        "created_at",
+    )
     list_filter = ("verification_status", "teaching_mode", "is_featured", "is_accepting_students")
     search_fields = ("user__email", "user__first_name", "user__last_name", "city")
-    readonly_fields = ("rating_average", "rating_count", "total_sessions_completed", "verified_at", "created_at", "updated_at")
+    readonly_fields = (
+        "rating_average",
+        "rating_count",
+        "total_sessions_completed",
+        "verified_at",
+        "created_at",
+        "updated_at",
+    )
     inlines = [TutorSubjectInline, VerificationDocumentInline]
 
 

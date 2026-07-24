@@ -30,7 +30,9 @@ class RefundService:
 
         try:
             if payment.gateway == PaymentGateway.RAZORPAY:
-                result = self.razorpay_gateway.create_refund(gateway_payment_id=payment.gateway_payment_id, amount=amount)
+                result = self.razorpay_gateway.create_refund(
+                    gateway_payment_id=payment.gateway_payment_id, amount=amount
+                )
                 gateway_refund_id = result.get("id", "")
             elif payment.gateway == PaymentGateway.STRIPE:
                 result = self.stripe_gateway.create_refund(gateway_payment_id=payment.gateway_payment_id, amount=amount)

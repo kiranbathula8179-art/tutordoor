@@ -109,7 +109,9 @@ class PaymentService:
             self._mark_failed(payment, reason="Signature verification failed.")
             raise ApplicationError("Payment verification failed.")
 
-        return self._mark_paid(payment, gateway_payment_id=razorpay_payment_id, raw_response={"signature_verified": True})
+        return self._mark_paid(
+            payment, gateway_payment_id=razorpay_payment_id, raw_response={"signature_verified": True}
+        )
 
     # ---------------------------------------------------------------- webhooks
     def handle_razorpay_webhook(self, *, payload_body: bytes, signature: str, event: dict):

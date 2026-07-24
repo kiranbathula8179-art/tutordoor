@@ -34,7 +34,11 @@ class AttendanceRepository:
         return self.model.objects.create(session=session, user=user, role=role, joined_at=timezone.now())
 
     def record_leave(self, session, user) -> Optional[SessionAttendance]:
-        record = self.model.objects.filter(session=session, user=user, left_at__isnull=True).order_by("-joined_at").first()
+        record = (
+            self.model.objects.filter(session=session, user=user, left_at__isnull=True)
+            .order_by("-joined_at")
+            .first()
+        )
         if not record:
             return None
         record.left_at = timezone.now()

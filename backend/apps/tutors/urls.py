@@ -11,7 +11,9 @@ urlpatterns = [
     path("me/profile/", views.MyTutorProfileView.as_view(), name="my_profile"),
     path("me/documents/", views.VerificationDocumentListCreateView.as_view(), name="my_documents"),
     path("me/availability/weekly/", views.MyWeeklyAvailabilityView.as_view(), name="my_weekly_availability"),
-    path("me/availability/exceptions/", views.MyAvailabilityExceptionsView.as_view(), name="my_availability_exceptions"),
+    path(
+        "me/availability/exceptions/", views.MyAvailabilityExceptionsView.as_view(), name="my_availability_exceptions"
+    ),
     path(
         "me/availability/exceptions/<uuid:exception_id>/",
         views.MyAvailabilityExceptionsView.as_view(),

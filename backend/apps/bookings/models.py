@@ -65,7 +65,9 @@ class Booking(BaseModel):
 
     booking_type = models.CharField(max_length=20, choices=BookingType.choices, default=BookingType.REGULAR)
     mode = models.CharField(max_length=10, choices=BookingMode.choices, default=BookingMode.ONLINE)
-    status = models.CharField(max_length=20, choices=BookingStatus.choices, default=BookingStatus.PENDING_PAYMENT, db_index=True)
+    status = models.CharField(
+        max_length=20, choices=BookingStatus.choices, default=BookingStatus.PENDING_PAYMENT, db_index=True
+    )
 
     start_time = models.DateTimeField(db_index=True)
     end_time = models.DateTimeField()
@@ -80,7 +82,9 @@ class Booking(BaseModel):
     student_notes = models.TextField(blank=True)
     tutor_notes = models.TextField(blank=True, help_text="Private prep notes, visible only to the tutor.")
 
-    cancelled_by = models.ForeignKey(User, null=True, blank=True, on_delete=models.SET_NULL, related_name="bookings_cancelled")
+    cancelled_by = models.ForeignKey(
+        User, null=True, blank=True, on_delete=models.SET_NULL, related_name="bookings_cancelled"
+    )
     cancellation_reason = models.TextField(blank=True)
     cancelled_at = models.DateTimeField(null=True, blank=True)
     is_late_cancellation = models.BooleanField(default=False)

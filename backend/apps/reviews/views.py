@@ -108,7 +108,9 @@ class SubmitCourseReviewView(APIView):
         serializer.is_valid(raise_exception=True)
 
         review = CourseReviewService().submit_review(enrollment, student_profile, **serializer.validated_data)
-        return Response({"success": True, "review": CourseReviewSerializer(review).data}, status=status.HTTP_201_CREATED)
+        return Response(
+            {"success": True, "review": CourseReviewSerializer(review).data}, status=status.HTTP_201_CREATED
+        )
 
 
 class CourseReviewListView(APIView):

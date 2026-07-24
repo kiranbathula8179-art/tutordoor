@@ -1,4 +1,4 @@
-from apps.notifications.models import NotificationChannel, NotificationType
+from apps.notifications.models import NotificationChannel
 from apps.notifications.repositories.notification_repository import (
     DeliveryLogRepository,
     NotificationPreferenceRepository,

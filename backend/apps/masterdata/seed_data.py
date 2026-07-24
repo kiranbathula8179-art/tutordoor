@@ -3,9 +3,6 @@ the `seed_master_data` command. `apply_seed` takes model classes so the
 migration can pass historical models. Idempotent; get_or_create only —
 admin edits are never clobbered (ADR-001)."""
 
-
-from apps.masterdata.models import MasterDataItem, MasterDataType
-
 # (code, name, description)
 TYPES: list[tuple[str, str, str]] = [
     ("grade_level", "Grade Levels", "Student academic stage used on student profiles."),
@@ -128,7 +125,10 @@ NOTIFICATION_TEMPLATES: list[tuple[str, str, dict]] = [
         "Booking Confirmed",
         {
             "subject": "Your session with {tutor_name} is confirmed",
-            "body": "Hi {student_name}, your {subject} session on {start_time} is confirmed. Join from your bookings page.",
+            "body": (
+                "Hi {student_name}, your {subject} session on {start_time} is confirmed. "
+                "Join from your bookings page."
+            ),
         },
     ),
     (
@@ -148,7 +148,6 @@ NOTIFICATION_TEMPLATES: list[tuple[str, str, dict]] = [
         },
     ),
 ]
-
 
 
 def apply_seed(TypeModel, ItemModel) -> tuple[int, int]:

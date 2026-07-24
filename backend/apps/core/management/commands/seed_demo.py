@@ -12,7 +12,7 @@ All demo accounts share the password below.
 """
 
 import random
-from datetime import date, time, timedelta
+from datetime import time, timedelta
 from decimal import Decimal
 
 from django.core.management import call_command
@@ -269,7 +269,9 @@ class Command(BaseCommand):
                 defaults={
                     "subject": subjects[subject_name],
                     "created_by": tutor.user,
-                    "description": f"A structured {total_sessions}-session program taught live by {tutor.user.first_name}.",
+                    "description": (
+                        f"A structured {total_sessions}-session program taught live by {tutor.user.first_name}."
+                    ),
                     "level": "all_levels",
                     "mode": "online",
                     "total_sessions": total_sessions,
@@ -433,7 +435,9 @@ class Command(BaseCommand):
         for tutor in {tutor_physics, tutor_maths}:
             review_service._recompute_tutor_rating(tutor)
 
-        self.stdout.write("  bookings: 2 completed(+paid+reviewed+payout), 1 confirmed, 1 pending payment, 1 demo, 1 cancelled")
+        self.stdout.write(
+            "  bookings: 2 completed(+paid+reviewed+payout), 1 confirmed, 1 pending payment, 1 demo, 1 cancelled"
+        )
 
     # ------------------------------------------------------------------ chat
     def _seed_chat(self, users):

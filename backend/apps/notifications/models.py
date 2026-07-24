@@ -53,7 +53,10 @@ class DeliveryStatus(models.TextChoices):
 
 
 class NotificationDeliveryLog(BaseModel):
-    """Tracks one channel-delivery attempt for a Notification (a single notification may fan out to several channels)."""
+    """Tracks one channel-delivery attempt for a Notification.
+
+    A single notification may fan out to several channels.
+    """
 
     notification = models.ForeignKey(Notification, on_delete=models.CASCADE, related_name="delivery_logs")
     channel = models.CharField(max_length=15, choices=NotificationChannel.choices)
