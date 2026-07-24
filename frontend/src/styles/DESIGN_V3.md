@@ -361,8 +361,19 @@ primitive this session has gone through.
   `PublicLayout.tsx` (root backgrounds made transparent so the shared
   atmosphere shows through immediately; individual page sections still
   have their own opaque fills at this point — those open up below).
-- ⬜ Milestone 2 — Landing (reconcile V5/V6 onto V7, open sections to
-  translucent surfaces).
+- ✅ **Milestone 2** — Landing reconciled onto V7: every section's card
+  fills moved from opaque `bg-white` to translucent `bg-white/70
+  backdrop-blur-sm border-sand/70`; `AmbientWash` tones across all
+  sections switched from V5's cool blue/cyan/sky/lavender to the warm
+  V7 set (`forest`/`sand`/`clay`/`gold`), varying per section for a loose
+  top-to-bottom progression; Hero's own opaque dawn-gradient background
+  removed so the shared `PublicAtmosphere` shows through directly (its
+  cloud blooms and `FlightTrail` motif stay, now layered on the
+  atmosphere instead of owning the base fill); `OrganicEdge` added at the
+  one genuine hard color boundary left on the page (into the footer's
+  deliberate dark surface). CTA's blue gradient and the footer's dark
+  surface are kept exactly as the two sanctioned "blue for CTA" / "one
+  deliberate dark surface" exceptions — neither is a page background.
 - ⬜ Milestone 3 — global public nav/footer.
 - ⬜ Milestone 4 — auth brand panel.
 - ⬜ Milestone 5 — Search + Tutor Profile.

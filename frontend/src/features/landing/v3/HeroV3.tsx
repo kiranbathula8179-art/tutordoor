@@ -61,7 +61,7 @@ function TutorPreviewCard({ tutor, className }: { tutor: TutorProfile; className
     <Link
       to={`/tutors/${tutor.id}`}
       className={cn(
-        "flex w-72 items-center gap-3 rounded-2xl border border-line bg-canvas p-4 shadow-hover transition-all",
+        "flex w-72 items-center gap-3 rounded-2xl border border-sand bg-white/80 p-4 shadow-hover backdrop-blur-md transition-all",
         "hover:-translate-y-0.5 hover:shadow-dropdown motion-reduce:animate-none",
         className
       )}
@@ -104,8 +104,10 @@ export function HeroV3() {
   };
 
   return (
-    <section className="relative overflow-hidden bg-gradient-to-b from-[#FFF8E8] via-[#FDFBF3] to-canvas">
-      {/* Dawn sky: soft gold-to-cream wash, drifting cloud blooms, and the flight trail. */}
+    <section className="relative overflow-hidden">
+      {/* Dawn accent over the shared PublicAtmosphere: no opaque fill of its
+          own anymore (V7 Milestone 2) — just a soft gold wash and drifting
+          cloud blooms layered on top of the page-wide atmosphere. */}
       <div aria-hidden="true" className="pointer-events-none absolute inset-0 overflow-hidden">
         <div className="absolute inset-x-0 top-0 h-[420px] bg-[radial-gradient(70%_90%_at_30%_0%,rgba(244,180,0,0.12)_0%,transparent_70%)]" />
         <div className="absolute -left-24 top-8 h-64 w-[32rem] animate-float-slow rounded-[50%] bg-white/70 blur-3xl motion-reduce:animate-none" />
@@ -144,7 +146,7 @@ export function HeroV3() {
           <motion.form
             {...arriveProps(0.2)}
             onSubmit={onSearch}
-            className="mt-8 flex max-w-lg items-center gap-2 rounded-2xl border border-line bg-canvas p-2 pl-4 shadow-soft transition-shadow focus-within:border-primary focus-within:ring-2 focus-within:ring-primary/20"
+            className="mt-8 flex max-w-lg items-center gap-2 rounded-2xl border border-sand bg-white/80 p-2 pl-4 shadow-soft backdrop-blur-md transition-shadow focus-within:border-primary focus-within:ring-2 focus-within:ring-primary/20"
           >
             <Search className="h-5 w-5 shrink-0 text-slate-400" />
             <input

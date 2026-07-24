@@ -16,8 +16,10 @@ import { PublicAtmosphere } from "@/components/ui/Surface";
  * testimonials (real reviews, sourced from the public reviews endpoint — hides
  * gracefully if none exist yet) → FAQ → CTA → footer.
  *
- * Individual sections below still carry their own opaque fills pending V7
- * Milestone 2, which reconciles them onto translucent surfaces.
+ * Every section below is a translucent `bg-white/70`+ surface over the
+ * shared atmosphere (V7 Milestone 2) — no section paints its own opaque
+ * fill anymore, aside from the CTA's deliberate blue gradient card and the
+ * footer's deliberate dark surface, both explicitly sanctioned exceptions.
  */
 export function LandingPage() {
   return (

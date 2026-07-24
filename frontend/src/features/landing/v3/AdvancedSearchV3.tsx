@@ -51,14 +51,14 @@ export function AdvancedSearchV3() {
 
   return (
     <section className="container-page relative -mt-10 pb-4 sm:-mt-14 sm:pb-8">
-      <AmbientWash tones={["blue"]} />
+      <AmbientWash tones={["gold", "clay"]} />
       <motion.div
         initial={riseInit(20)}
         whileInView={{ opacity: 1, y: 0 }}
         viewport={{ once: true, margin: "-40px" }}
         transition={motionSafe({ duration: DURATION.slow, ease: EASE_OUT })}
       >
-        <Card className="relative overflow-hidden rounded-3xl border-line/60 bg-white shadow-dialog">
+        <Card className="relative overflow-hidden rounded-3xl border-sand/70 bg-white/75 shadow-dialog backdrop-blur-md">
           {/* A single confident accent edge — the search card reads as the product's centerpiece, not another panel. */}
           <div aria-hidden="true" className="absolute inset-x-0 top-0 h-1.5 bg-gradient-to-r from-primary via-primary-light to-secondary" />
           <CardBody className="p-6 sm:p-8">

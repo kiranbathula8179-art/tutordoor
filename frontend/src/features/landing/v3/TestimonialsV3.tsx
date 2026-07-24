@@ -79,7 +79,7 @@ export function TestimonialsV3() {
 
   return (
     <section className="container-page relative py-20">
-      <AmbientWash tones={["lavender"]} />
+      <AmbientWash tones={["clay", "gold"]} />
       <SectionHeading eyebrow="Testimonials" title="What learners say" />
       <motion.div
         initial={still ? false : "hidden"}
@@ -91,7 +91,7 @@ export function TestimonialsV3() {
         {/* Editorial pull-quote treatment for the strongest real review. */}
         <motion.div
           variants={staggerItem}
-          className="relative flex flex-col justify-between rounded-3xl border border-line/60 bg-white p-8 shadow-soft sm:p-10"
+          className="relative flex flex-col justify-between rounded-3xl border border-sand/70 bg-white/70 p-8 shadow-soft backdrop-blur-sm sm:p-10"
         >
           <Quote className="h-10 w-10 shrink-0 text-primary/20" aria-hidden="true" />
           <p className="mt-4 flex-1 font-display text-xl leading-relaxed text-navy sm:text-2xl">
@@ -123,7 +123,7 @@ export function TestimonialsV3() {
               <motion.div
                 key={review.id}
                 variants={staggerItem}
-                className="flex flex-1 flex-col rounded-2xl border border-line/60 bg-white p-6 shadow-soft"
+                className="flex flex-1 flex-col rounded-2xl border border-sand/70 bg-white/70 p-6 shadow-soft backdrop-blur-sm"
               >
                 <Quote className="h-5 w-5 shrink-0 text-primary/25" aria-hidden="true" />
                 <p className="mt-3 flex-1 text-sm leading-relaxed text-slate-600">&ldquo;{review.comment}&rdquo;</p>

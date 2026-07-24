@@ -266,11 +266,24 @@ const ORGANIC_EDGE_FILL: Record<"linen" | "sand" | "canvas", string> = {
   canvas: "fill-canvas",
 };
 
+const ORGANIC_EDGE_PATH: Record<"top" | "bottom", string> = {
+  // A "cap" shape flush with its own container's top edge, filled down to a
+  // wavy line — sits INSIDE whatever it's placed in (e.g. a dark footer),
+  // so it survives `overflow-hidden` on the parent instead of relying on a
+  // negative offset that clips away.
+  top: "M0,56 C240,10 480,110 720,72 C960,34 1200,100 1440,64 L1440,0 L0,0 Z",
+  bottom: "M0,64 C240,110 480,10 720,48 C960,86 1200,20 1440,56 L1440,120 L0,120 Z",
+};
+
 /**
  * OrganicEdge — V7 "One World" (DESIGN_V3.md V7 addendum). A reusable,
  * hand-authored SVG wave divider for blending a raised content band into
  * the shared `PublicAtmosphere` instead of cutting it off on a hard
  * rectangular edge. Purely decorative — `aria-hidden`, non-interactive.
+ *
+ * Sits flush inside its own container (top-0 or bottom-0, no negative
+ * offset) so it isn't clipped by a parent's `overflow-hidden` — place it
+ * as the first child of whatever should get the wavy edge.
  */
 export function OrganicEdge({
   className,
@@ -288,14 +301,11 @@ export function OrganicEdge({
       preserveAspectRatio="none"
       className={cn(
         "pointer-events-none absolute inset-x-0 h-20 w-full",
-        position === "top" ? "top-0 -translate-y-[calc(100%-1px)] rotate-180" : "bottom-0 translate-y-[calc(100%-1px)]",
+        position === "top" ? "top-0" : "bottom-0",
         className
       )}
     >
-      <path
-        d="M0,64 C240,110 480,10 720,48 C960,86 1200,20 1440,56 L1440,120 L0,120 Z"
-        className={ORGANIC_EDGE_FILL[tone]}
-      />
+      <path d={ORGANIC_EDGE_PATH[position]} className={ORGANIC_EDGE_FILL[tone]} />
     </svg>
   );
 }
