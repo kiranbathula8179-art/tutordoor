@@ -526,7 +526,16 @@ replaced wherever a milestone touches that page.
   audited and left untouched — no `BrandMesh`/blue-dominant-background
   issue found, and its socket/read-receipt logic isn't worth the risk of
   touching without a concrete finding.
-- ⬜ Milestone 3 — Student portal.
+- ✅ **Milestone 3** — Student portal. `StudentDashboardPage` audited and
+  found already fully compliant (no `BrandMesh`, well-staggered motion,
+  warm tokens) — no changes made, stated explicitly rather than
+  manufacturing busywork. `StudentProfilePage` gained a real-data avatar
+  identity strip (existing `Avatar`/`user` data, no new upload
+  functionality invented) and staggered entrance across its three
+  settings cards (was one flat fade). `StudentCoursesPage` gained the
+  same stagger pattern now established for "my X" list pages
+  (`BookingsListPage` in Milestone 2) — one consistent motion language
+  across comparable list surfaces, per Principle 6.
 - ⬜ Milestone 4 — Tutor portal.
 - ⬜ Milestone 5 — Parent portal.
 - ⬜ Milestone 6 — Institute portal.

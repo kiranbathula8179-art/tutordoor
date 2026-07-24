@@ -7,6 +7,7 @@ import { useEffect, useState } from "react";
 import toast from "react-hot-toast";
 
 import { PageHeader } from "@/components/shared/PageHeader";
+import { Avatar } from "@/components/ui/Avatar";
 import { Button } from "@/components/ui/Button";
 import { Card, CardBody } from "@/components/ui/Card";
 import { EmptyState } from "@/components/ui/EmptyState";
@@ -22,7 +23,8 @@ import {
   updateMyStudentProfile,
   type StudentProfilePayload,
 } from "@/features/student/api";
-import { DURATION, EASE_OUT, riseInit } from "@/lib/motion/tokens";
+import { staggerContainer, staggerItem } from "@/lib/motion/tokens";
+import { prefersReducedMotion } from "@/lib/motion/quality";
 import { getErrorMessage } from "@/lib/utils";
 import { useAuthStore } from "@/store/auth-store";
 
@@ -41,6 +43,7 @@ export function StudentProfilePage() {
   const queryClient = useQueryClient();
   const { optionsFor } = useMasterData(["grade_level"]);
   const { user, setUser } = useAuthStore();
+  const still = prefersReducedMotion();
 
   const {
     data: profile,
@@ -150,14 +153,18 @@ export function StudentProfilePage() {
 
   return (
     <motion.div
-      initial={riseInit(12)}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: DURATION.base, ease: EASE_OUT }}
+      initial={still ? false : "hidden"}
+      animate="show"
+      variants={staggerContainer}
       className="mx-auto max-w-3xl"
     >
-      <PageHeader title="My profile" description="Your account, learning details, and security." />
+      <div className="flex items-center gap-4">
+        <Avatar src={user?.avatar} firstName={user?.first_name ?? ""} lastName={user?.last_name ?? ""} size="lg" />
+        <PageHeader title="My profile" description="Your account, learning details, and security." />
+      </div>
 
       {/* ------------------------------------------------ Account */}
+      <motion.div variants={staggerItem}>
       <Card className="mt-6">
         <CardBody>
 <SectionHeading icon={UserRound}>Account</SectionHeading>
@@ -177,8 +184,10 @@ export function StudentProfilePage() {
           </div>
         </CardBody>
       </Card>
+      </motion.div>
 
       {/* ------------------------------------------------ Learning profile */}
+      <motion.div variants={staggerItem}>
       <Card className="mt-6">
         <CardBody>
           <SectionHeading icon={GraduationCap}>Learning profile</SectionHeading>
@@ -234,8 +243,10 @@ export function StudentProfilePage() {
           </div>
         </CardBody>
       </Card>
+      </motion.div>
 
       {/* ------------------------------------------------ Security */}
+      <motion.div variants={staggerItem}>
       <Card className="mt-6">
         <CardBody>
 <SectionHeading icon={KeyRound}>Change password</SectionHeading>
@@ -266,6 +277,7 @@ export function StudentProfilePage() {
           </div>
         </CardBody>
       </Card>
+      </motion.div>
     </motion.div>
   );
 }

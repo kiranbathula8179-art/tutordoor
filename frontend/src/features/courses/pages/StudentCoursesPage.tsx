@@ -1,4 +1,5 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { motion } from "framer-motion";
 import { AlertCircle, BookOpen, LogOut, Video } from "lucide-react";
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
@@ -13,6 +14,8 @@ import { EmptyState } from "@/components/ui/EmptyState";
 import { Modal } from "@/components/ui/Modal";
 import { SectionLoader } from "@/components/ui/Spinner";
 import { dropEnrollment, joinCourseSession, listMyEnrollments } from "@/features/courses/api";
+import { staggerContainer, staggerItem } from "@/lib/motion/tokens";
+import { prefersReducedMotion } from "@/lib/motion/quality";
 import { formatDateTime, getErrorMessage } from "@/lib/utils";
 import type { CourseEnrollment, CourseSession } from "@/types";
 
@@ -30,6 +33,7 @@ export function StudentCoursesPage() {
   const navigate = useNavigate();
   const queryClient = useQueryClient();
   const [dropTarget, setDropTarget] = useState<CourseEnrollment | null>(null);
+  const still = prefersReducedMotion();
 
   const {
     data: enrollments = [],
@@ -97,11 +101,17 @@ export function StudentCoursesPage() {
           />
         </Card>
       ) : (
-        <div className="mt-6 space-y-4">
+        <motion.div
+          initial={still ? false : "hidden"}
+          animate="show"
+          variants={staggerContainer}
+          className="mt-6 space-y-4"
+        >
           {enrollments.map((enrollment) => {
             const nextSession = nextActionableSession(enrollment.course.sessions);
             return (
-              <Card key={enrollment.id}>
+              <motion.div key={enrollment.id} variants={staggerItem}>
+              <Card>
                 <CardBody>
                   <div className="flex flex-wrap items-start justify-between gap-3">
                     <div className="min-w-0">
@@ -184,9 +194,10 @@ export function StudentCoursesPage() {
                   </div>
                 </CardBody>
               </Card>
+              </motion.div>
             );
           })}
-        </div>
+        </motion.div>
       )}
 
       {/* ------------------------------------------------ Drop confirmation */}
