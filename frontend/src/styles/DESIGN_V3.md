@@ -554,7 +554,15 @@ replaced wherever a milestone touches that page.
   values — deliberately not a reuse of the shared `TutorResultCard`
   (which would have needed rating/verification fields a mid-edit, unsaved
   profile can't honestly claim yet).
-- ⬜ Milestone 5 — Parent portal.
+- ✅ **Milestone 5** — Parent portal. All five pages were already
+  `Card`-consistent from prior work; `ParentPaymentsPage` needed zero
+  changes (already exactly `Card`+`divide-y`, the standard). The one real
+  fix was `ParentBookingsPage`'s list rows, which used raw bordered
+  `div`s instead of `Card` — the exact "list-row standardization" gap
+  the plan named. All four pages with real lists/grids
+  (`ParentDashboardPage`, `ParentChildrenPage`, `ParentBookingsPage`,
+  `ParentProgressPage`) gained the same `staggerContainer`/`staggerItem`
+  entrance now consistent across every "my X" list in the app.
 - ⬜ Milestone 6 — Institute portal.
 - ⬜ Milestone 7 — Admin (Dashboard, Reports, Verifications).
 - ⬜ Milestone 8 — Admin (data-table-heavy pages — restrained pass only).

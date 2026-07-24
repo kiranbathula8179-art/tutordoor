@@ -1,4 +1,5 @@
 import { useQuery } from "@tanstack/react-query";
+import { motion } from "framer-motion";
 import { AlertCircle, TrendingUp } from "lucide-react";
 import { useEffect, useMemo, useState } from "react";
 import { Link } from "react-router-dom";
@@ -11,9 +12,12 @@ import { Card, CardBody } from "@/components/ui/Card";
 import { EmptyState } from "@/components/ui/EmptyState";
 import { SectionLoader } from "@/components/ui/Spinner";
 import { listChildEnrollments, listMyChildren } from "@/features/parent/api";
+import { staggerContainer, staggerItem } from "@/lib/motion/tokens";
+import { prefersReducedMotion } from "@/lib/motion/quality";
 import { cn } from "@/lib/utils";
 
 export function ParentProgressPage() {
+  const still = prefersReducedMotion();
   const {
     data: children = [],
     isLoading: childrenLoading,
@@ -151,9 +155,15 @@ export function ParentProgressPage() {
             </p>
           </div>
         ) : (
-          <div className="space-y-4">
+          <motion.div
+            initial={still ? false : "hidden"}
+            animate="show"
+            variants={staggerContainer}
+            className="space-y-4"
+          >
             {enrollments.map((enrollment) => (
-              <Card key={enrollment.id}>
+              <motion.div key={enrollment.id} variants={staggerItem}>
+              <Card>
                 <CardBody>
                   <div className="flex flex-wrap items-start justify-between gap-3">
                     <div>
@@ -186,8 +196,9 @@ export function ParentProgressPage() {
                   </div>
                 </CardBody>
               </Card>
+              </motion.div>
             ))}
-          </div>
+          </motion.div>
         )}
       </div>
     </div>

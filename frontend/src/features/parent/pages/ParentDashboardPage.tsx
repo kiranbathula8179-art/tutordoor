@@ -1,5 +1,6 @@
 import { useQuery } from "@tanstack/react-query";
 import { isAxiosError } from "axios";
+import { motion } from "framer-motion";
 import { UserPlus, Users } from "lucide-react";
 import { Link } from "react-router-dom";
 
@@ -12,10 +13,13 @@ import { Card } from "@/components/ui/Card";
 import { EmptyState } from "@/components/ui/EmptyState";
 import { SectionLoader } from "@/components/ui/Spinner";
 import { listMyChildren } from "@/features/parent/api";
+import { staggerContainer, staggerItem } from "@/lib/motion/tokens";
+import { prefersReducedMotion } from "@/lib/motion/quality";
 import { useAuthStore } from "@/store/auth-store";
 
 export function ParentDashboardPage() {
   const user = useAuthStore((state) => state.user);
+  const still = prefersReducedMotion();
   const {
     data: children,
     isLoading,
@@ -85,9 +89,15 @@ export function ParentDashboardPage() {
       )}
 
       {children && children.length > 0 && (
-        <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+        <motion.div
+          initial={still ? false : "hidden"}
+          animate="show"
+          variants={staggerContainer}
+          className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3"
+        >
           {children.map((link) => (
-            <Link key={link.id} to="/parent/children" className="group focus-visible:outline-none">
+            <motion.div key={link.id} variants={staggerItem}>
+            <Link to="/parent/children" className="group focus-visible:outline-none">
               <Card className="flex items-center gap-4 p-5 transition-all group-hover:-translate-y-0.5 group-hover:shadow-hover group-focus-visible:ring-2 group-focus-visible:ring-primary/30">
                 <Avatar
                   src={link.student.user.avatar}
@@ -104,8 +114,9 @@ export function ParentDashboardPage() {
                 </div>
               </Card>
             </Link>
+            </motion.div>
           ))}
-        </div>
+        </motion.div>
       )}
     </div>
   );

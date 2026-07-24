@@ -1,5 +1,6 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { isAxiosError } from "axios";
+import { motion } from "framer-motion";
 import { useMasterData } from "@/lib/master-data";
 import { AlertCircle, CheckCircle2, Mail, UserPlus, Users } from "lucide-react";
 import { useState } from "react";
@@ -17,11 +18,14 @@ import { Modal } from "@/components/ui/Modal";
 import { Select } from "@/components/ui/Select";
 import { SectionLoader } from "@/components/ui/Spinner";
 import { createMyParentProfile, getMyParentProfile, inviteChild, listMyChildren } from "@/features/parent/api";
+import { staggerContainer, staggerItem } from "@/lib/motion/tokens";
+import { prefersReducedMotion } from "@/lib/motion/quality";
 import { getErrorMessage } from "@/lib/utils";
 
 export function ParentChildrenPage() {
   const queryClient = useQueryClient();
   const [inviteOpen, setInviteOpen] = useState(false);
+  const still = prefersReducedMotion();
 
   const {
     isError: profileFetchFailed,
@@ -119,9 +123,15 @@ export function ParentChildrenPage() {
           </CardBody>
         </Card>
       ) : (
-        <div className="mt-6 grid gap-4 md:grid-cols-2">
+        <motion.div
+          initial={still ? false : "hidden"}
+          animate="show"
+          variants={staggerContainer}
+          className="mt-6 grid gap-4 md:grid-cols-2"
+        >
           {children.map((link) => (
-            <Card key={link.id}>
+            <motion.div key={link.id} variants={staggerItem}>
+            <Card>
               <CardBody>
                 <div className="flex items-start justify-between gap-3">
                   <div className="flex items-center gap-3">
@@ -154,8 +164,9 @@ export function ParentChildrenPage() {
                 )}
               </CardBody>
             </Card>
+            </motion.div>
           ))}
-        </div>
+        </motion.div>
       )}
 
       <InviteChildModal isOpen={inviteOpen} onClose={() => setInviteOpen(false)} />

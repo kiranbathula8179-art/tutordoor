@@ -1,4 +1,5 @@
 import { useQuery } from "@tanstack/react-query";
+import { motion } from "framer-motion";
 import { AlertCircle, Calendar, Clock, MapPin, Video } from "lucide-react";
 import { useState } from "react";
 
@@ -6,10 +7,13 @@ import { PageHeader } from "@/components/shared/PageHeader";
 import { Avatar } from "@/components/ui/Avatar";
 import { Badge, statusToTone } from "@/components/ui/Badge";
 import { Button } from "@/components/ui/Button";
+import { Card } from "@/components/ui/Card";
 import { EmptyState } from "@/components/ui/EmptyState";
 import { SectionLoader } from "@/components/ui/Spinner";
 import { Tabs } from "@/components/ui/Tabs";
 import { listMyBookings } from "@/features/bookings/api";
+import { staggerContainer, staggerItem } from "@/lib/motion/tokens";
+import { prefersReducedMotion } from "@/lib/motion/quality";
 import { formatCurrency, formatDate, formatTime } from "@/lib/utils";
 
 const TABS = [
@@ -20,6 +24,7 @@ const TABS = [
 
 export function ParentBookingsPage() {
   const [activeTab, setActiveTab] = useState<(typeof TABS)[number]["key"]>("upcoming");
+  const still = prefersReducedMotion();
 
   const { data, isLoading, isError, refetch } = useQuery({
     queryKey: ["parent-bookings", activeTab],
@@ -48,7 +53,7 @@ export function ParentBookingsPage() {
         {isLoading ? (
           <SectionLoader />
         ) : isError ? (
-          <div className="rounded-card border border-line bg-canvas shadow-soft">
+          <Card>
             <EmptyState
               icon={AlertCircle}
               title="We couldn't load bookings"
@@ -59,14 +64,17 @@ export function ParentBookingsPage() {
                 </Button>
               }
             />
-          </div>
+          </Card>
         ) : data && data.results.length > 0 ? (
-          <div className="space-y-4">
+          <motion.div
+            initial={still ? false : "hidden"}
+            animate="show"
+            variants={staggerContainer}
+            className="space-y-4"
+          >
             {data.results.map((booking) => (
-              <div
-                key={booking.id}
-                className="flex flex-col gap-4 rounded-card border border-line bg-canvas p-5 sm:flex-row sm:items-center"
-              >
+              <motion.div key={booking.id} variants={staggerItem}>
+              <Card className="flex flex-col gap-4 p-5 sm:flex-row sm:items-center">
                 <Avatar
                   src={booking.student.user.avatar}
                   firstName={booking.student.user.first_name}
@@ -97,9 +105,10 @@ export function ParentBookingsPage() {
                   </div>
                 </div>
                 <p className="font-mono font-semibold text-navy">{formatCurrency(booking.price, booking.currency)}</p>
-              </div>
+              </Card>
+              </motion.div>
             ))}
-          </div>
+          </motion.div>
         ) : (
           <div className="rounded-card border border-dashed border-line py-16 text-center">
             <p className="font-medium text-navy">No {activeTab} bookings</p>
