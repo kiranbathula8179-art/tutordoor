@@ -386,7 +386,18 @@ primitive this session has gone through.
   bookend one palette instead of ending on a leftover cool tone; link
   hover gained a subtle `motion-safe:hover:translate-x-0.5`. All nav
   routes, role-aware logic, and footer links unchanged.
-- ⬜ Milestone 4 — auth brand panel.
+- ✅ **Milestone 4** — Auth: `AuthLayout` now mounts its own
+  `PublicAtmosphere` (it isn't wrapped by `PublicLayout`, same as Landing)
+  instead of a flat `bg-canvas`. The brand panel's saturated blue
+  `BrandMesh` fill was replaced, not recolored — V7 reserves blue for
+  interactive elements and the footer is the app's one deliberate dark
+  surface, so a second dark/blue panel would violate both. It's now a
+  light, editorial panel: `AmbientWash` warm blooms, `font-editorial`
+  (Fraunces) headline in navy, botanical-green glyph chips and trust
+  icons, `GlassPanel` (light tone) for the stats card. The form column
+  stays mostly opaque (`bg-linen/90`) — the one place V7 intentionally
+  leans away from translucency, for input legibility. The five auth page
+  files themselves remain untouched.
 - ⬜ Milestone 5 — Search + Tutor Profile.
 - ⬜ Milestone 6 — Courses (list + detail).
 - ⬜ Milestone 7 — static/legal pages (About, Trust & Safety, Support,
