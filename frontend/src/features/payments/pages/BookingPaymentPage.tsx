@@ -1,6 +1,6 @@
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { motion } from "framer-motion";
-import { ArrowLeft, CalendarClock, Check, CreditCard, Lock, SearchX, ShieldCheck } from "lucide-react";
+import { ArrowLeft, CalendarClock, CreditCard, Lock, SearchX, ShieldCheck } from "lucide-react";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import toast from "react-hot-toast";
 
@@ -11,6 +11,7 @@ import { PageLoader } from "@/components/ui/Spinner";
 import { MeshBackground } from "@/components/ui/Surface";
 import { getBooking } from "@/features/bookings/api";
 import { CheckoutPanel } from "@/features/payments/components/CheckoutPanel";
+import { CheckoutSteps } from "@/features/payments/components/CheckoutSteps";
 import { celebrate } from "@/lib/motion/celebrate";
 import { DURATION, EASE_OUT, riseInit } from "@/lib/motion/tokens";
 
@@ -91,7 +92,7 @@ export function BookingPaymentPage() {
         </Link>
 
         {/* Checkout progress — Apple-style clarity on where you are */}
-        <CheckoutSteps />
+        <CheckoutSteps steps={["Session", "Payment", "Confirmed"]} current={1} />
 
         <h1 className="mt-6 font-display text-2xl font-extrabold tracking-tight text-navy sm:text-3xl">
           Complete your payment
@@ -140,46 +141,5 @@ export function BookingPaymentPage() {
         </div>
       </motion.div>
     </div>
-  );
-}
-
-function CheckoutSteps() {
-  const steps = ["Session", "Payment", "Confirmed"];
-  const current = 1; // On the payment page, step 2 of 3 is active.
-  return (
-    <nav aria-label="Checkout progress" className="flex items-center gap-2">
-      {steps.map((label, index) => {
-        const done = index < current;
-        const active = index === current;
-        return (
-          <div key={label} className="flex flex-1 items-center gap-2 last:flex-none">
-            <div className="flex items-center gap-2">
-              <span
-                className={
-                  "flex h-7 w-7 items-center justify-center rounded-full text-xs font-bold transition-colors " +
-                  (done
-                    ? "bg-success text-white"
-                    : active
-                      ? "bg-primary text-white"
-                      : "bg-surface-3 text-slate-400")
-                }
-              >
-                {done ? <Check className="h-3.5 w-3.5" /> : index + 1}
-              </span>
-              <span
-                className={
-                  "text-xs font-semibold " + (active ? "text-navy" : done ? "text-success-dark" : "text-slate-400")
-                }
-              >
-                {label}
-              </span>
-            </div>
-            {index < steps.length - 1 && (
-              <div className={"h-0.5 flex-1 rounded-full " + (done ? "bg-success" : "bg-surface-4")} />
-            )}
-          </div>
-        );
-      })}
-    </nav>
   );
 }

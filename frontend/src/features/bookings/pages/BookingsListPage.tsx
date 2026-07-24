@@ -1,14 +1,18 @@
 import { useQuery } from "@tanstack/react-query";
+import { motion } from "framer-motion";
 import { AlertCircle, CalendarDays } from "lucide-react";
 import { useState } from "react";
 
 import { PageHeader } from "@/components/shared/PageHeader";
 import { Button } from "@/components/ui/Button";
+import { Card } from "@/components/ui/Card";
 import { EmptyState } from "@/components/ui/EmptyState";
 import { SectionLoader } from "@/components/ui/Spinner";
 import { Tabs } from "@/components/ui/Tabs";
 import { BookingCard } from "@/features/bookings/components/BookingCard";
 import { listMyBookings } from "@/features/bookings/api";
+import { staggerContainer, staggerItem } from "@/lib/motion/tokens";
+import { prefersReducedMotion } from "@/lib/motion/quality";
 
 import { useAuthStore } from "@/store/auth-store";
 
@@ -21,6 +25,7 @@ const TABS = [
 export function BookingsListPage() {
   const user = useAuthStore((state) => state.user);
   const [activeTab, setActiveTab] = useState<(typeof TABS)[number]["key"]>("upcoming");
+  const still = prefersReducedMotion();
 
   const { data, isLoading, isError, refetch } = useQuery({
     queryKey: ["my-bookings", activeTab],
@@ -51,7 +56,7 @@ export function BookingsListPage() {
         {isLoading ? (
           <SectionLoader />
         ) : isError ? (
-          <div className="rounded-card border border-line bg-canvas shadow-soft">
+          <Card>
             <EmptyState
               icon={AlertCircle}
               title="We couldn't load your bookings"
@@ -62,21 +67,28 @@ export function BookingsListPage() {
                 </Button>
               }
             />
-          </div>
+          </Card>
         ) : data && data.results.length > 0 ? (
-          <div className="space-y-4">
+          <motion.div
+            initial={still ? false : "hidden"}
+            animate="show"
+            variants={staggerContainer}
+            className="space-y-4"
+          >
             {data.results.map((booking) => (
-              <BookingCard key={booking.id} booking={booking} viewerRole={viewerRole} />
+              <motion.div key={booking.id} variants={staggerItem}>
+                <BookingCard booking={booking} viewerRole={viewerRole} />
+              </motion.div>
             ))}
-          </div>
+          </motion.div>
         ) : (
-          <div className="rounded-card border border-line bg-canvas shadow-soft">
+          <Card>
             <EmptyState
               icon={CalendarDays}
               title={`No ${activeTab} bookings`}
               description={activeTab === "upcoming" ? "Book a session to see it here." : "Nothing to show yet."}
             />
-          </div>
+          </Card>
         )}
       </div>
     </div>

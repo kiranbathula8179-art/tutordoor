@@ -11,7 +11,7 @@ import { EmptyState } from "@/components/ui/EmptyState";
 import { Input } from "@/components/ui/Input";
 import { Modal } from "@/components/ui/Modal";
 import { SectionLoader } from "@/components/ui/Spinner";
-import { BrandMesh } from "@/components/ui/Surface";
+import { PortalHeroMesh } from "@/components/ui/Surface";
 import {
   confirmRazorpayPayment,
   getMyWallet,
@@ -154,7 +154,7 @@ export function WalletPage({ heading = "Wallet" }: { heading?: string }) {
           transition={{ duration: DURATION.slow, ease: EASE_OUT }}
           className="relative mt-5 overflow-hidden rounded-3xl shadow-hover"
         >
-          <BrandMesh />
+          <PortalHeroMesh />
           <div className="relative p-6 sm:p-8">
             <div className="flex flex-col items-start justify-between gap-5 sm:flex-row sm:items-center">
               <div className="flex items-center gap-4">
@@ -162,7 +162,7 @@ export function WalletPage({ heading = "Wallet" }: { heading?: string }) {
                   <WalletIcon className="h-6 w-6" />
                 </div>
                 <div>
-                  <p className="text-sm font-medium text-blue-100">Available balance</p>
+                  <p className="text-sm font-medium text-white/80">Available balance</p>
                   <p className="font-display text-4xl font-extrabold tracking-tight text-white sm:text-5xl">
                     {formatCurrency(wallet?.balance ?? 0, wallet?.currency)}
                   </p>

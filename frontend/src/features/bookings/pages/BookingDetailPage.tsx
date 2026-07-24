@@ -1,4 +1,5 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { motion } from "framer-motion";
 import { ArrowLeft, Calendar, Clock, MapPin, MessageCircle, SearchX, Video } from "lucide-react";
 import { useState } from "react";
 import { Link, useNavigate, useParams } from "react-router-dom";
@@ -13,6 +14,7 @@ import { PageLoader } from "@/components/ui/Spinner";
 import { Textarea } from "@/components/ui/Textarea";
 import { cancelBooking, getBooking, joinLiveClass } from "@/features/bookings/api";
 import { startConversation } from "@/features/chat/api";
+import { DURATION, EASE_OUT, riseInit } from "@/lib/motion/tokens";
 import { formatCurrency, formatDate, formatTime, getErrorMessage } from "@/lib/utils";
 import { useAuthStore } from "@/store/auth-store";
 
@@ -87,7 +89,12 @@ export function BookingDetailPage() {
   const counterpart = user?.role === "tutor" ? booking.student.user : booking.tutor.user;
 
   return (
-    <div className="mx-auto max-w-2xl">
+    <motion.div
+      initial={riseInit(16)}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: DURATION.slow, ease: EASE_OUT }}
+      className="mx-auto max-w-2xl"
+    >
       <Link to={backPath} className="mb-4 flex items-center gap-1.5 text-sm font-medium text-slate-400 hover:text-navy">
         <ArrowLeft className="h-4 w-4" /> Back to bookings
       </Link>
@@ -180,6 +187,6 @@ export function BookingDetailPage() {
           </Button>
         </div>
       </Modal>
-    </div>
+    </motion.div>
   );
 }
