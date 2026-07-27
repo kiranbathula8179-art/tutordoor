@@ -10,6 +10,7 @@ export interface StudentProfilePayload {
   city?: string;
   state?: string;
   country?: string;
+  preferred_subjects?: { subject_id: string; current_level: string }[];
 }
 
 export async function getMyStudentProfile(): Promise<StudentProfile> {
