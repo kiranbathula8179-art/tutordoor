@@ -127,12 +127,28 @@ export function TutorCoursesPage() {
             />
           </Card>
         ) : courses.length === 0 ? (
-          <div className="rounded-card border border-dashed border-line py-16 text-center">
-            <p className="font-medium text-navy">No courses here yet</p>
-            <p className="mt-1 text-sm text-slate-500">
-              {isVerified ? "Create your first course to teach a group." : "Get verified, then create your first course."}
-            </p>
-          </div>
+          <Card>
+            <EmptyState
+              icon={BookOpen}
+              title="No courses here yet"
+              description={
+                isVerified
+                  ? "A group course gets you a fixed schedule, a set price, and several students at once instead of one-on-one bookings."
+                  : "Get verified, then create your first course."
+              }
+              action={
+                isVerified ? (
+                  <Button onClick={() => setCreateOpen(true)}>
+                    <Plus className="h-4 w-4" /> New course
+                  </Button>
+                ) : (
+                  <Link to="/tutor/verification">
+                    <Button variant="outline">Complete verification</Button>
+                  </Link>
+                )
+              }
+            />
+          </Card>
         ) : (
           <motion.div
             initial={still ? false : "hidden"}

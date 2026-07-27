@@ -5,6 +5,7 @@ import { Link } from "react-router-dom";
 import toast from "react-hot-toast";
 
 import { DashboardHero } from "@/components/shared/DashboardHero";
+import { OnboardingChecklist } from "@/components/shared/OnboardingChecklist";
 import { StatCard } from "@/components/shared/StatCard";
 import { Button } from "@/components/ui/Button";
 import { Card, CardBody } from "@/components/ui/Card";
@@ -56,6 +57,10 @@ export function TutorDashboardPage() {
     animate: { opacity: 1, y: 0 },
     transition: motionSafe({ duration: DURATION.slow, delay, ease: EASE_OUT }),
   });
+
+  // Derived entirely from the summary this page already fetches — no new query.
+  const hasBooking = (summary?.upcoming_sessions ?? 0) > 0 || (summary?.total_sessions_completed ?? 0) > 0;
+  const hasEarnings = Number(summary?.total_earnings ?? 0) > 0;
 
   const respondMutation = useMutation({
     mutationFn: ({ instituteId, accept }: { instituteId: string; accept: boolean }) =>
@@ -137,7 +142,17 @@ export function TutorDashboardPage() {
         </motion.div>
       ) : (
         <>
-          <motion.div {...rise(0.08)} className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+          <motion.div {...rise(0.08)} className="mb-6">
+            <OnboardingChecklist
+              title="Getting started"
+              steps={[
+                { label: "Get your first booking", done: hasBooking, to: "/tutor/availability" },
+                { label: "Reach your first payout", done: hasEarnings, to: "/tutor/earnings" },
+              ]}
+            />
+          </motion.div>
+
+          <motion.div {...rise(0.1)} className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
             <StatCard icon={CalendarClock} tint="primary" label="Upcoming sessions" value={summary?.upcoming_sessions ?? 0} isLoading={isLoading} />
             <StatCard
               icon={Star}
@@ -152,7 +167,7 @@ export function TutorDashboardPage() {
           </motion.div>
 
           {/* Earnings spotlight */}
-          <motion.div {...rise(0.16)} className="mt-6 rounded-2xl border border-primary/20 bg-primary-subtle p-6 sm:p-8">
+          <motion.div {...rise(0.18)} className="mt-6 rounded-2xl border border-primary/20 bg-primary-subtle p-6 sm:p-8">
             <div className="flex flex-col items-start justify-between gap-5 sm:flex-row sm:items-center">
               <div>
                 <p className="text-sm font-medium text-primary-dark">Total earnings to date</p>

@@ -161,9 +161,13 @@ export function VerificationPage() {
                 />
               </Card>
             ) : documents.length === 0 ? (
-              <p className="rounded-card border border-dashed border-line px-4 py-8 text-center text-sm text-slate-500">
-                No documents uploaded yet.
-              </p>
+              <Card>
+                <EmptyState
+                  icon={FileUp}
+                  title="Verification starts with two documents"
+                  description="Upload a government ID and your degree certificate above — that's the pair that moves your profile to review. Everything else is optional, added credibility."
+                />
+              </Card>
             ) : (
               <Card>
                 <div className="divide-y divide-line">
