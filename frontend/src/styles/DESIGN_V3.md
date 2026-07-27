@@ -721,7 +721,17 @@ happening, not serve it.
   role-appropriate action. Verified live against two real accounts with
   different data states; zero console errors, zero overflow, zero
   stuck-opacity under reduced motion.
-- ⬜ Milestone 3 — Tutor portal.
+- ✅ **Milestone 3** — Tutor portal. `TutorDashboardPage` gained an
+  `OnboardingChecklist` (get a first booking, reach a first payout),
+  computed from the dashboard's own already-fetched summary. `Verification
+  Page`'s bare-paragraph "No documents uploaded yet" and
+  `TutorCoursesPage`'s raw-div "No courses here yet" both upgraded to
+  proper `EmptyState`s with real, actionable copy (naming the actual two
+  required document types; a working "New course" button or "Complete
+  verification" link depending on real verification status). Verified live
+  against a fully-done account (checklist collapses) and a zero-progress
+  pending account (checklist shows "0 of 2 done", empty states render
+  correctly, populated courses page for that account unaffected).
 - ⬜ Milestone 4 — Parent portal.
 - ⬜ Milestone 5 — Institute portal.
 - ⬜ Milestone 6 — Admin (verification pass, not a build pass).
