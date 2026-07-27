@@ -835,3 +835,24 @@ than backed by invented tracking.
   beyond the same two intentional decorative overlays and one known
   invisible responsive-chrome toggle button already established as
   baseline-normal in V7/V8/V9. Build and lint clean.
+- ✅ **Milestone 2** — Student subject-interests picker, closing the single
+  biggest real gap found in V10 planning: `StudentProfile.preferred_subjects`
+  / `StudentSubjectInterest` was a complete, working backend feature with
+  zero frontend UI anywhere. `StudentProfilePage` gained a "Subjects you're
+  interested in" card (add/remove rows, subject + level, styled after the
+  identical pattern `TutorProfileSettingsPage` already uses for
+  `tutor_subjects`), reusing the existing `"subjects"` query key/cache and
+  extending this page's existing `useMasterData` call with `skill_level`
+  for the level options. Saves alongside the rest of the learning profile
+  in the existing mutation — the backend's update serializer only touches
+  `preferred_subjects` when the key is present, so other fields are never
+  at risk of being silently cleared. This directly powers the "Pick
+  subjects you're interested in" checklist step added in Milestone 1,
+  which had no way to become true until this UI existed. Verified live
+  end-to-end against the zero-data seeded account: empty state renders
+  correctly, a saved selection survives a hard reload through a real
+  round trip to the backend, the dashboard checklist count updates via
+  the shared query key with no new fetch, and the account was restored to
+  its original empty state afterward. Zero console errors, zero DOM
+  visibility issues, keyboard reachability at the established baseline.
+  Zero backend changes — every field and endpoint used already existed.
