@@ -11,6 +11,7 @@ import { Button } from "@/components/ui/Button";
 import { Card, CardBody } from "@/components/ui/Card";
 import { EmptyState } from "@/components/ui/EmptyState";
 import { listMyInstituteInvites, respondToInstituteInvite } from "@/features/institute/api";
+import { getMyTutorProfile, getMyWeeklyAvailability, listMyVerificationDocuments } from "@/features/tutors/api";
 import { apiClient } from "@/lib/api-client";
 import { DURATION, EASE_OUT, motionSafe, riseInit } from "@/lib/motion/tokens";
 import { formatCurrency, getErrorMessage } from "@/lib/utils";
@@ -52,15 +53,38 @@ export function TutorDashboardPage() {
   });
   const pendingInvites = instituteLinks.filter((link) => link.status === "pending");
 
+  // Same query keys already used by ProfileSettings/Availability/Verification
+  // pages, so this reuses their cache instead of duplicating a fetch.
+  const { data: profile } = useQuery({
+    queryKey: ["my-tutor-profile"],
+    queryFn: getMyTutorProfile,
+    retry: false,
+  });
+  const { data: weeklyAvailability = [] } = useQuery({
+    queryKey: ["my-weekly-availability"],
+    queryFn: getMyWeeklyAvailability,
+    retry: false,
+  });
+  const { data: documents = [] } = useQuery({
+    queryKey: ["my-verification-documents"],
+    queryFn: listMyVerificationDocuments,
+    retry: false,
+  });
+
   const rise = (delay: number) => ({
     initial: riseInit(18),
     animate: { opacity: 1, y: 0 },
     transition: motionSafe({ duration: DURATION.slow, delay, ease: EASE_OUT }),
   });
 
-  // Derived entirely from the summary this page already fetches — no new query.
-  const hasBooking = (summary?.upcoming_sessions ?? 0) > 0 || (summary?.total_sessions_completed ?? 0) > 0;
-  const hasEarnings = Number(summary?.total_earnings ?? 0) > 0;
+  // Every step derived from data already fetched by an existing page's own
+  // query (reused here via the same query key) — no new endpoints.
+  const hasCompletedProfile = Boolean(profile?.headline.trim());
+  const hasUploadedDocument = documents.length > 0;
+  const hasAddedSubjects = (profile?.tutor_subjects.length ?? 0) > 0;
+  const hasSetAvailability = weeklyAvailability.length > 0;
+  const hasSetPricing = Number(profile?.hourly_rate ?? 0) > 0;
+  const isPublished = Boolean(profile?.is_verified);
 
   const respondMutation = useMutation({
     mutationFn: ({ instituteId, accept }: { instituteId: string; accept: boolean }) =>
@@ -146,8 +170,12 @@ export function TutorDashboardPage() {
             <OnboardingChecklist
               title="Getting started"
               steps={[
-                { label: "Get your first booking", done: hasBooking, to: "/tutor/availability" },
-                { label: "Reach your first payout", done: hasEarnings, to: "/tutor/earnings" },
+                { label: "Complete your public profile", done: hasCompletedProfile, to: "/tutor/profile" },
+                { label: "Upload a verification document", done: hasUploadedDocument, to: "/tutor/verification" },
+                { label: "Add the subjects you teach", done: hasAddedSubjects, to: "/tutor/profile" },
+                { label: "Set your weekly availability", done: hasSetAvailability, to: "/tutor/availability" },
+                { label: "Set your hourly rate", done: hasSetPricing, to: "/tutor/profile" },
+                { label: "Get verified and appear in search", done: isPublished, to: "/tutor/verification" },
               ]}
             />
           </motion.div>

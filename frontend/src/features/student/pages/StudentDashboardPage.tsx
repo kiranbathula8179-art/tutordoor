@@ -20,6 +20,7 @@ import { StatCard } from "@/components/shared/StatCard";
 import { Button } from "@/components/ui/Button";
 import { Card } from "@/components/ui/Card";
 import { EmptyState } from "@/components/ui/EmptyState";
+import { getMyStudentProfile } from "@/features/student/api";
 import { apiClient } from "@/lib/api-client";
 import { DURATION, EASE_OUT, motionSafe, riseInit } from "@/lib/motion/tokens";
 import { useAuthStore } from "@/store/auth-store";
@@ -56,14 +57,26 @@ export function StudentDashboardPage() {
     retry: false,
   });
 
+  // Same query key already used by StudentProfilePage, so this reuses that
+  // page's cache instead of duplicating a fetch. A 404 (no profile yet)
+  // resolves to `undefined` here, which every derived flag below treats as
+  // "not done yet" — the correct, honest default.
+  const { data: profile } = useQuery({
+    queryKey: ["my-student-profile"],
+    queryFn: getMyStudentProfile,
+    retry: false,
+  });
+
   const rise = (delay: number) => ({
     initial: riseInit(18),
     animate: { opacity: 1, y: 0 },
     transition: motionSafe({ duration: DURATION.slow, delay, ease: EASE_OUT }),
   });
 
-  // Derived entirely from the summary this page already fetches — no new
-  // query. Collapses on its own once both steps are done.
+  // Every step derived from data already fetched — no new endpoints.
+  const hasVerifiedEmail = Boolean(user?.is_email_verified);
+  const hasCompletedProfile = Boolean(profile?.school_name.trim() || profile?.learning_goals.trim());
+  const hasSelectedInterests = (profile?.subject_interests.length ?? 0) > 0;
   const hasBooked = (summary?.upcoming_sessions ?? 0) > 0 || (summary?.total_sessions_completed ?? 0) > 0;
   const hasJoinedCourse = (summary?.active_course_enrollments ?? 0) > 0;
 
@@ -114,6 +127,9 @@ export function StudentDashboardPage() {
           <OnboardingChecklist
             title="Getting started"
             steps={[
+              { label: "Verify your email", done: hasVerifiedEmail, to: "/student/profile" },
+              { label: "Complete your learning profile", done: hasCompletedProfile, to: "/student/profile" },
+              { label: "Pick subjects you're interested in", done: hasSelectedInterests, to: "/student/profile" },
               { label: "Book your first session with a tutor", done: hasBooked, to: "/search" },
               { label: "Join a group course", done: hasJoinedCourse, to: "/student/courses" },
             ]}

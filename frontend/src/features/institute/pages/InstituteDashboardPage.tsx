@@ -10,7 +10,7 @@ import { RequireInstituteProfile } from "@/components/shared/RequireInstitutePro
 import { StatCard } from "@/components/shared/StatCard";
 import { Card } from "@/components/ui/Card";
 import { SectionLoader } from "@/components/ui/Spinner";
-import { getMyInstituteProfile } from "@/features/institute/api";
+import { getMyInstituteProfile, listInstituteStudents, listInstituteTutors } from "@/features/institute/api";
 import { DURATION, EASE_OUT, motionSafe, riseInit } from "@/lib/motion/tokens";
 import { useAuthStore } from "@/store/auth-store";
 
@@ -47,6 +47,23 @@ export function InstituteDashboardPage() {
 
   const noProfile = isError && isAxiosError(error) && error.response?.status === 404;
   const hasError = isError && !noProfile;
+
+  // Same query keys already used by InstituteTutorsPage/InstituteStudentsPage,
+  // so this reuses their cache instead of duplicating a fetch. Only enabled
+  // once a real profile exists — no point fetching roster/enrollment data
+  // for an institute that hasn't been created yet.
+  const { data: roster = [] } = useQuery({
+    queryKey: ["institute-tutors"],
+    queryFn: () => listInstituteTutors(),
+    enabled: !!institute,
+    retry: false,
+  });
+  const { data: enrollments = [] } = useQuery({
+    queryKey: ["institute-students"],
+    queryFn: () => listInstituteStudents(),
+    enabled: !!institute,
+    retry: false,
+  });
 
   const rise = (delay: number) => ({
     initial: riseInit(18),
@@ -90,6 +107,8 @@ export function InstituteDashboardPage() {
               done: Boolean(institute.description.trim() || institute.city.trim()),
               to: "/institute/profile",
             },
+            { label: "Add a tutor to your roster", done: roster.length > 0, to: "/institute/tutors" },
+            { label: "Enroll your first student", done: enrollments.length > 0, to: "/institute/students" },
             { label: "Get verified", done: institute.is_verified, to: "/institute/profile" },
           ]}
         />
