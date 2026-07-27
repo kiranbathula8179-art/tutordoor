@@ -856,3 +856,31 @@ than backed by invented tracking.
   its original empty state afterward. Zero console errors, zero DOM
   visibility issues, keyboard reachability at the established baseline.
   Zero backend changes — every field and endpoint used already existed.
+- ✅ **Milestone 3** — Empty-state coverage gap-fill. Re-scanned all 37
+  files using `EmptyState` (~60 call sites), classifying each as an
+  `isError`/Retry state (left alone), already wired, a genuinely-empty
+  admin search result (left alone, per the standing Principle 4 decision),
+  or a real gap. `WalletPage.tsx`, `AdminCouponsPage.tsx`, and
+  `BookingsListPage.tsx` (student-only, tab-aware) each gained an action
+  that reuses a handler already implemented elsewhere on the same page —
+  nothing invented. While evaluating whether to add booking actions to
+  two Parent-role empty states, found and fixed a real, pre-existing bug:
+  `BookingModal.tsx` let a parent open the booking flow (`canBook` already
+  allowed it) but never asked which child the session was for and never
+  sent `student_id` — a field the backend has always required for
+  parent-initiated bookings. Every parent booking attempt was silently
+  failing with a 400. Fixed with a "Booking for" selector (parent-only,
+  reusing the exact `"parent-children"` query key three other parent
+  pages already share) and role-aware post-booking navigation (parents
+  have no booking-detail route; the previous hardcoded redirect sent them
+  to one that doesn't exist for their role). Only after that fix did
+  `ParentBookingsPage.tsx` (whose zero-results state was a raw `<div>`,
+  the only such case among all 37 files, with copy that already promised
+  a working link) and `ParentPaymentsPage.tsx` get a real "Find a tutor"
+  action added. Verified live end-to-end: a real parent account completed
+  a real demo booking for a real linked child through the fixed modal,
+  landing correctly on `/parent/bookings` with the booking visible — the
+  exact path that silently 400'd before this milestone. Zero backend
+  changes — the backend already fully implemented and required the field
+  in question; the frontend simply never collected it. Build and lint
+  clean.
