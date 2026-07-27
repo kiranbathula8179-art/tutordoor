@@ -755,5 +755,12 @@ happening, not serve it.
   carries an honest "Soon" tag via a new optional `soon?` field on the
   shared `DashboardNavItem` type — additive, no other portal's nav
   affected. Verified live against the seeded institute account.
-- ⬜ Milestone 6 — Admin (verification pass, not a build pass).
+- ✅ **Milestone 6** — Admin (verification pass, not a build pass, exactly
+  as scoped). Spot-checked live: `AdminUsersPage`'s "No users match these
+  filters" (a filtered-search result, not a first-time-use state) is
+  already clear, honest, and correctly scoped — this is search feedback,
+  not the start of a journey, and dressing it up with discovery/onboarding
+  framing would violate the Honesty pillar rather than serve it. Zero code
+  changes in this milestone, by design — the register-follows-stakes
+  boundary from the Design DNA held.
 - ⬜ Milestone 7 — Final review + implementation report.
