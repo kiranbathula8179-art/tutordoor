@@ -711,7 +711,16 @@ happening, not serve it.
   404. Shipped first, before any experience-layer work, on the reasoning
   that a delightful layer on top of a broken save button is backwards.
 - ⬜ Milestone 1 — Foundation primitives.
-- ⬜ Milestone 2 — Student portal.
+- ✅ **Milestone 2** — Student portal. `StudentDashboardPage` gained an
+  `OnboardingChecklist` ("Getting started," 2 steps) computed purely from
+  the dashboard's own already-fetched summary — zero new API calls.
+  `StudentCoursesPage`'s zero-enrollment empty state gained a "New on
+  TutorDoor" `DiscoveryRail` powered by the existing public course-list
+  endpoint, query-gated so it never fires while enrollments exist.
+  `ChatPage`'s empty conversation list (shared with Tutor) gained a
+  role-appropriate action. Verified live against two real accounts with
+  different data states; zero console errors, zero overflow, zero
+  stuck-opacity under reduced motion.
 - ⬜ Milestone 3 — Tutor portal.
 - ⬜ Milestone 4 — Parent portal.
 - ⬜ Milestone 5 — Institute portal.
