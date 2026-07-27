@@ -666,3 +666,54 @@ shipped, verified, and committed. Every dashboard applies the Design DNA
 from first paint; the one severe cross-cutting bug this rollout
 surfaced (the reduced-motion `riseInit` stuck-animation issue, Milestone
 7) was root-caused and fixed centrally rather than patched per page.
+
+## V9 — World-Class Product Experience System
+
+A follow-on functionality audit (all 34 authenticated routes) found zero
+functional regressions from V7/V8, real backend endpoints everywhere, and
+that "empty-looking" pages are overwhelmingly legitimate zero-seed-data
+states — with exactly two small, pre-existing wiring bugs (unrelated to
+any redesign). V9's mandate: layer a reusable onboarding / empty-state /
+discovery / celebration system on top of the existing app without touching
+business logic, APIs, or backend contracts — governed by the same Design
+DNA as V8, now committed to the repo at `frontend/src/styles/DESIGN_DNA.md`
+instead of living only in session memory.
+
+**The governing decision: Discovery ships honest-only.** Backend feasibility
+was traced endpoint-by-endpoint before building anything: "popular tutors"
+(real, via the existing public tutor-search default ordering
+`-is_featured, -rating_average, -total_sessions_completed`) and "new
+courses" (real, via the existing public course-list default ordering
+`-created_at`) are both buildable with zero backend change. "Trending
+subjects" and "rated/recommended courses" are **not** — the only real
+popularity aggregation is admin-gated, and no endpoint anywhere ranks
+courses by rating or enrollment. Per the project's frozen-backend rule,
+V9 does not build those — Discovery ships with only the two real,
+already-public data sources, never a fabricated "trending" signal.
+
+**The second governing decision: Admin gets none of this.** Per Design DNA
+Principle 4 (register follows stakes, already established in V8), Admin is
+an internal ops tool — its existing empty states ("No users match these
+filters") are already honest and correct as search-result feedback, not
+the start of a journey. Adding onboarding/discovery/celebration framing
+there would violate Principle 1 (Honesty) by implying a journey that isn't
+happening, not serve it.
+
+### Rollout ledger
+
+- ✅ **Milestone 0** — Fixed `StudentProfilePage`'s broken "Save name"/
+  "Update password" actions (pre-existing since the first commit, found
+  during the audit): `student/api.ts` called `/users/me/` and
+  `/users/password/change/`, routes that don't exist — the `users` app is
+  mounted at `/auth/`. Pointed both at the correct, already-implemented
+  `/auth/me/`/`/auth/password/change/` endpoints. Verified live: both
+  actions now return real responses (200 / 400-on-bad-input) instead of
+  404. Shipped first, before any experience-layer work, on the reasoning
+  that a delightful layer on top of a broken save button is backwards.
+- ⬜ Milestone 1 — Foundation primitives.
+- ⬜ Milestone 2 — Student portal.
+- ⬜ Milestone 3 — Tutor portal.
+- ⬜ Milestone 4 — Parent portal.
+- ⬜ Milestone 5 — Institute portal.
+- ⬜ Milestone 6 — Admin (verification pass, not a build pass).
+- ⬜ Milestone 7 — Final review + implementation report.

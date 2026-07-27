@@ -6,18 +6,26 @@ import { cn } from "@/lib/utils";
 /**
  * Empty state (V3 spec): icon · headline · description · actions.
  * Keep copy specific and kind — say what's empty and what to do next.
+ *
+ * `secondaryAction` and `discovery` are additive, optional slots (V9) for
+ * first-time-use states that have a real next step to offer beyond Retry —
+ * never used on error branches, where a plain Retry stays the honest answer.
  */
 export function EmptyState({
   icon: Icon,
   title,
   description,
   action,
+  secondaryAction,
+  discovery,
   className,
 }: {
   icon: LucideIcon;
   title: string;
   description?: string;
   action?: ReactNode;
+  secondaryAction?: ReactNode;
+  discovery?: ReactNode;
   className?: string;
 }) {
   return (
@@ -27,7 +35,13 @@ export function EmptyState({
       </div>
       <p className="font-display text-base font-semibold text-navy">{title}</p>
       {description && <p className="max-w-sm text-sm leading-relaxed text-slate-500">{description}</p>}
-      {action && <div className="mt-2">{action}</div>}
+      {(action || secondaryAction) && (
+        <div className="mt-2 flex flex-wrap items-center justify-center gap-3">
+          {action}
+          {secondaryAction}
+        </div>
+      )}
+      {discovery && <div className="mt-8 w-full">{discovery}</div>}
     </div>
   );
 }
