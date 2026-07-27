@@ -28,10 +28,10 @@ export async function updateMyStudentProfile(payload: StudentProfilePayload): Pr
 }
 
 export async function updateMyAccount(payload: { first_name?: string; last_name?: string }): Promise<User> {
-  const { data } = await apiClient.patch<{ user: User }>("/users/me/", payload);
+  const { data } = await apiClient.patch<{ user: User }>("/auth/me/", payload);
   return data.user;
 }
 
 export async function changeMyPassword(payload: { old_password: string; new_password: string }): Promise<void> {
-  await apiClient.post("/users/password/change/", payload);
+  await apiClient.post("/auth/password/change/", payload);
 }
