@@ -2,7 +2,7 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { addDays, format } from "date-fns";
 import { CalendarX2, Check, Gift } from "lucide-react";
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import toast from "react-hot-toast";
 
 import { Button } from "@/components/ui/Button";
@@ -12,8 +12,10 @@ import { Select } from "@/components/ui/Select";
 import { Skeleton } from "@/components/ui/Skeleton";
 import { Textarea } from "@/components/ui/Textarea";
 import { createBooking } from "@/features/bookings/api";
+import { listMyChildren } from "@/features/parent/api";
 import { getTutorAvailableSlots } from "@/features/tutors/api";
 import { cn, formatCurrency, formatTime, getErrorMessage } from "@/lib/utils";
+import { useAuthStore } from "@/store/auth-store";
 import type { BookingMode, BookingType, TutorProfile } from "@/types";
 
 /**
@@ -32,6 +34,8 @@ interface BookingModalProps {
 export function BookingModal({ tutor, isOpen, onClose }: BookingModalProps) {
   const navigate = useNavigate();
   const queryClient = useQueryClient();
+  const user = useAuthStore((state) => state.user);
+  const isParent = user?.role === "parent";
 
   const [bookingType, setBookingType] = useState<BookingType>("demo");
   const [subjectId, setSubjectId] = useState(tutor.tutor_subjects[0]?.subject.id ?? "");
@@ -40,6 +44,17 @@ export function BookingModal({ tutor, isOpen, onClose }: BookingModalProps) {
   const [selectedSlot, setSelectedSlot] = useState<{ start: string; end: string } | null>(null);
   const [location, setLocation] = useState("");
   const [notes, setNotes] = useState("");
+  const [studentId, setStudentId] = useState("");
+
+  // Same query key ParentChildrenPage/ParentDashboardPage/ParentProgressPage
+  // already use, so this shares their cache instead of duplicating a fetch.
+  // Only enabled for parents — a student booking for themselves never needs it.
+  const { data: children = [], isLoading: childrenLoading } = useQuery({
+    queryKey: ["parent-children"],
+    queryFn: listMyChildren,
+    enabled: isParent,
+  });
+  const bookableChildren = children.filter((link) => link.status === "active" && link.can_manage_bookings);
 
   const { data: slots = [], isLoading: slotsLoading } = useQuery({
     queryKey: ["tutor-slots", tutor.id, selectedDate],
@@ -53,12 +68,17 @@ export function BookingModal({ tutor, isOpen, onClose }: BookingModalProps) {
       toast.success(bookingType === "demo" ? "Demo class booked!" : "Booking created — complete payment to confirm.");
       queryClient.invalidateQueries({ queryKey: ["my-bookings"] });
       onClose();
-      navigate(`/student/bookings/${booking.id}`);
+      // Parents have no booking-detail route today — the list is the honest destination.
+      navigate(isParent ? "/parent/bookings" : `/student/bookings/${booking.id}`);
     },
     onError: (error) => toast.error(getErrorMessage(error)),
   });
 
   const handleConfirm = () => {
+    if (isParent && !studentId) {
+      toast.error("Choose which child this session is for.");
+      return;
+    }
     if (!selectedSlot) {
       toast.error("Pick a time slot first.");
       return;
@@ -70,6 +90,7 @@ export function BookingModal({ tutor, isOpen, onClose }: BookingModalProps) {
 
     bookingMutation.mutate({
       tutor_id: tutor.id,
+      student_id: isParent ? studentId : undefined,
       subject_id: subjectId || undefined,
       booking_type: bookingType,
       mode,
@@ -88,9 +109,39 @@ export function BookingModal({ tutor, isOpen, onClose }: BookingModalProps) {
       active ? "border-primary bg-primary-subtle shadow-soft" : "border-line hover:border-navy/25 hover:shadow-soft"
     );
 
+  const noBookableChildren = isParent && !childrenLoading && bookableChildren.length === 0;
+
   return (
     <Modal isOpen={isOpen} onClose={onClose} title={`Book a session with ${tutor.user.first_name}`} size="lg">
+      {noBookableChildren ? (
+        <div className="rounded-xl border border-dashed border-line p-6 text-center">
+          <p className="text-sm text-slate-600">
+            You don't have a child linked yet who you can book sessions for.
+          </p>
+          <Link
+            to="/parent/children"
+            onClick={onClose}
+            className="mt-3 inline-flex items-center gap-1.5 text-sm font-semibold text-primary hover:underline"
+          >
+            Manage children →
+          </Link>
+        </div>
+      ) : (
       <div className="space-y-5">
+        {isParent && (
+          <Select
+            label="Booking for"
+            placeholder={childrenLoading ? "Loading your children…" : "Choose a child"}
+            value={studentId}
+            onChange={(event) => setStudentId(event.target.value)}
+            disabled={childrenLoading}
+            options={bookableChildren.map((link) => ({
+              value: link.student.id,
+              label: link.student.user.full_name,
+            }))}
+          />
+        )}
+
         {/* -------------------------------------------- Session type */}
         <div className="grid grid-cols-2 gap-3" role="radiogroup" aria-label="Session type">
           <button
@@ -225,11 +276,16 @@ export function BookingModal({ tutor, isOpen, onClose }: BookingModalProps) {
               {estimatedPrice === 0 ? "Free" : formatCurrency(estimatedPrice, tutor.currency)}
             </p>
           </div>
-          <Button onClick={handleConfirm} isLoading={bookingMutation.isPending} disabled={!selectedSlot}>
+          <Button
+            onClick={handleConfirm}
+            isLoading={bookingMutation.isPending}
+            disabled={!selectedSlot || (isParent && !studentId)}
+          >
             Confirm booking
           </Button>
         </div>
       </div>
+      )}
     </Modal>
   );
 }

@@ -69,7 +69,16 @@ export function AdminCouponsPage() {
           </Card>
         ) : coupons.length === 0 ? (
           <Card>
-            <EmptyState icon={Ticket} title="No coupons yet" description="Create one to run a discount campaign." />
+            <EmptyState
+              icon={Ticket}
+              title="No coupons yet"
+              description="Create one to run a discount campaign."
+              action={
+                <Button onClick={() => setCreateOpen(true)}>
+                  <Plus className="h-4 w-4" /> New coupon
+                </Button>
+              }
+            />
           </Card>
         ) : (
           <Card className={cn(isFetching && "opacity-60")}>

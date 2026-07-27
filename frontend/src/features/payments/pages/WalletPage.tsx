@@ -231,6 +231,11 @@ export function WalletPage({ heading = "Wallet" }: { heading?: string }) {
               icon={WalletIcon}
               title="No transactions yet"
               description="Payouts, refunds, and top-ups will appear here as they happen."
+              action={
+                <Button onClick={() => setTopupOpen(true)} disabled={wallet?.is_frozen}>
+                  <Plus className="h-4 w-4" /> Add money
+                </Button>
+              }
             />
           </Card>
         ) : (

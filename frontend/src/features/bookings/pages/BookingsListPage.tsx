@@ -1,7 +1,8 @@
 import { useQuery } from "@tanstack/react-query";
 import { motion } from "framer-motion";
-import { AlertCircle, CalendarDays } from "lucide-react";
+import { AlertCircle, CalendarDays, Search } from "lucide-react";
 import { useState } from "react";
+import { Link } from "react-router-dom";
 
 import { PageHeader } from "@/components/shared/PageHeader";
 import { Button } from "@/components/ui/Button";
@@ -87,6 +88,15 @@ export function BookingsListPage() {
               icon={CalendarDays}
               title={`No ${activeTab} bookings`}
               description={activeTab === "upcoming" ? "Book a session to see it here." : "Nothing to show yet."}
+              action={
+                activeTab === "upcoming" && viewerRole === "student" ? (
+                  <Link to="/search">
+                    <Button>
+                      <Search className="h-4 w-4" /> Find a tutor
+                    </Button>
+                  </Link>
+                ) : undefined
+              }
             />
           </Card>
         )}

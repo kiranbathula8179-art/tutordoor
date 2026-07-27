@@ -1,7 +1,8 @@
 import { useQuery } from "@tanstack/react-query";
 import { motion } from "framer-motion";
-import { AlertCircle, Calendar, Clock, MapPin, Video } from "lucide-react";
+import { AlertCircle, Calendar, CalendarDays, Clock, MapPin, Search, Video } from "lucide-react";
 import { useState } from "react";
+import { Link } from "react-router-dom";
 
 import { PageHeader } from "@/components/shared/PageHeader";
 import { Avatar } from "@/components/ui/Avatar";
@@ -110,12 +111,26 @@ export function ParentBookingsPage() {
             ))}
           </motion.div>
         ) : (
-          <div className="rounded-card border border-dashed border-line py-16 text-center">
-            <p className="font-medium text-navy">No {activeTab} bookings</p>
-            <p className="mt-1 text-sm text-slate-500">
-              Sessions appear here once a linked child has bookings, or you book on their behalf from a tutor's page.
-            </p>
-          </div>
+          <Card>
+            <EmptyState
+              icon={CalendarDays}
+              title={`No ${activeTab} bookings`}
+              description={
+                activeTab === "upcoming"
+                  ? "Sessions appear here once a linked child has bookings, or you book on their behalf from a tutor's page."
+                  : "Nothing to show yet."
+              }
+              action={
+                activeTab === "upcoming" ? (
+                  <Link to="/search">
+                    <Button>
+                      <Search className="h-4 w-4" /> Find a tutor
+                    </Button>
+                  </Link>
+                ) : undefined
+              }
+            />
+          </Card>
         )}
       </div>
     </div>

@@ -1,5 +1,6 @@
 import { useQuery } from "@tanstack/react-query";
-import { AlertCircle, CreditCard } from "lucide-react";
+import { AlertCircle, CreditCard, Search } from "lucide-react";
+import { Link } from "react-router-dom";
 
 import { PageHeader } from "@/components/shared/PageHeader";
 import { Badge, statusToTone } from "@/components/ui/Badge";
@@ -52,6 +53,13 @@ export function ParentPaymentsPage() {
               icon={CreditCard}
               title="No payments yet"
               description="Payments for your children's sessions and courses will appear here."
+              action={
+                <Link to="/search">
+                  <Button>
+                    <Search className="h-4 w-4" /> Find a tutor
+                  </Button>
+                </Link>
+              }
             />
           </Card>
         ) : (
