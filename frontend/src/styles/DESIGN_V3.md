@@ -779,3 +779,59 @@ existing caller — both new `EmptyState` props and the new `DashboardNavItem`
 field are purely additive. Discovery shipped honest-only, using only the
 two real, already-public data sources traced before any UI was written.
 Full implementation report published separately.
+
+## V10 — Universal First-Time UX & Production Readiness Audit
+
+A user report of blank-rendering pages (Dashboard, My Courses, Messages,
+Bookings, Wallet, Profile) was investigated before any new work started.
+Root cause: this session's screenshot/CDP capture pipeline reproducibly
+returns blank or stale frames for regions independently proven — via
+`elementFromPoint`, computed opacity, color-contrast, `visibility`, and
+zero-size checks — to be correctly rendered by the browser's real layout
+engine. Zero actual rendering defects found on any of the reported pages.
+**Consequence for V10 and beyond: live DOM/CSS audits, not screenshots,
+are the authoritative verification method.** Screenshots are still taken
+opportunistically, but any blank/stale capture is cross-checked against
+the DOM before being treated as evidence of a real defect.
+
+V10's own brief re-requests a deeper version of V9's onboarding checklists
+with specific per-role step lists. Each requested step was traced against
+real backend/frontend capability before being added — same discipline as
+V9's Discovery feasibility trace — and any step with no real, cheap signal
+to compute a done/not-done state from was dropped and disclosed rather
+than backed by invented tracking.
+
+### Rollout ledger
+
+- ✅ **Milestone 1** — Foundation extensions: richer, real-data onboarding
+  checklists. `TutorDashboardPage`'s 2-item outcome-based checklist
+  (V9 M3) replaced with 6 setup-based steps — complete profile, upload a
+  verification document, add subjects, set weekly availability, set an
+  hourly rate, get verified — each backed by an existing profile/
+  availability/documents query already used elsewhere (`getMyTutorProfile`,
+  `getMyWeeklyAvailability`, `listMyVerificationDocuments`), reusing those
+  pages' exact query keys so React Query shares the cache instead of
+  duplicating fetches. `StudentDashboardPage`'s checklist (V9 M2) extended
+  from 2 to 5 steps, adding "verify your email" (`user.is_email_verified`,
+  already in the auth store — zero new cost), "complete your learning
+  profile," and "pick subjects you're interested in" (the last one
+  surfaces a real, previously-unbuilt backend feature — see Milestone 2).
+  "Browse tutors," requested by V10's brief, was dropped: no signal
+  anywhere records that a student browsed search, and inventing one would
+  violate the Honesty pillar. `InstituteDashboardPage`'s checklist (V9 M5)
+  extended from 2 to 4 steps, adding "add a tutor to your roster" and
+  "enroll your first student" (`listInstituteTutors`/`listInstituteStudents`,
+  again reusing those pages' existing query keys). "Create a course,"
+  requested by V10's brief, was dropped: confirmed in the V9 audit that no
+  institute-course management feature exists anywhere in the backend.
+  Admin and Parent dashboards left unchanged — Admin per Principle 4 and
+  V10's own "no artificial onboarding" instruction; Parent's V9 checklist
+  already matches what's honestly trackable for that role. Verified live
+  against three accounts in three different real data states (Kabir: 4 of
+  6 done; BrightMinds: checklist correctly collapsed, all 4 done; Ishaan:
+  1 of 5 done) — checklist content matched each account's real state
+  exactly. Full DOM visibility audit, reduced-motion stuck-opacity check,
+  and keyboard-reachability sweep run on all three dashboards: zero issues
+  beyond the same two intentional decorative overlays and one known
+  invisible responsive-chrome toggle button already established as
+  baseline-normal in V7/V8/V9. Build and lint clean.
