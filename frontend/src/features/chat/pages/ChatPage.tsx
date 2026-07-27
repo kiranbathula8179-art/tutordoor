@@ -2,10 +2,11 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { motion } from "framer-motion";
 import { ArrowLeft, Check, CheckCheck, MessageCircle, SendHorizonal, WifiOff } from "lucide-react";
 import { useEffect, useMemo, useRef, useState } from "react";
-import { useSearchParams } from "react-router-dom";
+import { Link, useSearchParams } from "react-router-dom";
 import toast from "react-hot-toast";
 
 import { Avatar } from "@/components/ui/Avatar";
+import { Button } from "@/components/ui/Button";
 import { EmptyState } from "@/components/ui/EmptyState";
 import { SectionLoader } from "@/components/ui/Spinner";
 import { getMessages, listConversations, markConversationRead, sendMessageHttp } from "@/features/chat/api";
@@ -138,6 +139,21 @@ export function ChatPage() {
               icon={MessageCircle}
               title="No conversations yet"
               description="Message a tutor from one of your bookings to start a thread."
+              action={
+                user?.role === "tutor" ? (
+                  <Link to="/tutor/bookings">
+                    <Button variant="outline" size="sm">
+                      View your bookings
+                    </Button>
+                  </Link>
+                ) : (
+                  <Link to="/search">
+                    <Button variant="outline" size="sm">
+                      Find a tutor
+                    </Button>
+                  </Link>
+                )
+              }
             />
           ) : (
             conversations.map((conversation) => {

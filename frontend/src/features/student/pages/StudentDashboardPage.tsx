@@ -15,6 +15,7 @@ import {
 import { Link } from "react-router-dom";
 
 import { DashboardHero } from "@/components/shared/DashboardHero";
+import { OnboardingChecklist } from "@/components/shared/OnboardingChecklist";
 import { StatCard } from "@/components/shared/StatCard";
 import { Button } from "@/components/ui/Button";
 import { Card } from "@/components/ui/Card";
@@ -61,6 +62,11 @@ export function StudentDashboardPage() {
     transition: motionSafe({ duration: DURATION.slow, delay, ease: EASE_OUT }),
   });
 
+  // Derived entirely from the summary this page already fetches — no new
+  // query. Collapses on its own once both steps are done.
+  const hasBooked = (summary?.upcoming_sessions ?? 0) > 0 || (summary?.total_sessions_completed ?? 0) > 0;
+  const hasJoinedCourse = (summary?.active_course_enrollments ?? 0) > 0;
+
   return (
     <div className="space-y-6">
       <DashboardHero
@@ -99,6 +105,19 @@ export function StudentDashboardPage() {
           <StatCard icon={GraduationCap} tint="success" label="Sessions completed" value={summary?.total_sessions_completed ?? 0} isLoading={isLoading} />
           <StatCard icon={BookOpen} tint="accent" label="Active courses" value={summary?.active_course_enrollments ?? 0} isLoading={isLoading} />
           <StatCard icon={TrendingUp} tint="info" label="Hours learned" value={Number(summary?.total_hours_learned ?? 0).toFixed(1)} isLoading={isLoading} />
+        </motion.div>
+      )}
+
+      {/* ---------------------------------------------- Getting started */}
+      {!isError && (
+        <motion.div {...rise(0.12)}>
+          <OnboardingChecklist
+            title="Getting started"
+            steps={[
+              { label: "Book your first session with a tutor", done: hasBooked, to: "/search" },
+              { label: "Join a group course", done: hasJoinedCourse, to: "/student/courses" },
+            ]}
+          />
         </motion.div>
       )}
 

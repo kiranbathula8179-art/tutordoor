@@ -93,11 +93,12 @@ export function DiscoveryRail({
  * (verified tutors accepting students). No new endpoint, no fabricated
  * "popularity" score.
  */
-export function usePopularTutors(limit = 6) {
+export function usePopularTutors(limit = 6, enabled = true) {
   const query = useQuery({
     queryKey: ["discovery-popular-tutors"],
     queryFn: () => searchTutors({}),
     staleTime: 5 * 60 * 1000,
+    enabled,
   });
 
   const items: DiscoveryItem[] = (query.data?.results ?? []).slice(0, limit).map((tutor) => ({
@@ -120,11 +121,12 @@ export function usePopularTutors(limit = 6) {
  * Presented honestly as "new," never as "trending" (no popularity signal
  * is exposed to non-admin callers anywhere in the backend).
  */
-export function useNewCourses(limit = 6) {
+export function useNewCourses(limit = 6, enabled = true) {
   const query = useQuery({
     queryKey: ["discovery-new-courses"],
     queryFn: () => listPublishedCourses({}),
     staleTime: 5 * 60 * 1000,
+    enabled,
   });
 
   const items: DiscoveryItem[] = (query.data?.results ?? []).slice(0, limit).map((course) => ({

@@ -5,6 +5,7 @@ import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import toast from "react-hot-toast";
 
+import { DiscoveryRail, useNewCourses } from "@/components/shared/DiscoveryRail";
 import { PageHeader } from "@/components/shared/PageHeader";
 import { Avatar } from "@/components/ui/Avatar";
 import { Badge, statusToTone } from "@/components/ui/Badge";
@@ -61,6 +62,11 @@ export function StudentCoursesPage() {
     onError: (error) => toast.error(getErrorMessage(error)),
   });
 
+  const { items: newCourseItems, isLoading: newCoursesLoading } = useNewCourses(
+    4,
+    !isLoading && enrollments.length === 0
+  );
+
   return (
     <div>
       <PageHeader
@@ -97,6 +103,11 @@ export function StudentCoursesPage() {
               <Link to="/courses">
                 <Button>Find a course</Button>
               </Link>
+            }
+            discovery={
+              newCourseItems.length > 0 || newCoursesLoading ? (
+                <DiscoveryRail title="New on TutorDoor" items={newCourseItems} isLoading={newCoursesLoading} />
+              ) : undefined
             }
           />
         </Card>
