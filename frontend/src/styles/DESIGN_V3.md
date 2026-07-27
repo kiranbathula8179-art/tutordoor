@@ -743,6 +743,17 @@ happening, not serve it.
   gained `celebrate()` — a real, one-time, earned family-connection
   moment. Verified live against the seeded parent account; zero
   regressions on the populated pages.
-- ⬜ Milestone 5 — Institute portal.
+- ✅ **Milestone 5** — Institute portal. `InstituteDashboardPage` gained an
+  `OnboardingChecklist` from its already-fetched profile object. A real
+  Honesty-pillar fix: the rating `StatCard` no longer shows a misleading
+  "0.0" when `rating_count` is 0 — the prior audit found no institute
+  review system exists anywhere in the backend (unlike tutors/courses),
+  so a real zero-tracked-rating case now reads "— / No reviews yet"
+  instead of implying a real, tracked, below-average score. Tutor/Student
+  roster empty states gained real invite/enroll actions. `/institute/
+  courses` (a real nav item pointing at a generic placeholder stub) now
+  carries an honest "Soon" tag via a new optional `soon?` field on the
+  shared `DashboardNavItem` type — additive, no other portal's nav
+  affected. Verified live against the seeded institute account.
 - ⬜ Milestone 6 — Admin (verification pass, not a build pass).
 - ⬜ Milestone 7 — Final review + implementation report.
