@@ -732,7 +732,17 @@ happening, not serve it.
   against a fully-done account (checklist collapses) and a zero-progress
   pending account (checklist shows "0 of 2 done", empty states render
   correctly, populated courses page for that account unaffected).
-- ⬜ Milestone 4 — Parent portal.
+- ✅ **Milestone 4** — Parent portal. `ParentChildrenPage`'s empty state
+  gained a real action (invite modal, right there instead of requiring a
+  scroll back to the header). `ParentProgressPage`'s zero-enrollment state
+  gained a "New on TutorDoor" `DiscoveryRail`, query-gated to the true
+  empty case. `ParentDashboardPage` deliberately left unchanged — it
+  already has a complete, working empty state, and its single onboarding
+  step is identical to what a checklist would say, so adding one would
+  just repeat the same message. `ParentLinkConfirmPage`'s success state
+  gained `celebrate()` — a real, one-time, earned family-connection
+  moment. Verified live against the seeded parent account; zero
+  regressions on the populated pages.
 - ⬜ Milestone 5 — Institute portal.
 - ⬜ Milestone 6 — Admin (verification pass, not a build pass).
 - ⬜ Milestone 7 — Final review + implementation report.
