@@ -884,3 +884,20 @@ than backed by invented tracking.
   changes — the backend already fully implemented and required the field
   in question; the frontend simply never collected it. Build and lint
   clean.
+- ✅ **Milestone 4** — Full 5-role DOM verification pass. Fresh login as
+  every role, DOM-audited every authenticated route (Admin: dashboard,
+  users, bookings, payments, coupons, reports, verifications, master
+  data; Institute: dashboard, tutors, students, profile; Parent:
+  dashboard, children, progress, bookings, payments; Tutor: dashboard,
+  profile, availability, verification, courses, chat, earnings, bookings;
+  Student: dashboard, profile, courses, chat, bookings, wallet), plus the
+  public landing page, course catalog, and tutor search — zero real
+  visibility defects found anywhere. One investigated false positive: the
+  audit heuristic flagged two `visibility: hidden` elements on
+  `/admin/reports`, traced to Recharts' own `recharts-tooltip-label`
+  class — a chart tooltip correctly hidden until hover, not a bug (now
+  excluded from the audit going forward, the same way `<option>` tags
+  already were). Console error sweep clean across all five roles and
+  every public page checked. No code changes required by this milestone —
+  it's the payoff of M1–M3's live verification discipline, not a new fix
+  pass.
