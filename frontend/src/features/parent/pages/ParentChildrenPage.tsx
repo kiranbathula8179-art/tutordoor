@@ -114,13 +114,16 @@ export function ParentChildrenPage() {
         </Card>
       ) : children.length === 0 ? (
         <Card className="mt-6">
-          <CardBody className="flex flex-col items-center gap-3 py-14 text-center">
-            <Mail className="h-8 w-8 text-slate-400" />
-            <p className="font-medium text-navy">No children linked yet</p>
-            <p className="max-w-sm text-sm text-slate-500">
-              Send an invitation and it appears here as pending until your child confirms.
-            </p>
-          </CardBody>
+          <EmptyState
+            icon={Mail}
+            title="No children linked yet"
+            description="Send an invitation and it appears here as pending until your child confirms."
+            action={
+              <Button onClick={() => setInviteOpen(true)}>
+                <UserPlus className="h-4 w-4" /> Invite a child
+              </Button>
+            }
+          />
         </Card>
       ) : (
         <motion.div

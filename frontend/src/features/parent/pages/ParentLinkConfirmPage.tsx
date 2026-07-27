@@ -1,11 +1,13 @@
 import { useQuery } from "@tanstack/react-query";
 import { isAxiosError } from "axios";
 import { AlertCircle, CheckCircle2, XCircle } from "lucide-react";
+import { useEffect } from "react";
 import { Link, useSearchParams } from "react-router-dom";
 
 import { Button } from "@/components/ui/Button";
 import { Spinner } from "@/components/ui/Spinner";
 import { confirmParentLink } from "@/features/parent/api";
+import { celebrate } from "@/lib/motion/celebrate";
 
 export function ParentLinkConfirmPage() {
   const [searchParams] = useSearchParams();
@@ -17,6 +19,11 @@ export function ParentLinkConfirmPage() {
     enabled: !!token,
     retry: false,
   });
+
+  // A real, earned, one-time moment — a family connection just went live.
+  useEffect(() => {
+    if (link) celebrate();
+  }, [link]);
 
   // An invalid/expired/already-used token is a 400 from the backend — that's
   // a real "this link is dead" case. Anything else (network, 5xx) is a

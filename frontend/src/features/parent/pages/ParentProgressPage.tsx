@@ -5,6 +5,7 @@ import { useEffect, useMemo, useState } from "react";
 import { Link } from "react-router-dom";
 
 import { PageHeader } from "@/components/shared/PageHeader";
+import { DiscoveryRail, useNewCourses } from "@/components/shared/DiscoveryRail";
 import { Avatar } from "@/components/ui/Avatar";
 import { Badge, statusToTone } from "@/components/ui/Badge";
 import { Button } from "@/components/ui/Button";
@@ -54,6 +55,11 @@ export function ParentProgressPage() {
     enabled: !!selectedStudentId,
     retry: false,
   });
+
+  const { items: newCourseItems, isLoading: newCoursesLoading } = useNewCourses(
+    4,
+    !enrollmentsLoading && enrollments.length === 0
+  );
 
   if (childrenLoading) return <SectionLoader />;
 
@@ -148,12 +154,23 @@ export function ParentProgressPage() {
             />
           </Card>
         ) : enrollments.length === 0 ? (
-          <div className="rounded-card border border-dashed border-line py-14 text-center">
-            <p className="font-medium text-navy">No course enrollments yet</p>
-            <p className="mt-1 text-sm text-slate-500">
-              Progress tracking starts when they join a course.
-            </p>
-          </div>
+          <Card>
+            <EmptyState
+              icon={TrendingUp}
+              title="No course enrollments yet"
+              description="Progress tracking starts once they join a group course — attendance and assignment completion roll up here automatically."
+              action={
+                <Link to="/courses">
+                  <Button variant="outline">Browse courses</Button>
+                </Link>
+              }
+              discovery={
+                newCourseItems.length > 0 || newCoursesLoading ? (
+                  <DiscoveryRail title="New on TutorDoor" items={newCourseItems} isLoading={newCoursesLoading} />
+                ) : undefined
+              }
+            />
+          </Card>
         ) : (
           <motion.div
             initial={still ? false : "hidden"}
