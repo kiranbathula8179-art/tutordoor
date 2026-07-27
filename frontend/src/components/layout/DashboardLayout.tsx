@@ -25,6 +25,8 @@ export interface DashboardNavItem {
   to: string;
   icon: LucideIcon;
   end?: boolean;
+  /** Marks a real nav destination that isn't built yet — renders an honest "Soon" tag so it never looks like a broken link. */
+  soon?: boolean;
 }
 
 interface DashboardLayoutProps {
@@ -79,7 +81,12 @@ export function DashboardLayout({ navItems, portalLabel }: DashboardLayoutProps)
                     isActive ? "text-primary" : "text-slate-400 group-hover:text-slate-600"
                   )}
                 />
-                <span className="relative">{item.label}</span>
+                <span className="relative flex-1">{item.label}</span>
+                {item.soon && (
+                  <span className="relative rounded-full bg-surface-3 px-2 py-0.5 text-[0.65rem] font-semibold uppercase tracking-wide text-slate-400">
+                    Soon
+                  </span>
+                )}
               </>
             )}
           </NavLink>

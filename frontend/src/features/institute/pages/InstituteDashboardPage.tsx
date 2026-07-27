@@ -5,6 +5,7 @@ import { ArrowRight, GraduationCap, Star, Users } from "lucide-react";
 import { Link } from "react-router-dom";
 
 import { DashboardHero } from "@/components/shared/DashboardHero";
+import { OnboardingChecklist } from "@/components/shared/OnboardingChecklist";
 import { RequireInstituteProfile } from "@/components/shared/RequireInstituteProfile";
 import { StatCard } from "@/components/shared/StatCard";
 import { Card } from "@/components/ui/Card";
@@ -80,13 +81,27 @@ export function InstituteDashboardPage() {
         }
       />
 
-      <motion.div {...rise(0.08)} className="grid gap-4 sm:grid-cols-3">
+      <motion.div {...rise(0.08)} className="mb-6">
+        <OnboardingChecklist
+          title="Getting started"
+          steps={[
+            {
+              label: "Add your institute's description and city",
+              done: Boolean(institute.description.trim() || institute.city.trim()),
+              to: "/institute/profile",
+            },
+            { label: "Get verified", done: institute.is_verified, to: "/institute/profile" },
+          ]}
+        />
+      </motion.div>
+
+      <motion.div {...rise(0.14)} className="grid gap-4 sm:grid-cols-3">
         <StatCard
           icon={Star}
           tint="accent"
           label="Institute rating"
-          value={Number(institute.rating_average).toFixed(1)}
-          sub={`${institute.rating_count} review${institute.rating_count === 1 ? "" : "s"}`}
+          value={institute.rating_count > 0 ? Number(institute.rating_average).toFixed(1) : "—"}
+          sub={institute.rating_count > 0 ? `${institute.rating_count} reviews` : "No reviews yet"}
         />
         <ActionTile icon={Users} kicker="Manage your" title="Tutor roster" to="/institute/tutors" />
         <ActionTile icon={GraduationCap} kicker="Enroll and track" title="Students" to="/institute/students" />

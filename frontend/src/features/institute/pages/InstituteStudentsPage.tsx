@@ -115,6 +115,11 @@ export function InstituteStudentsPage() {
             icon={Mail}
             title="No students enrolled yet"
             description="Enroll students by the email on their TutorDoor account."
+            action={
+              <Button onClick={() => setEnrollOpen(true)}>
+                <UserPlus className="h-4 w-4" /> Enroll a student
+              </Button>
+            }
           />
         </Card>
       ) : (

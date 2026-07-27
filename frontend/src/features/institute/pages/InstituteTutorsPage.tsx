@@ -109,6 +109,11 @@ export function InstituteTutorsPage() {
             icon={Users}
             title="No tutors on the roster yet"
             description="Invitations appear here as pending until the tutor accepts."
+            action={
+              <Button onClick={() => setInviteOpen(true)}>
+                <UserPlus className="h-4 w-4" /> Invite a tutor
+              </Button>
+            }
           />
         </Card>
       ) : (
